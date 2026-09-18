@@ -4,11 +4,17 @@ import { STATUS_CODES } from 'node:http';
 
 import { HTTPException } from 'hono/http-exception';
 
+import { toTitleCase } from './formatters.ts';
+
 type HttpErrorOptions = Partial<{
 	res: Response;
 	message: string;
 	cause: unknown;
 }>;
+
+type NotFoundErrorOptions = Omit<HttpErrorOptions, 'message'> & {
+	resource?: string;
+};
 
 export class HttpError extends HTTPException {
 	static isHttpError(value: unknown) {
@@ -25,6 +31,14 @@ export class HttpError extends HTTPException {
 		super(status, { res, message, cause });
 		this.message = message ?? 'Internal Server Error';
 		this.cause = cause;
+	}
+}
+
+export class NotFoundError extends HttpError {
+	constructor({ resource, ...options }: NotFoundErrorOptions = {}) {
+		const resourcePrefix = resource == null ? '' : `${resource} `;
+		const message = toTitleCase(`${resourcePrefix}not found`);
+		super(404, { ...options, message });
 	}
 }
 
