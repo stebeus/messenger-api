@@ -2,7 +2,8 @@ import { type SQLWrapper, sql } from 'drizzle-orm';
 import * as p from 'drizzle-orm/pg-core';
 
 const mode = 'string';
-const withTimezone = true;
+
+export const withTimezone = true;
 
 export const id = p.bigint({ mode }).primaryKey().generatedAlwaysAsIdentity();
 
