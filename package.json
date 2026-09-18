@@ -6,6 +6,14 @@
 	"imports": {
 		"#*": "./src/*"
 	},
+	"dependencies": {
+		"@hono/node-server": "^2.1.1",
+		"@hono/standard-validator": "^0.4.0",
+		"drizzle-orm": "1.0.0-rc.4",
+		"hono": "^4.13.8",
+		"postgres": "^3.4.9",
+		"zod": "^4.6.5"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.14",
 		"@types/node": "^26.6.1",
