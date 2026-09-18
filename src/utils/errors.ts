@@ -36,9 +36,8 @@ export class HttpError extends HTTPException {
 
 export class NotFoundError extends HttpError {
 	constructor({ resource, ...options }: NotFoundErrorOptions = {}) {
-		const resourcePrefix = resource == null ? '' : `${resource} `;
-		const message = toTitleCase(`${resourcePrefix}not found`);
-		super(404, { ...options, message });
+		const resourcePrefix = resource == null ? '' : `${toTitleCase(resource)} `;
+		super(404, { ...options, message: `${resourcePrefix}Not Found` });
 	}
 }
 
