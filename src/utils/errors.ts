@@ -34,6 +34,12 @@ export class HttpError extends HTTPException {
 	}
 }
 
+export class BadRequestError extends HttpError {
+	constructor(options?: HttpErrorOptions) {
+		super(400, options);
+	}
+}
+
 export class NotFoundError extends HttpError {
 	constructor({ resource, ...options }: NotFoundErrorOptions = {}) {
 		const resourcePrefix = resource == null ? '' : `${toTitleCase(resource)} `;
