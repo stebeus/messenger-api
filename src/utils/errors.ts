@@ -28,7 +28,7 @@ export class HttpError extends HTTPException {
 	}
 }
 
-export const catchError = (value: unknown) => {
+export const catchError = (value: unknown): NodeJS.ErrnoException => {
 	if (Error.isError(value)) return value;
 
 	let serialized = '[Non-serializable value]';
