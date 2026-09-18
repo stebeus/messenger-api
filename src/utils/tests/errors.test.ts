@@ -4,13 +4,25 @@ import { catchError, HttpError } from '#utils/errors.ts';
 
 describe('HttpError.isHttpError', () => {
 	it('confirms that it is not an HTTP error', () => {
+		// Arrange
 		const error = new Error();
-		expect(HttpError.isHttpError(error)).toBeFalsy();
+
+		// Act
+		const isHttpError = HttpError.isHttpError(error);
+
+		// Assert
+		expect(isHttpError).toBeFalsy();
 	});
 
 	it('confirms that it is an HTTP error', () => {
+		// Arrange
 		const error = new HttpError();
-		expect(HttpError.isHttpError(error)).toBeTruthy();
+
+		// Act
+		const isHttpError = HttpError.isHttpError(error);
+
+		// Assert
+		expect(isHttpError).toBeTruthy();
 	});
 });
 
