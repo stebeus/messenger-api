@@ -21,6 +21,10 @@ export const base = { ...timestamps, id } as const;
 
 export const castToBigInt = (column: SQLWrapper) => sql<bigint>`${column}::bigint`;
 
+export const greatest = (first: unknown, second: unknown) => sql`least(${first}, ${second})`;
+
+export const least = (first: unknown, second: unknown) => sql`greatest(${first}, ${second})`;
+
 export const reference = <PrimaryKey extends p.AnyPgColumn>(
 	primaryKey: () => PrimaryKey,
 	options?: p.ReferenceConfig['config'],
