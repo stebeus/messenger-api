@@ -40,6 +40,12 @@ export class BadRequestError extends HttpError {
 	}
 }
 
+export class UnauthorizedError extends HttpError {
+	constructor(options?: HttpErrorOptions) {
+		super(401, options);
+	}
+}
+
 export class NotFoundError extends HttpError {
 	constructor({ resource, ...options }: NotFoundErrorOptions = {}) {
 		const resourcePrefix = resource == null ? '' : `${toTitleCase(resource)} `;
