@@ -28,7 +28,7 @@ jobs:
         uses: pnpm/setup@v2
         with:
           cache: true
-          runtime: node@${{ matrix.node }
+          runtime: node@${{ matrix.node }}
 
       - name: Install dependencies
         run: pnpm ci
