@@ -14,7 +14,7 @@ try {
 const dbUrlRegex = /(postgres(?:ql)?):\/\/(?:([^@\s]+)@)?([^/\s]+)(?:\/(\w+))?(?:\?(.+))?/;
 
 const Env = z.object({
-	CLIENT_URL: z.url().default('*'),
+	CLIENT_URL: z.url().normalize().default('*'),
 	DATABASE_URL: z.url().regex(dbUrlRegex),
 	PORT: z.coerce.number().int().positive().default(3000),
 
