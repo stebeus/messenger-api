@@ -6,6 +6,13 @@
 	"imports": {
 		"#*": "./src/*"
 	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.14",
+		"@types/node": "^26.6.1",
+		"drizzle-kit": "1.0.0-rc.4",
+		"typescript": "^7.0.2",
+		"vitest": "^5.0.1"
+	},
 	"packageManager": "pnpm@12.4.2",
 	"devEngines": {
 		"packageManager": {
