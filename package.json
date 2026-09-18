@@ -18,8 +18,10 @@
 		"test": "vitest"
 	},
 	"dependencies": {
+		"@better-auth/drizzle-adapter": "^1.7.5",
 		"@hono/node-server": "^2.1.1",
 		"@hono/standard-validator": "^0.4.0",
+		"better-auth": "^1.7.5",
 		"drizzle-orm": "1.0.0-rc.4",
 		"hono": "^4.13.8",
 		"postgres": "^3.4.9",
