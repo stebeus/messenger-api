@@ -19,7 +19,7 @@ export const timestamps = { createdAt, updatedAt } as const;
 
 export const base = { ...timestamps, id } as const;
 
-export const castToBigInt = (column: SQLWrapper) => sql`${column}::bigint`;
+export const castToBigInt = (column: SQLWrapper) => sql<bigint>`${column}::bigint`;
 
 export const reference = <PrimaryKey extends p.AnyPgColumn>(
 	primaryKey: () => PrimaryKey,
