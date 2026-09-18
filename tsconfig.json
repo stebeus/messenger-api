@@ -16,6 +16,7 @@
 
 		// Interop constraints
 		"erasableSyntaxOnly": true,
+		"esModuleInterop": true,
 		"verbatimModuleSyntax": true,
 
 		// Completeness
