@@ -1,0 +1,42 @@
+name: Migrate Database
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+concurrency:
+  group: db-migrations-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version:
+          - 26
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install pnpm and Node.js
+        uses: pnpm/setup@v2
+        with:
+          cache: true
+          runtime: node@${{ matrix.node }
+
+      - name: Install dependencies
+        run: pnpm ci
+
+      - name: Build
+        run: pnpm build
+
+      - name: Migrate database
+        run: pnpm db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
