@@ -1,0 +1,17 @@
+{
+	"name": "messenger-api",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"imports": {
+		"#*": "./src/*"
+	},
+	"packageManager": "pnpm@12.4.2",
+	"devEngines": {
+		"packageManager": {
+			"name": "pnpm",
+			"version": "12.4.2",
+			"onFail": "download"
+		}
+	}
+}
