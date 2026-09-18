@@ -1,0 +1,24 @@
+{
+	"compilerOptions": {
+		// Type checking
+		"noUncheckedIndexedAccess": true,
+
+		// Modules
+		"allowImportingTsExtensions": true,
+		"module": "nodenext",
+		"types": ["node"],
+
+		// Emit
+		"noEmit": true,
+
+		// Language and environment
+		"target": "esnext",
+
+		// Interop constraints
+		"erasableSyntaxOnly": true,
+		"verbatimModuleSyntax": true,
+
+		// Completeness
+		"skipLibCheck": true
+	}
+}
