@@ -17,6 +17,10 @@ const Env = z.object({
 	CLIENT_URL: z.url().default('*'),
 	DATABASE_URL: z.url().regex(dbUrlRegex),
 	PORT: z.coerce.number().int().positive().default(3000),
+
+	// Better Auth
+	BETTER_AUTH_SECRET: z.string(),
+	BETTER_AUTH_URL: z.httpUrl().normalize(),
 });
 
 const { success, error, data } = z.safeParse(Env, process.env);
