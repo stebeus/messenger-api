@@ -1,6 +1,7 @@
 import * as z from 'zod';
 
-import { id, Query } from '#contracts/index.ts';
+import { id } from '#contracts/index.ts';
+import { UserQuery } from '#features/users/contracts/dtos.ts';
 
 export const FriendRequestParams = z.object({
 	recipientId: id,
@@ -10,7 +11,7 @@ export const directions = ['incoming', 'outgoing'] as const;
 
 export const FriendRequestQuery = z
 	.object({
-		...Query.shape,
+		...UserQuery.shape,
 		direction: z.enum(directions).default('incoming'),
 	})
 	.partial();
