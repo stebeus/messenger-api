@@ -46,7 +46,7 @@ export const bans = messagingSchema.table(
 		...timestamps,
 		userId: reference(() => users.id, { onDelete: 'cascade' }).notNull(),
 		groupId: reference(() => conversations.id, { onDelete: 'cascade' }).notNull(),
-		reason: t.text(),
+		reason: t.text().notNull(),
 		expiresAt: t.timestamp({ withTimezone }),
 	}),
 	(t) => [unique().on(t.userId, t.groupId)],
