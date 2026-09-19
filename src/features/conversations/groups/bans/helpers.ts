@@ -1,0 +1,10 @@
+import type { GroupMember } from '#features/members/types.ts';
+
+import { and, eq } from 'drizzle-orm';
+
+import { bans } from '#db/schemas/messaging.ts';
+
+export const banRelations = { user: true, group: true } as const;
+
+export const isBan = ({ userId, groupId }: GroupMember) =>
+	and(eq(bans.userId, userId), eq(bans.groupId, groupId));
