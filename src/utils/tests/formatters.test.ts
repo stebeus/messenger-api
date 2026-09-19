@@ -11,7 +11,7 @@ describe('capitalize', () => {
 
 describe('toTitleCase', () => {
 	it('title cases strings', () => {
-		const titleCased = toTitleCase('hello, world!');
+		const titleCased = toTitleCase('hello, worlD!');
 		expect(titleCased).toBe('Hello, World!');
 	});
 });
