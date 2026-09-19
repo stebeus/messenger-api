@@ -1,13 +1,17 @@
-import type * as z from 'zod';
+import * as z from 'zod';
 
-import { createInsertSchema, createSelectSchema } from 'drizzle-orm/zod';
+import { createdAt, id } from '#contracts/entities.ts';
 
-import { conversations } from '#db/schemas/messaging.ts';
+export const conversationTypes = ['direct', 'group'] as const;
 
-export const Conversation = createSelectSchema(conversations);
+export const Conversation = z.object({
+	id,
+	type: z.enum(conversationTypes).default('direct'),
+	createdAt,
+});
 
-export const NewConversation = createInsertSchema(conversations).pick({ type: true });
+export const NewConversation = Conversation.pick({ type: true });
 
 export type Conversation = z.infer<typeof Conversation>;
 
-export type NewConversation = z.infer<typeof NewConversation>;
+export type NewConversation = z.input<typeof NewConversation>;

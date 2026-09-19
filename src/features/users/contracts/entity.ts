@@ -1,62 +1,46 @@
-import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-orm/zod';
 import * as z from 'zod';
 
-import { id, timestamps } from '#contracts/entities.ts';
-import { users } from '#db/schemas/auth.ts';
+import { Base, base, timestamps } from '#contracts/entities.ts';
 import { formatMaxLength, formatMinLength } from '#utils/formatters.ts';
 
-import { constants } from './constants.ts';
+import { bio, displayName, password, username } from './constants.ts';
 
-const refinements = {
+export const User = z.object({
+	...Base.shape,
 	username: z
 		.string()
 		.trim()
-		.min(constants.USERNAME_MIN_LENGTH, formatMinLength('username', constants.USERNAME_MIN_LENGTH))
-		.max(constants.USERNAME_MAX_LENGTH, formatMaxLength('username', constants.USERNAME_MAX_LENGTH))
-		.regex(constants.USERNAME_REGEX, 'Username must only contain alphanumeric characters'),
+		.min(username.minLength, formatMinLength(username.fieldName, username.minLength))
+		.max(username.maxLength, formatMaxLength(username.fieldName, username.maxLength))
+		.regex(username.regex, 'Username must only contain alphanumeric characters'),
 	displayName: z
 		.string()
 		.trim()
-		.max(
-			constants.DISPLAY_NAME_MAX_LENGTH,
-			formatMaxLength('display name', constants.DISPLAY_NAME_MAX_LENGTH),
-		)
-		.nullable(),
-	avatar: z.httpUrl().normalize().nullable(),
-} as const;
-
-const unusedFields = { name: true, email: true, emailVerified: true } as const;
-
-const unusedFieldsWithTimestamps = { ...unusedFields, ...timestamps };
-
-const userInsertSchema = createInsertSchema(users, refinements).omit(unusedFieldsWithTimestamps);
-
-const userUpdateSchema = createUpdateSchema(users, refinements).omit(unusedFieldsWithTimestamps);
-
-const password = z
-	.string()
-	.trim()
-	.min(constants.PASSWORD_MIN_LENGTH, formatMinLength('password', constants.PASSWORD_MIN_LENGTH))
-	.max(constants.PASSWORD_MAX_LENGTH, formatMinLength('password', constants.PASSWORD_MAX_LENGTH));
-
-export const User = createSelectSchema(users).omit(unusedFields);
-
-export const NewUser = z.object({
-	...userInsertSchema.shape,
-	password,
+		.max(displayName.maxLength, formatMaxLength(displayName.fieldName, displayName.maxLength))
+		.nullish(),
+	bio: z
+		.string()
+		.trim()
+		.max(bio.maxLength, formatMaxLength(bio.fieldName, bio.maxLength))
+		.nullish(),
+	avatar: z.httpUrl().normalize().nullish(),
 });
 
-export const UserUpdate = z
-	.object({
-		...userUpdateSchema.shape,
-		id,
-		password,
-	})
-	.partial()
-	.required({ id: true });
+const Credentials = z.object({
+	...User.shape,
+	password: z
+		.string()
+		.trim()
+		.min(password.minLength, formatMinLength(password.fieldName, password.minLength))
+		.max(password.maxLength, formatMaxLength(password.fieldName, password.maxLength)),
+});
+
+export const NewUser = Credentials.omit(base);
+
+export const UserUpdate = Credentials.omit(timestamps).partial().required({ id: true });
 
 export type User = z.infer<typeof User>;
 
-export type NewUser = z.infer<typeof NewUser>;
+export type NewUser = z.input<typeof NewUser>;
 
 export type UserUpdate = z.infer<typeof UserUpdate>;
