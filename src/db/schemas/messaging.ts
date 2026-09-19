@@ -70,8 +70,12 @@ export const messages = messagingSchema.table('messages', (t) => ({
 	content: t.text().notNull(),
 }));
 
-type _ConversationContract = SatisfiesContract<typeof conversations.$inferSelect, Conversation>;
-type _GroupContract = SatisfiesContract<typeof groups.$inferSelect, Group>;
-type _BanContract = SatisfiesContract<typeof bans.$inferSelect, Ban>;
-type _MemberContract = SatisfiesContract<typeof members.$inferSelect, Member>;
-type _MessageContract = SatisfiesContract<typeof messages.$inferSelect, Message>;
+type _ConversationContractCheck = SatisfiesContract<
+	typeof conversations.$inferSelect,
+	Conversation
+>;
+
+type _GroupContractCheck = SatisfiesContract<typeof groups.$inferSelect, Group>;
+type _BanContractCheck = SatisfiesContract<typeof bans.$inferSelect, Ban>;
+type _MemberContractCheck = SatisfiesContract<typeof members.$inferSelect, Member>;
+type _MessageContractCheck = SatisfiesContract<typeof messages.$inferSelect, Message>;

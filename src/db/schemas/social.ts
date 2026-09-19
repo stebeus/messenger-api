@@ -46,5 +46,9 @@ export const friendships = socialSchema.table(
 	],
 );
 
-type _FriendRequestContract = SatisfiesContract<typeof friendRequests.$inferSelect, FriendRequest>;
-type _FriendshipContract = SatisfiesContract<typeof friendships.$inferSelect, Friendship>;
+type _FriendRequestContractCheck = SatisfiesContract<
+	typeof friendRequests.$inferSelect,
+	FriendRequest
+>;
+
+type _FriendshipContractCheck = SatisfiesContract<typeof friendships.$inferSelect, Friendship>;

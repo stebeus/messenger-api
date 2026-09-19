@@ -61,4 +61,4 @@ export const verifications = authSchema.table(
 	(t) => [index('verifications_identifier_idx').on(t.identifier)],
 );
 
-type _UserContract = SatisfiesContract<typeof users.$inferSelect, User>;
+type _UserContractCheck = SatisfiesContract<typeof users.$inferSelect, User>;
