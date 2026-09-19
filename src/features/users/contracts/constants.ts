@@ -1,17 +1,24 @@
-const USERNAME_MIN_LENGTH = 3;
-const USERNAME_MAX_LENGTH = 30;
-const USERNAME_REGEX = /^[\p{L}\p{N}_]+$/u;
+const alphanumericRegex = /^[\p{L}\p{N}_]+$/u;
 
-const DISPLAY_NAME_MAX_LENGTH = 50;
+export const username = {
+	fieldName: 'username',
+	minLength: 3,
+	maxLength: 30,
+	regex: alphanumericRegex,
+} as const;
 
-const PASSWORD_MIN_LENGTH = 8;
-const PASSWORD_MAX_LENGTH = 128;
+export const displayName = {
+	fieldName: 'display name',
+	maxLength: 50,
+} as const;
 
-export const constants = {
-	USERNAME_MIN_LENGTH,
-	USERNAME_MAX_LENGTH,
-	USERNAME_REGEX,
-	DISPLAY_NAME_MAX_LENGTH,
-	PASSWORD_MIN_LENGTH,
-	PASSWORD_MAX_LENGTH,
+export const bio = {
+	fieldName: 'bio',
+	maxLength: 250,
+} as const;
+
+export const password = {
+	fieldName: 'password',
+	minLength: 8,
+	maxLength: 100,
 } as const;
