@@ -17,3 +17,7 @@ export type Query = z.infer<typeof Query>;
 export type QueryDto<Dto = Query> = {
 	query: Dto;
 };
+
+export type BodyDto<Dto> = {
+	body: Dto;
+};
