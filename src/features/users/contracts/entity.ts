@@ -10,18 +10,18 @@ export const User = z.object({
 	username: z
 		.string()
 		.trim()
-		.min(username.minLength, formatMinLength(username.fieldName, username.minLength))
-		.max(username.maxLength, formatMaxLength(username.fieldName, username.maxLength))
+		.min(username.minLength, formatMinLength(username.minLength, username.fieldName))
+		.max(username.maxLength, formatMaxLength(username.maxLength, username.fieldName))
 		.regex(username.regex, 'Username must only contain alphanumeric characters'),
 	displayName: z
 		.string()
 		.trim()
-		.max(displayName.maxLength, formatMaxLength(displayName.fieldName, displayName.maxLength))
+		.max(displayName.maxLength, formatMaxLength(displayName.maxLength, displayName.fieldName))
 		.nullish(),
 	bio: z
 		.string()
 		.trim()
-		.max(bio.maxLength, formatMaxLength(bio.fieldName, bio.maxLength))
+		.max(bio.maxLength, formatMaxLength(bio.maxLength, bio.fieldName))
 		.nullish(),
 	avatar: z.httpUrl().normalize().nullish(),
 });
@@ -31,8 +31,8 @@ const Credentials = z.object({
 	password: z
 		.string()
 		.trim()
-		.min(password.minLength, formatMinLength(password.fieldName, password.minLength))
-		.max(password.maxLength, formatMaxLength(password.fieldName, password.maxLength)),
+		.min(password.minLength, formatMinLength(password.minLength, password.fieldName))
+		.max(password.maxLength, formatMaxLength(password.maxLength, password.fieldName)),
 });
 
 export const NewUser = Credentials.omit(base);

@@ -19,21 +19,21 @@ describe('toTitleCase', () => {
 describe('formatMinLength', () => {
 	describe('Given invalid lengths', () => {
 		it('rejects floats', () => {
-			expect(() => formatMinLength('field', 0.1)).toThrow('Length must be an integer');
+			expect(() => formatMinLength(0.1, 'field')).toThrow('Length must be an integer');
 		});
 
 		it('rejects negative integers', () => {
-			expect(() => formatMinLength('field', -1)).toThrow('Length must be positive');
+			expect(() => formatMinLength(-1, 'field')).toThrow('Length must be positive');
 		});
 	});
 
-	it('defaults to a required field message', () => {
-		const formatted = formatMinLength('field');
+	it('formats a minimum length of 1 as required', () => {
+		const formatted = formatMinLength(1, 'field');
 		expect(formatted).toBe('Field is required');
 	});
 
 	it('formats minimum length messages', () => {
-		const formatted = formatMinLength('field', 2);
+		const formatted = formatMinLength(2, 'field');
 		expect(formatted).toBe('Field must be at least 2 characters long');
 	});
 });
@@ -41,21 +41,21 @@ describe('formatMinLength', () => {
 describe('formatMaxLength', () => {
 	describe('Given invalid lengths', () => {
 		it('rejects floats', () => {
-			expect(() => formatMinLength('field', 0.1)).toThrow('Length must be an integer');
+			expect(() => formatMinLength(0.1, 'field')).toThrow('Length must be an integer');
 		});
 
 		it('rejects negative integers', () => {
-			expect(() => formatMinLength('field', -1)).toThrow('Length must be positive');
+			expect(() => formatMinLength(-1, 'field')).toThrow('Length must be positive');
 		});
 	});
 
 	it('formats singular maximum length messages', () => {
-		const formatted = formatMaxLength('field', 1);
+		const formatted = formatMaxLength(1, 'field');
 		expect(formatted).toBe('Field cannot be longer than 1 character');
 	});
 
 	it('formats plural maximum length messages', () => {
-		const formatted = formatMaxLength('field', 2);
+		const formatted = formatMaxLength(2, 'field');
 		expect(formatted).toBe('Field cannot be longer than 2 characters');
 	});
 });

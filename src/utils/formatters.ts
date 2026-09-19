@@ -22,7 +22,7 @@ export const toTitleCase = (string: string) => {
 	return string.toLowerCase().replace(initialsRegex, capitalize);
 };
 
-export const formatMinLength = (fieldName: string, length = 1) => {
+export const formatMinLength = (length: number, fieldName: string) => {
 	const assertedLength = assertLength(length);
 
 	const message =
@@ -31,7 +31,7 @@ export const formatMinLength = (fieldName: string, length = 1) => {
 	return `${capitalize(fieldName)} ${message}`;
 };
 
-export const formatMaxLength = (fieldName: string, length: number) => {
+export const formatMaxLength = (length: number, fieldName: string) => {
 	const assertedLength = assertLength(length);
 	return `${capitalize(fieldName)} cannot be longer than ${assertedLength} ${pluralize(assertedLength, 'character')}`;
 };
