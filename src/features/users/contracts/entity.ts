@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { Base, base, timestamps } from '#contracts/entities.ts';
+import { Base, base, id, timestamps } from '#contracts/entities.ts';
 import { formatMaxLength, formatMinLength } from '#utils/formatters.ts';
 
 import { bio, displayName, password, username } from './constants.ts';
@@ -39,8 +39,15 @@ export const NewUser = Credentials.omit(base);
 
 export const UserUpdate = Credentials.omit(timestamps).partial().required({ id: true });
 
+export const UserPair = z.object({
+	user1Id: id,
+	user2Id: id,
+});
+
 export type User = z.infer<typeof User>;
 
 export type NewUser = z.input<typeof NewUser>;
 
 export type UserUpdate = z.infer<typeof UserUpdate>;
+
+export type UserPair = z.infer<typeof UserPair>;
