@@ -20,5 +20,5 @@ export const bio = {
 export const password = {
 	fieldName: 'password',
 	minLength: 8,
-	maxLength: 100,
+	maxLength: 128,
 } as const;
