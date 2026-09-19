@@ -3,6 +3,8 @@ import * as p from 'drizzle-orm/pg-core';
 
 const mode = 'string';
 
+export type SatisfiesContract<Table extends Entity, Entity> = Table;
+
 export const withTimezone = true;
 
 export const id = p.bigint({ mode }).primaryKey().generatedAlwaysAsIdentity();
