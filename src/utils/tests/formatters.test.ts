@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { capitalize, formatMinLength, toTitleCase } from '#utils/formatters.ts';
+import { capitalize, formatMaxLength, formatMinLength, toTitleCase } from '#utils/formatters.ts';
 
 describe('capitalize', () => {
 	it('capitalizes strings', () => {
@@ -35,5 +35,27 @@ describe('formatMinLength', () => {
 	it('formats minimum length messages', () => {
 		const formatted = formatMinLength('field', 2);
 		expect(formatted).toBe('Field must be at least 2 characters long');
+	});
+});
+
+describe('formatMaxLength', () => {
+	describe('Given invalid lengths', () => {
+		it('rejects floats', () => {
+			expect(() => formatMinLength('field', 0.1)).toThrow('Length must be an integer');
+		});
+
+		it('rejects negative integers', () => {
+			expect(() => formatMinLength('field', -1)).toThrow('Length must be positive');
+		});
+	});
+
+	it('formats singular maximum length messages', () => {
+		const formatted = formatMaxLength('field', 1);
+		expect(formatted).toBe('Field cannot be longer than 1 character');
+	});
+
+	it('formats plural maximum length messages', () => {
+		const formatted = formatMaxLength('field', 2);
+		expect(formatted).toBe('Field cannot be longer than 2 characters');
 	});
 });
