@@ -1,6 +1,8 @@
+import type { User } from '#features/users/contracts/entity.ts';
+
 import { boolean, index, snakeCase, text } from 'drizzle-orm/pg-core';
 
-import { base, reference } from './helpers.ts';
+import { base, reference, type SatisfiesContract } from './helpers.ts';
 
 export const authSchema = snakeCase.schema('auth');
 
@@ -58,3 +60,5 @@ export const verifications = authSchema.table(
 	}),
 	(t) => [index('verifications_identifier_idx').on(t.identifier)],
 );
+
+type _UserContract = SatisfiesContract<typeof users.$inferSelect, User>;

@@ -1,16 +1,32 @@
+import type { Ban } from '#features/conversations/groups/bans/contracts/entity.ts';
+import type { Message } from '#features/messages/contracts/entity.ts';
+
 import { snakeCase, unique } from 'drizzle-orm/pg-core';
 
+import { Conversation, conversationTypes } from '#features/conversations/contracts/entity.ts';
+import { Group, visibilities } from '#features/conversations/groups/contracts/entity.ts';
+import { Member, roles } from '#features/members/contracts/entity.ts';
+
 import { users } from './auth.ts';
-import { base, createdAt, id, reference, timestamps, withTimezone } from './helpers.ts';
+import {
+	base,
+	createdAt,
+	id,
+	reference,
+	type SatisfiesContract,
+	timestamps,
+	withTimezone,
+} from './helpers.ts';
+
+const { type } = Conversation.shape;
+const { visibility } = Group.shape;
+const { role } = Member.shape;
 
 export const messagingSchema = snakeCase.schema('messaging');
 
 export const conversations = messagingSchema.table('conversations', (t) => ({
 	id,
-	type: t
-		.text({ enum: ['direct', 'group'] })
-		.default('direct')
-		.notNull(),
+	type: t.text({ enum: conversationTypes }).default(type.def.defaultValue).notNull(),
 	createdAt,
 }));
 
@@ -21,10 +37,7 @@ export const groups = messagingSchema.table('groups', (t) => ({
 	name: t.text().notNull(),
 	description: t.text(),
 	avatar: t.text(),
-	visibility: t
-		.text({ enum: ['private', 'public'] })
-		.default('private')
-		.notNull(),
+	visibility: t.text({ enum: visibilities }).default(visibility.def.defaultValue).notNull(),
 }));
 
 export const bans = messagingSchema.table(
@@ -45,10 +58,7 @@ export const members = messagingSchema.table(
 		...timestamps,
 		userId: reference(() => users.id, { onDelete: 'cascade' }).notNull(),
 		conversationId: reference(() => conversations.id, { onDelete: 'cascade' }).notNull(),
-		role: t
-			.text({ enum: ['member', 'admin', 'owner'] })
-			.default('member')
-			.notNull(),
+		role: t.text({ enum: roles }).default(role.def.defaultValue).notNull(),
 	}),
 	(t) => [unique().on(t.userId, t.conversationId)],
 );
@@ -59,3 +69,9 @@ export const messages = messagingSchema.table('messages', (t) => ({
 	conversationId: reference(() => conversations.id, { onDelete: 'cascade' }).notNull(),
 	content: t.text().notNull(),
 }));
+
+type _ConversationContract = SatisfiesContract<typeof conversations.$inferSelect, Conversation>;
+type _GroupContract = SatisfiesContract<typeof groups.$inferSelect, Group>;
+type _BanContract = SatisfiesContract<typeof bans.$inferSelect, Ban>;
+type _MemberContract = SatisfiesContract<typeof members.$inferSelect, Member>;
+type _MessageContract = SatisfiesContract<typeof messages.$inferSelect, Message>;

@@ -1,8 +1,18 @@
+import type { FriendRequest } from '#features/friend-requests/contracts/entity.ts';
+import type { Friendship } from '#features/friendships/contracts/entity.ts';
+
 import { lt, ne } from 'drizzle-orm';
 import { check, snakeCase, unique, uniqueIndex } from 'drizzle-orm/pg-core';
 
 import { users } from './auth.ts';
-import { castToBigInt, createdAt, greatest, least, reference } from './helpers.ts';
+import {
+	castToBigInt,
+	createdAt,
+	greatest,
+	least,
+	reference,
+	type SatisfiesContract,
+} from './helpers.ts';
 
 export const socialSchema = snakeCase.schema('social');
 
@@ -35,3 +45,6 @@ export const friendships = socialSchema.table(
 		unique().on(t.user1Id, t.user2Id),
 	],
 );
+
+type _FriendRequestContract = SatisfiesContract<typeof friendRequests.$inferSelect, FriendRequest>;
+type _FriendshipContract = SatisfiesContract<typeof friendships.$inferSelect, Friendship>;
