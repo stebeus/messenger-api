@@ -23,15 +23,15 @@ export const toTitleCase = (string: string) => {
 };
 
 export const formatMinLength = (fieldName: string, length = 1) => {
-	const sanitizedLength = assertLength(length);
+	const assertedLength = assertLength(length);
 
 	const message =
-		sanitizedLength === 1 ? 'is required' : `must be at least ${sanitizedLength} characters long`;
+		assertedLength === 1 ? 'is required' : `must be at least ${assertedLength} characters long`;
 
 	return `${capitalize(fieldName)} ${message}`;
 };
 
 export const formatMaxLength = (fieldName: string, length: number) => {
-	const sanitizedLength = assertLength(length);
-	return `${capitalize(fieldName)} cannot be longer than ${sanitizedLength} ${pluralize(sanitizedLength, 'character')}`;
+	const assertedLength = assertLength(length);
+	return `${capitalize(fieldName)} cannot be longer than ${assertedLength} ${pluralize(assertedLength, 'character')}`;
 };
