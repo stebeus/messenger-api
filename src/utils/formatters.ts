@@ -3,7 +3,7 @@ type PluralizationOptions = Partial<{
 	plural: string;
 }>;
 
-const sanitizeLength = (length: number) => {
+const assertLength = (length: number) => {
 	if (!Number.isInteger(length)) throw new Error('Length must be an integer');
 	if (length < 1) throw new Error('Length must be positive');
 	return length;
@@ -23,7 +23,7 @@ export const toTitleCase = (string: string) => {
 };
 
 export const formatMinLength = (fieldName: string, length = 1) => {
-	const sanitizedLength = sanitizeLength(length);
+	const sanitizedLength = assertLength(length);
 
 	const message =
 		sanitizedLength === 1 ? 'is required' : `must be at least ${sanitizedLength} characters long`;
@@ -32,6 +32,6 @@ export const formatMinLength = (fieldName: string, length = 1) => {
 };
 
 export const formatMaxLength = (fieldName: string, length: number) => {
-	const sanitizedLength = sanitizeLength(length);
+	const sanitizedLength = assertLength(length);
 	return `${capitalize(fieldName)} cannot be longer than ${sanitizedLength} ${pluralize(sanitizedLength, 'character')}`;
 };
