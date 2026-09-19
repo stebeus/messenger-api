@@ -4,6 +4,7 @@ import { username } from 'better-auth/plugins';
 
 import { db } from '#db/client.ts';
 import * as schema from '#db/schemas/auth.ts';
+import * as user from '#features/users/contracts/constants.ts';
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -20,9 +21,13 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		autoSignIn: true,
 		enabled: true,
+		maxPasswordLength: user.password.maxLength,
+		minPasswordLength: user.password.minLength,
 	},
 	plugins: [
 		username({
+			maxUsernameLength: user.username.maxLength,
+			minUsernameLength: user.username.minLength,
 			schema: {
 				user: {
 					fields: {
@@ -30,6 +35,7 @@ export const auth = betterAuth({
 					},
 				},
 			},
+			usernameValidator: (username) => user.username.regex.test(username),
 		}),
 	],
 	user: {
