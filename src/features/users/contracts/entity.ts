@@ -39,7 +39,7 @@ const password = z
 	.min(constants.PASSWORD_MIN_LENGTH, formatMinLength('password', constants.PASSWORD_MIN_LENGTH))
 	.max(constants.PASSWORD_MAX_LENGTH, formatMinLength('password', constants.PASSWORD_MAX_LENGTH));
 
-export const User = createSelectSchema(users, refinements).omit(unusedFields);
+export const User = createSelectSchema(users).omit(unusedFields);
 
 export const NewUser = z.object({
 	...userInsertSchema.shape,
