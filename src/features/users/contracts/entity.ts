@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-orm/zod';
 import * as z from 'zod';
 
-import { id } from '#contracts/entities.ts';
+import { id, timestamps } from '#contracts/entities.ts';
 import { users } from '#db/schemas/auth.ts';
 import { formatMaxLength, formatMinLength } from '#utils/formatters.ts';
 
@@ -27,9 +27,11 @@ const refinements = {
 
 const unusedFields = { name: true, email: true, emailVerified: true } as const;
 
-const userInsertSchema = createInsertSchema(users, refinements).omit(unusedFields);
+const unusedFieldsWithTimestamps = { ...unusedFields, ...timestamps };
 
-const userUpdateSchema = createUpdateSchema(users, refinements).omit(unusedFields);
+const userInsertSchema = createInsertSchema(users, refinements).omit(unusedFieldsWithTimestamps);
+
+const userUpdateSchema = createUpdateSchema(users, refinements).omit(unusedFieldsWithTimestamps);
 
 const password = z
 	.string()
