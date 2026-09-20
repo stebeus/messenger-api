@@ -46,6 +46,12 @@ export class UnauthorizedError extends HttpError {
 	}
 }
 
+export class ForbiddenError extends HttpError {
+	constructor(options?: HttpErrorOptions) {
+		super(403, options);
+	}
+}
+
 export class NotFoundError extends HttpError {
 	constructor({ resource, ...options }: NotFoundErrorOptions = {}) {
 		const resourcePrefix = resource == null ? '' : `${toTitleCase(resource)} `;
