@@ -10,7 +10,7 @@ import { containsName, groupRelations, groupSearchRelations, memberOfGroup } fro
 
 const create = async ({ tx = db, ...values }: DatabaseContext<NewGroup>) => {
 	const [data] = await tx.insert(groups).values(values).returning();
-	if (data == null) throw new CreationError('Group', values);
+	if (data == null) throw new CreationError('group', values);
 	return data;
 };
 
