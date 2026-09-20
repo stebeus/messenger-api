@@ -18,7 +18,7 @@ export const Ban = z.object({
 
 export const NewBan = Ban.omit(timestamps);
 
-export const BanUpdate = Ban.omit(timestamps).partial({ reason: true, expiresAt: true });
+export const BanUpdate = Ban.omit(timestamps).partial({ reason: true });
 
 export type Ban = z.infer<typeof Ban>;
 
