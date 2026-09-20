@@ -5,14 +5,23 @@ import { type DatabaseContext, db } from '#db/index.ts';
 import { dmService } from '#features/conversations/dms/services.ts';
 import { friendshipService } from '#features/friendships/services.ts';
 import { userService } from '#features/users/services.ts';
-import { ConflictError, NotFoundError } from '#utils/errors.ts';
+import { ConflictError, NotFoundError, UnprocessableContentError } from '#utils/errors.ts';
 
 import { friendRequestRepository } from './repository.ts';
 
 const send = async ({ requesterId, recipientId }: FriendRequestArgs) => {
-	const { id } = await userService.getOne({ userId: recipientId });
-	const friendship = await friendshipService.findOne({ user1Id: requesterId, user2Id: id });
+	if (requesterId === recipientId) throw new UnprocessableContentError();
 
+	const { id } = await userService.getOne({ userId: recipientId });
+
+	const friendRequest = await friendRequestRepository.findOne({
+		user1Id: requesterId,
+		user2Id: id,
+	});
+
+	if (friendRequest != null) throw new ConflictError();
+
+	const friendship = await friendshipService.findOne({ user1Id: requesterId, user2Id: id });
 	if (friendship != null) throw new ConflictError({ message: 'Friendship already exists' });
 
 	return await friendRequestRepository.create({ requesterId, recipientId: id });
@@ -24,22 +33,27 @@ const getOne = async ({ user1Id, user2Id }: DatabaseContext<UserPair>) => {
 	return friendRequest;
 };
 
-const accept = async (args: FriendRequestArgs) =>
+const accept = async ({ requesterId, recipientId }: FriendRequestArgs) =>
 	db.transaction(async (tx) => {
-		const { requesterId, recipientId } = await getOne({
-			user1Id: args.recipientId,
-			user2Id: args.requesterId,
+		const friendRequest = await getOne({ user1Id: recipientId, user2Id: requesterId, tx });
+
+		await dmService.create({
+			user1Id: friendRequest.requesterId,
+			user2Id: friendRequest.recipientId,
 			tx,
 		});
 
-		await dmService.create({ user1Id: requesterId, user2Id: recipientId, tx });
 		await friendRequestRepository.destroy({ requesterId, recipientId, tx });
 
-		return await friendshipService.create({ user1Id: requesterId, user2Id: recipientId, tx });
+		return await friendshipService.create({
+			user1Id: friendRequest.requesterId,
+			user2Id: friendRequest.recipientId,
+			tx,
+		});
 	});
 
-const cancel = async (args: UserPair) => {
-	const { requesterId, recipientId } = await getOne(args);
+const cancel = async ({ user1Id, user2Id }: UserPair) => {
+	const { requesterId, recipientId } = await getOne({ user1Id, user2Id });
 	return await friendRequestRepository.destroy({ requesterId, recipientId });
 };
 

@@ -1,5 +1,5 @@
 import type { Ban } from '#features/conversations/groups/bans/contracts/entity.ts';
-import type { Message } from '#features/messages/contracts/entity.ts';
+import type { Message } from '#features/conversations/messages/contracts/entity.ts';
 
 import { snakeCase, unique } from 'drizzle-orm/pg-core';
 

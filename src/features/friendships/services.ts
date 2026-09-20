@@ -7,27 +7,33 @@ import { NotFoundError } from '#utils/errors.ts';
 import { orderFriendshipId } from './helpers.ts';
 import { friendshipRepository } from './repository.ts';
 
-const create = async ({ tx, ...args }: DatabaseContext<UserPair>) => {
-	const friendshipId = orderFriendshipId(args);
+const create = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
+	const friendshipId = orderFriendshipId({ user1Id, user2Id });
 	return await friendshipRepository.create({ ...friendshipId, tx });
 };
 
-const findOne = async ({ tx, ...args }: DatabaseContext<UserPair>) => {
-	const friendshipId = orderFriendshipId(args);
+const findOne = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
+	const friendshipId = orderFriendshipId({ user1Id, user2Id });
 	return await friendshipRepository.findOne({ ...friendshipId, tx });
 };
 
-const getOne = async (args: DatabaseContext<UserPair>) => {
-	const friendship = await findOne(args);
+const getOne = async ({ user1Id, user2Id }: DatabaseContext<UserPair>) => {
+	const friendship = await findOne({ user1Id, user2Id });
 	if (friendship == null) throw new NotFoundError({ resource: 'friendship' });
 	return friendship;
 };
 
-const unfriend = async (args: UserPair) =>
+const unfriend = async ({ user1Id, user2Id }: UserPair) =>
 	db.transaction(async (tx) => {
-		const { user1Id, user2Id } = await getOne({ ...args, tx });
-		await dmService.destroyByPair({ user1Id, user2Id, tx });
-		return await friendshipRepository.destroy({ user1Id, user2Id, tx });
+		const friendship = await getOne({ user1Id, user2Id, tx });
+
+		await dmService.destroyByPair({ user1Id: friendship.user1Id, user2Id: friendship.user2Id, tx });
+
+		return await friendshipRepository.destroy({
+			user1Id: friendship.user1Id,
+			user2Id: friendship.user2Id,
+			tx,
+		});
 	});
 
 export const friendshipService = { create, findOne, getOne, unfriend } as const;
