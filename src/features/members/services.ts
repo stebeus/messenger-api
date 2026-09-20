@@ -21,20 +21,20 @@ const joinGroup = async ({ userId, groupId }: GroupMember) => {
 	return await memberRepository.create({ userId, conversationId: groupId });
 };
 
-const getOne = async ({ groupId, ...params }: DatabaseContext<GroupMember>) => {
-	const member = await memberRepository.findOne({ ...params, conversationId: groupId });
+const getOne = async ({ groupId, ...args }: DatabaseContext<GroupMember>) => {
+	const member = await memberRepository.findOne({ ...args, conversationId: groupId });
 	if (member == null) throw new NotFoundError({ resource: 'member' });
 	return member;
 };
 
-const leaveGroup = async (params: GroupMember) => {
-	const { userId, conversationId, role } = await getOne(params);
+const leaveGroup = async (args: GroupMember) => {
+	const { userId, conversationId, role } = await getOne(args);
 	if (role === 'owner') throw new ForbiddenError();
 	return memberRepository.destroy({ userId, conversationId });
 };
 
-const requireMembership = async (params: DatabaseContext<MemberArgs>) => {
-	const member = await memberRepository.findOne(params);
+const requireMembership = async (args: DatabaseContext<MemberArgs>) => {
+	const member = await memberRepository.findOne(args);
 	if (member == null) throw new ForbiddenError();
 	return member;
 };
@@ -53,29 +53,29 @@ const authorizeManagement = async ({ actorId, groupId, tx }: DatabaseContext<Man
 const authorizeMemberManagement = async ({
 	actorId,
 	targetId,
-	...params
+	...args
 }: DatabaseContext<MemberManagement>) => {
-	const actor = await authorizeManagement({ ...params, actorId });
-	const target = await getOne({ ...params, userId: targetId });
+	const actor = await authorizeManagement({ ...args, actorId });
+	const target = await getOne({ ...args, userId: targetId });
 
 	if (!canManageMember(actor, target)) throw new ForbiddenError();
 
 	return target;
 };
 
-const changeRole = async ({ groupId, body, ...params }: RoleManagement) => {
-	const { userId } = await authorizeMemberManagement({ ...params, groupId });
+const changeRole = async ({ groupId, body, ...args }: RoleManagement) => {
+	const { userId } = await authorizeMemberManagement({ ...args, groupId });
 	return await memberRepository.update({ ...body, userId, conversationId: groupId });
 };
 
-const kick = async ({ groupId, tx, ...params }: DatabaseContext<MemberManagement>) => {
-	const { userId } = await authorizeMemberManagement({ ...params, groupId, tx });
+const kick = async ({ groupId, tx, ...args }: DatabaseContext<MemberManagement>) => {
+	const { userId } = await authorizeMemberManagement({ ...args, groupId, tx });
 	return await memberRepository.destroy({ userId, conversationId: groupId, tx });
 };
 
-const ban = async (params: MemberManagement) =>
+const ban = async (args: MemberManagement) =>
 	await db.transaction(async (tx) => {
-		const { userId, conversationId } = await kick({ ...params, tx });
+		const { userId, conversationId } = await kick({ ...args, tx });
 		return await banRepository.create({ userId, groupId: conversationId, tx, reason: 'any' });
 	});
 

@@ -38,13 +38,13 @@ const getOneByOwnership = async ({ groupId, userId }: GroupMember) => {
 	return group;
 };
 
-const edit = async ({ body, ...params }: EditGroupArgs) => {
-	const { conversationId } = await getOneByOwnership(params);
+const edit = async ({ body, ...args }: EditGroupArgs) => {
+	const { conversationId } = await getOneByOwnership(args);
 	return await groupRepository.update({ ...body, conversationId });
 };
 
-const destroy = async (params: GroupMember) => {
-	const { conversationId } = await getOneByOwnership(params);
+const destroy = async (args: GroupMember) => {
+	const { conversationId } = await getOneByOwnership(args);
 	return await conversationRepository.destroy({ id: conversationId });
 };
 

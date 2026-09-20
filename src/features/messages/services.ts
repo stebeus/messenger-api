@@ -18,8 +18,8 @@ const send = async ({ conversationId, userId, body }: SendMessageArgs) => {
 	return await messageRepository.create({ ...body, conversationId, senderId: userId });
 };
 
-const find = async ({ query, ...params }: ListMessageArgs) => {
-	const { conversationId } = await memberService.requireMembership(params);
+const find = async ({ query, ...args }: ListMessageArgs) => {
+	const { conversationId } = await memberService.requireMembership(args);
 	return messageRepository.find({ conversationId, query });
 };
 
@@ -35,25 +35,25 @@ const getOneBySender = async ({ messageId, userId }: SentMessage) => {
 	return message;
 };
 
-const edit = async ({ body, ...params }: EditMessageArgs) => {
-	const { id } = await getOneBySender(params);
+const edit = async ({ body, ...args }: EditMessageArgs) => {
+	const { id } = await getOneBySender(args);
 	return await messageRepository.update({ ...body, id });
 };
 
-const destroy = async (params: SentMessage) => {
-	const { id } = await getOneBySender(params);
+const destroy = async (args: SentMessage) => {
+	const { id } = await getOneBySender(args);
 	return await messageRepository.destroy({ id });
 };
 
-const editWithPermission = async ({ messageId, body, ...params }: EditManagedMessageArgs) => {
+const editWithPermission = async ({ messageId, body, ...args }: EditManagedMessageArgs) => {
 	const { id, senderId } = await getOne({ messageId });
-	await memberService.authorizeMemberManagement({ ...params, targetId: senderId });
+	await memberService.authorizeMemberManagement({ ...args, targetId: senderId });
 	return await messageRepository.update({ ...body, id });
 };
 
-const destroyWithPermission = async ({ messageId, ...params }: MessageManagement) => {
+const destroyWithPermission = async ({ messageId, ...args }: MessageManagement) => {
 	const { id, senderId } = await getOne({ messageId });
-	await memberService.authorizeMemberManagement({ ...params, targetId: senderId });
+	await memberService.authorizeMemberManagement({ ...args, targetId: senderId });
 	return await messageRepository.destroy({ id });
 };
 
