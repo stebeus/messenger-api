@@ -10,7 +10,7 @@ import {
 	orderBy,
 	UpdateError,
 } from '#db/index.ts';
-import { bans } from '#db/schemas/messaging.ts';
+import { bans } from '#db/schemas/conversation.ts';
 import { containsName } from '#features/users/helpers.ts';
 
 import { banRelations, isBan } from './helpers.ts';

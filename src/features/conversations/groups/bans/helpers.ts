@@ -2,7 +2,7 @@ import type { GroupMember } from '#features/members/types.ts';
 
 import { and, eq } from 'drizzle-orm';
 
-import { bans } from '#db/schemas/messaging.ts';
+import { bans } from '#db/schemas/conversation.ts';
 
 export const banRelations = { user: true, group: true } as const;
 

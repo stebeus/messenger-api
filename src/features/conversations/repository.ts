@@ -4,7 +4,7 @@ import type { NewConversation } from './contracts/entity.ts';
 import { eq } from 'drizzle-orm';
 
 import { CreationError, type DatabaseContext, DeletionError, db } from '#db/index.ts';
-import { conversations } from '#db/schemas/messaging.ts';
+import { conversations } from '#db/schemas/conversation.ts';
 
 const create = async ({ tx = db, ...values }: DatabaseContext<NewConversation>) => {
 	const [data] = await tx.insert(conversations).values(values).returning();

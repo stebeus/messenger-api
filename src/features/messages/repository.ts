@@ -13,7 +13,7 @@ import {
 	orderBy,
 	UpdateError,
 } from '#db/index.ts';
-import { messages } from '#db/schemas/messaging.ts';
+import { messages } from '#db/schemas/conversation.ts';
 
 const create = async ({ tx = db, ...values }: DatabaseContext<NewMessage>) => {
 	const [data] = await tx.insert(messages).values(values).returning();

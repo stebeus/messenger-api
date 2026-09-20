@@ -2,7 +2,7 @@ import type { Hierarchy, MemberArgs, Role, Roles } from './types.ts';
 
 import { and, eq } from 'drizzle-orm';
 
-import { members } from '#db/schemas/messaging.ts';
+import { members } from '#db/schemas/conversation.ts';
 
 import { type Member, roles } from './contracts/entity.ts';
 

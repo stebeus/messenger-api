@@ -9,7 +9,7 @@ import {
 	orderBy,
 	UpdateError,
 } from '#db/index.ts';
-import { members } from '#db/schemas/messaging.ts';
+import { members } from '#db/schemas/conversation.ts';
 import { containsName } from '#features/users/helpers.ts';
 
 import { isMember, memberRelations } from './helpers.ts';

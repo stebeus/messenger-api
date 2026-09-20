@@ -2,7 +2,7 @@ import { defineRelationsPart } from 'drizzle-orm';
 
 import { bans, conversations, groups, members, messages, users } from '#db/schemas/index.ts';
 
-export const messagingRelations = defineRelationsPart(
+export const conversationRelations = defineRelationsPart(
 	{ conversations, groups, bans, messages, members, users },
 	(r) => ({
 		conversations: {

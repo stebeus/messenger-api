@@ -4,7 +4,7 @@ import type { GroupSelection, GroupsSelection } from './types.ts';
 import { eq } from 'drizzle-orm';
 
 import { CreationError, type DatabaseContext, db, orderBy, UpdateError } from '#db/index.ts';
-import { groups } from '#db/schemas/messaging.ts';
+import { groups } from '#db/schemas/conversation.ts';
 
 import { containsName, groupRelations, groupSearchRelations, memberOfGroup } from './helpers.ts';
 
