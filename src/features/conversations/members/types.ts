@@ -1,4 +1,4 @@
-import type { BodyDto, Id } from '#contracts/index.ts';
+import type { Id } from '#contracts/entities.ts';
 import type { Selection } from '#db/types.ts';
 import type { ConversationParams } from '#features/conversations/contracts/dtos.ts';
 import type { GroupParams } from '#features/conversations/groups/contracts/dtos.ts';
