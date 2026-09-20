@@ -13,6 +13,7 @@ const create = async ({ tx = db, ...values }: DatabaseContext<NewFriendRequest>)
 	if (data == null) throw new CreationError('friend request', values);
 	return data;
 };
+
 const find = async ({
 	userId,
 	query: { q, direction, sort, order },
