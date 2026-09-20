@@ -27,13 +27,13 @@ export const userRelations = defineRelationsPart(
 				from: r.users.id,
 				to: r.bans.userId,
 			}),
-			outgoingFriendRequests: r.many.friendRequests({
-				from: r.users.id,
-				to: r.friendRequests.requesterId,
-			}),
 			incomingFriendRequests: r.many.friendRequests({
 				from: r.users.id,
 				to: r.friendRequests.recipientId,
+			}),
+			outgoingFriendRequests: r.many.friendRequests({
+				from: r.users.id,
+				to: r.friendRequests.requesterId,
 			}),
 			friendshipsAsUser1: r.many.friendships({
 				from: r.users.id,
