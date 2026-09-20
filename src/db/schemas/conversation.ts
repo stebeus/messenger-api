@@ -5,7 +5,7 @@ import { snakeCase, unique } from 'drizzle-orm/pg-core';
 
 import { Conversation, conversationTypes } from '#features/conversations/contracts/entity.ts';
 import { Group, visibilities } from '#features/conversations/groups/contracts/entity.ts';
-import { Member, roles } from '#features/members/contracts/entity.ts';
+import { Member, roles } from '#features/conversations/members/contracts/entity.ts';
 
 import { users } from './auth.ts';
 import {

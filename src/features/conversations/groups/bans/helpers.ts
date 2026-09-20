@@ -1,4 +1,4 @@
-import type { GroupMember } from '#features/members/types.ts';
+import type { GroupMember } from '#features/conversations/members/types.ts';
 
 import { and, eq } from 'drizzle-orm';
 

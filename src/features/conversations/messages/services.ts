@@ -8,7 +8,7 @@ import type {
 	SentMessage,
 } from './types.ts';
 
-import { memberService } from '#features/members/services.ts';
+import { memberService } from '#features/conversations/members/services.ts';
 import { ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
 import { messageRepository } from './repository.ts';

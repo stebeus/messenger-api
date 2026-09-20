@@ -1,7 +1,7 @@
 import type { BodyDto, QueryDto } from '#contracts/dtos.ts';
 import type { Selection } from '#db/types.ts';
 import type { ConversationParams } from '#features/conversations/contracts/dtos.ts';
-import type { Management, MemberArgs } from '#features/members/types.ts';
+import type { Management, MemberArgs } from '#features/conversations/members/types.ts';
 import type { UserParams } from '#features/users/contracts/dtos.ts';
 import type {
 	CreateMessageBody,

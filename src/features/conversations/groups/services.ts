@@ -1,10 +1,10 @@
-import type { GroupMember } from '#features/members/types.ts';
+import type { GroupMember } from '#features/conversations/members/types.ts';
 import type { GroupParams } from './contracts/dtos.ts';
 import type { CreateGroupArgs, EditGroupArgs } from './types.ts';
 
 import { db } from '#db/client.ts';
+import { memberService } from '#features/conversations/members/services.ts';
 import { conversationRepository } from '#features/conversations/repository.ts';
-import { memberService } from '#features/members/services.ts';
 import { ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
 import { groupRepository } from './repository.ts';

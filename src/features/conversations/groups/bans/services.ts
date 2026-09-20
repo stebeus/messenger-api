@@ -1,8 +1,8 @@
-import type { GroupMember, MemberManagement } from '#features/members/types.ts';
+import type { GroupMember, MemberManagement } from '#features/conversations/members/types.ts';
 import type { CreateBanArgs, ListBanArgs, UpdateBanArgs } from './types.ts';
 
 import { type DatabaseContext, db } from '#db/index.ts';
-import { memberService } from '#features/members/services.ts';
+import { memberService } from '#features/conversations/members/services.ts';
 import { ConflictError, ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
 import { banRepository } from './repository.ts';
