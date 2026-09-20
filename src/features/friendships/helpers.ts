@@ -9,7 +9,8 @@ export const isFriendship = ({ user1Id, user2Id }: UserPair) =>
 	and(eq(friendships.user1Id, user1Id), eq(friendships.user2Id, user2Id));
 
 export const orderFriendshipIds = (args: UserPair) => {
-	const [user1Id, user2Id] = Object.values(args).map(parseId) as [number, number];
+	const [user1Id, user2Id] = Object.values(args).map(parseId);
+	if (user1Id == null || user2Id == null) throw new TypeError('Friendship ID is undefined');
 
 	const minId = Math.min(user1Id, user2Id).toString();
 	const maxId = Math.max(user1Id, user2Id).toString();
