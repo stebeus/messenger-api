@@ -8,6 +8,6 @@ export const orderBy = (sort = 'createdAt', order = 'asc') =>
 
 export const parseId = (id: Id) => {
 	const parsedId = Number.parseInt(id, 10);
-	if (!Number.isInteger(parsedId)) throw new Error('Parsed ID is not an integer');
+	if (Number.isNaN(parsedId)) throw new Error('Parsed ID is NaN');
 	return parsedId;
 };
