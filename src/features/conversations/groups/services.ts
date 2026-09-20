@@ -1,29 +1,25 @@
 import type { GroupMember } from '#features/members/types.ts';
-import type { ListBanArgs } from './bans/types.ts';
 import type { GroupParams } from './contracts/dtos.ts';
 import type { CreateGroupArgs, EditGroupArgs } from './types.ts';
 
 import { db } from '#db/client.ts';
 import { conversationRepository } from '#features/conversations/repository.ts';
-import { memberRepository } from '#features/members/repository.ts';
 import { memberService } from '#features/members/services.ts';
 import { ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
-import { banRepository } from './bans/repository.ts';
 import { groupRepository } from './repository.ts';
 
 const create = async ({ userId, body }: CreateGroupArgs) =>
 	await db.transaction(async (tx) => {
 		const { id } = await conversationRepository.create({ type: 'group', tx });
+		const member = await memberService.create({ userId, conversationId: id, role: 'owner', tx });
 
-		const { userId: ownerId } = await memberRepository.create({
-			userId,
-			conversationId: id,
-			role: 'owner',
+		return await groupRepository.create({
+			...body,
+			conversationId: member.conversationId,
+			ownerId: member.userId,
 			tx,
 		});
-
-		return await groupRepository.create({ ...body, conversationId: id, ownerId, tx });
 	});
 
 const getOne = async ({ groupId }: GroupParams) => {
@@ -32,29 +28,20 @@ const getOne = async ({ groupId }: GroupParams) => {
 	return group;
 };
 
-const getOneByOwnership = async ({ groupId, userId }: GroupMember) => {
+const getOneByOwnership = async ({ userId, groupId }: GroupMember) => {
 	const group = await getOne({ groupId });
 	if (group.ownerId !== userId) throw new ForbiddenError();
 	return group;
 };
 
-const edit = async ({ body, ...args }: EditGroupArgs) => {
-	const { conversationId } = await getOneByOwnership(args);
+const update = async ({ userId, groupId, body }: EditGroupArgs) => {
+	const { conversationId } = await getOneByOwnership({ userId, groupId });
 	return await groupRepository.update({ ...body, conversationId });
 };
 
-const destroy = async (args: GroupMember) => {
-	const { conversationId } = await getOneByOwnership(args);
+const destroy = async ({ userId, groupId }: GroupMember) => {
+	const { conversationId } = await getOneByOwnership({ userId, groupId });
 	return await conversationRepository.destroy({ id: conversationId });
 };
 
-const findBans = async ({ userId, groupId, query }: ListBanArgs) => {
-	const { conversationId } = await memberService.requireMembership({
-		userId,
-		conversationId: groupId,
-	});
-
-	return banRepository.find({ groupId: conversationId, query });
-};
-
-export const groupService = { create, edit, destroy, findBans } as const;
+export const groupService = { create, update, destroy } as const;

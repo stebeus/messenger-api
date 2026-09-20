@@ -13,14 +13,19 @@ import { ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
 import { messageRepository } from './repository.ts';
 
-const send = async ({ conversationId, userId, body }: SendMessageArgs) => {
-	await memberService.requireMembership({ conversationId, userId });
-	return await messageRepository.create({ ...body, conversationId, senderId: userId });
+const send = async ({ userId, conversationId, body }: SendMessageArgs) => {
+	const member = await memberService.requireMembership({ conversationId, userId });
+
+	return await messageRepository.create({
+		...body,
+		senderId: member.userId,
+		conversationId: member.conversationId,
+	});
 };
 
-const find = async ({ query, ...args }: ListMessageArgs) => {
-	const { conversationId } = await memberService.requireMembership(args);
-	return messageRepository.find({ conversationId, query });
+const find = async ({ userId, conversationId, query }: ListMessageArgs) => {
+	const member = await memberService.requireMembership({ userId, conversationId });
+	return messageRepository.find({ conversationId: member.conversationId, query });
 };
 
 const getOne = async ({ messageId }: MessageParams) => {
@@ -35,25 +40,30 @@ const getOneBySender = async ({ messageId, userId }: SentMessage) => {
 	return message;
 };
 
-const edit = async ({ body, ...args }: EditMessageArgs) => {
-	const { id } = await getOneBySender(args);
+const edit = async ({ userId, messageId, body }: EditMessageArgs) => {
+	const { id } = await getOneBySender({ userId, messageId });
 	return await messageRepository.update({ ...body, id });
 };
 
-const destroy = async (args: SentMessage) => {
-	const { id } = await getOneBySender(args);
+const destroy = async ({ userId, messageId }: SentMessage) => {
+	const { id } = await getOneBySender({ userId, messageId });
 	return await messageRepository.destroy({ id });
 };
 
-const editWithPermission = async ({ messageId, body, ...args }: EditManagedMessageArgs) => {
+const editWithPermission = async ({
+	actorId,
+	groupId,
+	messageId,
+	body,
+}: EditManagedMessageArgs) => {
 	const { id, senderId } = await getOne({ messageId });
-	await memberService.authorizeMemberManagement({ ...args, targetId: senderId });
+	await memberService.authorizeMemberManagement({ actorId, groupId, targetId: senderId });
 	return await messageRepository.update({ ...body, id });
 };
 
-const destroyWithPermission = async ({ messageId, ...args }: MessageManagement) => {
+const destroyWithPermission = async ({ actorId, groupId, messageId }: MessageManagement) => {
 	const { id, senderId } = await getOne({ messageId });
-	await memberService.authorizeMemberManagement({ ...args, targetId: senderId });
+	await memberService.authorizeMemberManagement({ actorId, groupId, targetId: senderId });
 	return await messageRepository.destroy({ id });
 };
 

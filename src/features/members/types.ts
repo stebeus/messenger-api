@@ -30,4 +30,4 @@ export type MemberManagement = Management & {
 	targetId: Id;
 };
 
-export type RoleManagement = MemberManagement & BodyDto<UpdateMemberBody>;
+export type RoleManagement = MemberManagement & UpdateMemberBody;
