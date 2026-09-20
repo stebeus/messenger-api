@@ -59,6 +59,12 @@ export class NotFoundError extends HttpError {
 	}
 }
 
+export class ConflictError extends HttpError {
+	constructor(options?: HttpErrorOptions) {
+		super(409, options);
+	}
+}
+
 export const catchError = (value: unknown): NodeJS.ErrnoException => {
 	if (Error.isError(value)) return value;
 
