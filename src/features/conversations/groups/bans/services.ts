@@ -3,7 +3,7 @@ import type { CreateBanArgs, ListBanArgs, UpdateBanArgs } from './types.ts';
 
 import { type DatabaseContext, db } from '#db/index.ts';
 import { memberService } from '#features/conversations/members/services.ts';
-import { ConflictError, ForbiddenError, NotFoundError } from '#utils/errors.ts';
+import { ConflictError, NotFoundError } from '#utils/errors.ts';
 
 import { banRepository } from './repository.ts';
 
@@ -27,12 +27,6 @@ const getOne = async ({ userId, groupId, tx }: DatabaseContext<GroupMember>) => 
 	return ban;
 };
 
-const authorizeGroupJoin = async (member: GroupMember) => {
-	const ban = await banRepository.findOne(member);
-	if (ban != null) throw new ForbiddenError();
-	return member;
-};
-
 const update = async ({ actorId, targetId, groupId, reason, expiresAt }: UpdateBanArgs) => {
 	const { conversationId } = await memberService.authorizeManagement({ actorId, groupId });
 	const ban = await getOne({ userId: targetId, groupId: conversationId });
@@ -52,4 +46,4 @@ const destroy = async ({ actorId, targetId, groupId }: MemberManagement) =>
 		return await banRepository.destroy({ ...ban, tx });
 	});
 
-export const banService = { create, find, getOne, authorizeGroupJoin, update, destroy } as const;
+export const banService = { create, find, getOne, update, destroy } as const;
