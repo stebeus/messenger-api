@@ -26,7 +26,7 @@ const getOne = async (args: DatabaseContext<UserPair>) => {
 const unfriend = async (args: UserPair) =>
 	db.transaction(async (tx) => {
 		const { user1Id, user2Id } = await getOne({ ...args, tx });
-		await dmService.destroyByFriendship({ user1Id, user2Id, tx });
+		await dmService.destroyByPair({ user1Id, user2Id, tx });
 		return await friendshipRepository.destroy({ user1Id, user2Id, tx });
 	});
 

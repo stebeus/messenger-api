@@ -1,6 +1,7 @@
 import type { Id } from '#contracts/entities.ts';
 import type { DatabaseContext } from '#db/index.ts';
 import type { UserPair } from '#features/users/contracts/entity.ts';
+import type { DirectMessageParams } from './dtos.ts';
 import type { DirectMessageMember } from './types.ts';
 
 import { conversationRepository } from '#features/conversations/repository.ts';
@@ -37,4 +38,4 @@ const destroyByPair = async ({ tx, ...args }: DatabaseContext<UserPair>) => {
 	return conversationRepository.destroy({ id, tx });
 };
 
-export const dmService = { create, getOne, destroyByFriendship: destroyByPair } as const;
+export const dmService = { create, getOne, destroyByPair } as const;
