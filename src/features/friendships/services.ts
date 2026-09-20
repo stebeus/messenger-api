@@ -1,15 +1,21 @@
 import type { UserPair } from '#features/users/contracts/entity.ts';
+import type { ListUserArgs } from '#features/users/types.ts';
 
 import { type DatabaseContext, db } from '#db/index.ts';
 import { dmService } from '#features/conversations/dms/services.ts';
 import { NotFoundError } from '#utils/errors.ts';
 
-import { orderFriendshipId } from './helpers.ts';
+import { mergeFriend, orderFriendshipId } from './helpers.ts';
 import { friendshipRepository } from './repository.ts';
 
 const create = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
 	const friendshipId = orderFriendshipId({ user1Id, user2Id });
 	return await friendshipRepository.create({ ...friendshipId, tx });
+};
+
+const find = async ({ userId, query }: ListUserArgs) => {
+	const friendships = await friendshipRepository.find({ userId, query });
+	return friendships.map(mergeFriend);
 };
 
 const findOne = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
@@ -36,4 +42,4 @@ const unfriend = async ({ user1Id, user2Id }: UserPair) =>
 		});
 	});
 
-export const friendshipService = { create, findOne, getOne, unfriend } as const;
+export const friendshipService = { create, find, findOne, getOne, unfriend } as const;
