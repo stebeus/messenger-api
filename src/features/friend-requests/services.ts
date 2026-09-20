@@ -10,7 +10,9 @@ import { ConflictError, NotFoundError, UnprocessableContentError } from '#utils/
 import { friendRequestRepository } from './repository.ts';
 
 const send = async ({ requesterId, recipientId }: FriendRequestArgs) => {
-	if (requesterId === recipientId) throw new UnprocessableContentError();
+	if (requesterId === recipientId) {
+		throw new UnprocessableContentError({ message: 'Cannot send a friend request to yourself' });
+	}
 
 	const { id } = await userService.getOne({ userId: recipientId });
 
@@ -19,7 +21,7 @@ const send = async ({ requesterId, recipientId }: FriendRequestArgs) => {
 		user2Id: id,
 	});
 
-	if (friendRequest != null) throw new ConflictError();
+	if (friendRequest != null) throw new ConflictError({ message: 'Friend request already exists' });
 
 	const friendship = await friendshipService.findOne({ user1Id: requesterId, user2Id: id });
 	if (friendship != null) throw new ConflictError({ message: 'Friendship already exists' });

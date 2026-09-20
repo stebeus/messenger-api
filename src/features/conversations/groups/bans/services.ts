@@ -10,7 +10,7 @@ import { banRepository } from './repository.ts';
 const create = async ({ actorId, targetId, groupId, reason, expiresAt }: CreateBanArgs) =>
 	await db.transaction(async (tx) => {
 		const ban = await banRepository.findOne({ userId: targetId, groupId, tx });
-		if (ban != null) throw new ConflictError();
+		if (ban != null) throw new ConflictError({ message: 'User is already banned' });
 
 		const { userId, conversationId } = await memberService.kick({ actorId, targetId, groupId, tx });
 		return await banRepository.create({ userId, groupId: conversationId, reason, expiresAt, tx });

@@ -17,7 +17,7 @@ import { memberRepository } from './repository.ts';
 
 const create = async ({ userId, conversationId, role, tx }: DatabaseContext<NewMember>) => {
 	const member = await memberRepository.findOne({ userId, conversationId, tx });
-	if (member != null) throw new ConflictError();
+	if (member != null) throw new ConflictError({ message: 'Member already exists' });
 	return await memberRepository.create({ userId, conversationId, role });
 };
 
