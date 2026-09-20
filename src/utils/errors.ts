@@ -65,6 +65,12 @@ export class ConflictError extends HttpError {
 	}
 }
 
+export class UnprocessableContentError extends HttpError {
+	constructor(options?: HttpErrorOptions) {
+		super(422, options);
+	}
+}
+
 export const catchError = (value: unknown): NodeJS.ErrnoException => {
 	if (Error.isError(value)) return value;
 
