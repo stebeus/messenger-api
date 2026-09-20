@@ -4,16 +4,16 @@ import { type DatabaseContext, db } from '#db/index.ts';
 import { dmService } from '#features/conversations/dms/services.ts';
 import { NotFoundError } from '#utils/errors.ts';
 
-import { orderFriendshipIds } from './helpers.ts';
+import { orderFriendshipId } from './helpers.ts';
 import { friendshipRepository } from './repository.ts';
 
 const create = async ({ tx, ...args }: DatabaseContext<UserPair>) => {
-	const friendshipId = orderFriendshipIds(args);
+	const friendshipId = orderFriendshipId(args);
 	return await friendshipRepository.create({ ...friendshipId, tx });
 };
 
 const findOne = async ({ tx, ...args }: DatabaseContext<UserPair>) => {
-	const friendshipId = orderFriendshipIds(args);
+	const friendshipId = orderFriendshipId(args);
 	return await friendshipRepository.findOne({ ...friendshipId, tx });
 };
 
