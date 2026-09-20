@@ -39,13 +39,13 @@ const accept = async ({ requesterId, recipientId }: FriendRequestArgs) =>
 	db.transaction(async (tx) => {
 		const friendRequest = await getOne({ user1Id: recipientId, user2Id: requesterId, tx });
 
+		await friendRequestRepository.destroy({ requesterId, recipientId, tx });
+
 		await dmService.create({
 			user1Id: friendRequest.requesterId,
 			user2Id: friendRequest.recipientId,
 			tx,
 		});
-
-		await friendRequestRepository.destroy({ requesterId, recipientId, tx });
 
 		return await friendshipService.create({
 			user1Id: friendRequest.requesterId,
