@@ -4,6 +4,7 @@ import { logger } from 'hono/logger';
 
 import { env } from './env.ts';
 import { auth } from './lib/auth.ts';
+import { routes } from './routes.ts';
 import { HttpError, NotFoundError } from './utils/errors.ts';
 
 export const app = new Hono().basePath('/api');
@@ -19,6 +20,8 @@ app.use(
 		credentials: true,
 	}),
 );
+
+app.route('/v1', routes);
 
 app.notFound((c) => {
 	const error = new NotFoundError();
