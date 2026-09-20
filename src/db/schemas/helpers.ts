@@ -3,8 +3,6 @@ import * as p from 'drizzle-orm/pg-core';
 
 const mode = 'string';
 
-export type SatisfiesContract<Table extends Entity, Entity> = Table;
-
 export const withTimezone = true;
 
 export const id = p.bigint({ mode }).primaryKey().generatedAlwaysAsIdentity();
@@ -31,3 +29,5 @@ export const reference = <PrimaryKey extends p.AnyPgColumn>(
 	primaryKey: () => PrimaryKey,
 	options?: p.ReferenceConfig['config'],
 ) => p.bigint({ mode }).references(primaryKey, options);
+
+export type SatisfiesContract<Table extends Entity, Entity> = Table;
