@@ -13,7 +13,7 @@ export const users = authSchema.table('users', (t) => ({
 	bio: t.text(),
 	avatar: t.text(),
 
-	// ! Unused columns that are required by Better Auth
+	// ! Unused columns from Better Auth
 	name: text().default('').notNull(),
 	email: text().default('').notNull(),
 	emailVerified: boolean().default(false).notNull(),
