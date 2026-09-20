@@ -9,7 +9,7 @@ import type {
 	RoleManagement,
 } from './types.ts';
 
-import { banRepository } from '#features/conversations/groups/bans/repository.ts';
+import { banRepository } from '#features/bans/repository.ts';
 import { ConflictError, ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
 import { canManage, canManageMember } from './helpers.ts';

@@ -3,8 +3,8 @@ import type { UserPair } from '#features/users/contracts/entity.ts';
 import type { DirectMessageMember } from './types.ts';
 
 import { type DatabaseContext, db } from '#db/index.ts';
-import { memberService } from '#features/conversations/members/services.ts';
 import { conversationRepository } from '#features/conversations/repository.ts';
+import { memberService } from '#features/members/services.ts';
 import { NotFoundError } from '#utils/errors.ts';
 
 import { dmRepository } from './repository.ts';

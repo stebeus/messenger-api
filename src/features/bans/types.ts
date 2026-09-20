@@ -1,6 +1,6 @@
 import type { Selection } from '#db/types.ts';
 import type { GroupParams } from '#features/conversations/groups/contracts/dtos.ts';
-import type { GroupMember, MemberManagement } from '#features/conversations/members/types.ts';
+import type { GroupMember, MemberManagement } from '#features/members/types.ts';
 import type { UsersSelection } from '#features/users/types.ts';
 import type { Ban, CreateBanBody, UpdateBanBody } from './contracts/index.ts';
 
