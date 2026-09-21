@@ -36,11 +36,11 @@ dms.post('/:userId', validate('param', UserParams), requireAuth, async (c) => {
 	return c.json({ data }, 201);
 });
 
-dms.delete('/:dmId', validate('param', DirectMessageParams), requireAuth, async (c) => {
-	const { dmId } = c.req.valid('param');
+dms.delete('/:userId', validate('param', UserParams), requireAuth, async (c) => {
 	const { user } = c.var.auth;
+	const { userId } = c.req.valid('param');
 
-	const data = await dmService.destroy({ dmId, userId: user.id });
+	const data = await dmService.destroyByPair({ user1Id: user.id, user2Id: userId });
 
 	return c.json({ data });
 });

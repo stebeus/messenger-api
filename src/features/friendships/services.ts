@@ -5,6 +5,7 @@ import { type DatabaseContext, db } from '#db/index.ts';
 import { dmService } from '#features/conversations/dms/services.ts';
 import { NotFoundError } from '#utils/errors.ts';
 
+import { findFriendship } from './find-friendship.ts';
 import { mergeFriend, orderFriendshipId } from './helpers.ts';
 import { friendshipRepository } from './repository.ts';
 
@@ -18,13 +19,8 @@ const find = async ({ userId, query }: ListUserArgs) => {
 	return friendships.map(mergeFriend);
 };
 
-const findOne = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
-	const friendshipId = orderFriendshipId({ user1Id, user2Id });
-	return await friendshipRepository.findOne({ ...friendshipId, tx });
-};
-
 const getOne = async ({ user1Id, user2Id }: DatabaseContext<UserPair>) => {
-	const friendship = await findOne({ user1Id, user2Id });
+	const friendship = await findFriendship({ user1Id, user2Id });
 	if (friendship == null) throw new NotFoundError({ resource: 'friendship' });
 	return friendship;
 };
@@ -42,4 +38,10 @@ const unfriend = async ({ user1Id, user2Id }: UserPair) =>
 		});
 	});
 
-export const friendshipService = { create, find, findOne, getOne, unfriend } as const;
+export const friendshipService = {
+	create,
+	find,
+	findOne: findFriendship,
+	getOne,
+	unfriend,
+} as const;
