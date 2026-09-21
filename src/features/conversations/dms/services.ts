@@ -5,12 +5,15 @@ import type { DirectMessageMember } from './types.ts';
 import { type DatabaseContext, db } from '#db/index.ts';
 import { conversationRepository } from '#features/conversations/repository.ts';
 import { memberService } from '#features/members/services.ts';
-import { NotFoundError } from '#utils/errors.ts';
+import { ConflictError, NotFoundError } from '#utils/errors.ts';
 
 import { dmRepository } from './repository.ts';
 
 const create = async ({ user1Id, user2Id, tx = db }: DatabaseContext<UserPair>) =>
 	await tx.transaction(async (tx) => {
+		const dm = await dmRepository.findOneByPair({ user1Id, user2Id, tx });
+		if (dm != null) throw new ConflictError({ message: 'Direct message already exists' });
+
 		const { id, createdAt } = await conversationRepository.create({ tx });
 
 		const createMember = async (userId: Id) =>
