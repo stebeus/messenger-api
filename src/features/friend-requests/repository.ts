@@ -23,8 +23,8 @@ const find = async ({
 	const userFilter = createUserFilter(userId);
 
 	const directionFilter = {
-		incoming: { requesterId: userId, recipient: displayName },
-		outgoing: { recipientId: userId, requester: displayName },
+		incoming: { recipientId: userId, requester: displayName },
+		outgoing: { requesterId: userId, recipient: displayName },
 	} as const;
 
 	const where =
