@@ -12,7 +12,7 @@ export const directions = ['incoming', 'outgoing'] as const;
 export const FriendRequestQuery = z
 	.object({
 		...UserQuery.shape,
-		direction: z.enum(directions).default('incoming'),
+		direction: z.enum(directions),
 	})
 	.partial();
 
