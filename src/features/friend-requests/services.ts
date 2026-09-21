@@ -2,7 +2,7 @@ import type { UserPair } from '#features/users/contracts/entity.ts';
 import type { FriendRequestArgs } from './types.ts';
 
 import { type DatabaseContext, db } from '#db/index.ts';
-import { dmRepository, dmService } from '#features/conversations/dms/index.ts';
+import { dmService } from '#features/conversations/dms/services.ts';
 import { friendshipService } from '#features/friendships/services.ts';
 import { userService } from '#features/users/services.ts';
 import { ConflictError, NotFoundError, UnprocessableContentError } from '#utils/errors.ts';
@@ -38,17 +38,14 @@ const getOne = async ({ user1Id, user2Id }: DatabaseContext<UserPair>) => {
 const accept = async ({ requesterId, recipientId }: FriendRequestArgs) =>
 	db.transaction(async (tx) => {
 		const friendRequest = await getOne({ user1Id: recipientId, user2Id: requesterId, tx });
-		const dm = await dmRepository.findOneByPair({ user1Id: requesterId, user2Id: recipientId, tx });
-
-		if (dm == null) {
-			await dmService.create({
-				user1Id: friendRequest.requesterId,
-				user2Id: friendRequest.recipientId,
-				tx,
-			});
-		}
 
 		await friendRequestRepository.destroy({ requesterId, recipientId, tx });
+
+		await dmService.create({
+			user1Id: friendRequest.requesterId,
+			user2Id: friendRequest.recipientId,
+			tx,
+		});
 
 		return await friendshipService.create({
 			user1Id: friendRequest.requesterId,
