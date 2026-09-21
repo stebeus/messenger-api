@@ -6,6 +6,7 @@ import { conversationRelations, memberOf } from '#features/conversations/helpers
 import { containsName, type ListUserArgs } from '#features/users/index.ts';
 
 const type = 'direct';
+const columns = { type: false } as const;
 
 const find = async ({
 	userId,
@@ -15,6 +16,7 @@ const find = async ({
 	await tx.query.conversations.findMany({
 		where: { members: { userId, user: containsName(q) }, type },
 		with: conversationRelations,
+		columns,
 		...orderBy(sort, order),
 	});
 
@@ -22,11 +24,13 @@ const findOne = async ({ id, userId, tx = db }: DatabaseContext<ConversationMemb
 	await tx.query.conversations.findFirst({
 		where: { ...memberOf(userId), id, type },
 		with: conversationRelations,
+		columns,
 	});
 
 const findOneByPair = async ({ user1Id, user2Id, tx = db }: DatabaseContext<UserPair>) =>
 	await tx.query.conversations.findFirst({
 		where: { AND: [memberOf(user1Id), memberOf(user2Id)], type },
+		columns,
 	});
 
 export const dmRepository = { find, findOne, findOneByPair } as const;
