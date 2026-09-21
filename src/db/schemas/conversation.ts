@@ -32,8 +32,8 @@ export const conversations = messagingSchema.table('conversations', (t) => ({
 
 export const groups = messagingSchema.table('groups', (t) => ({
 	...timestamps,
-	conversationId: reference(() => users.id, { onDelete: 'cascade' }).notNull(),
-	ownerId: reference(() => conversations.id, { onDelete: 'cascade' }).notNull(),
+	conversationId: reference(() => conversations.id, { onDelete: 'cascade' }).notNull(),
+	ownerId: reference(() => users.id, { onDelete: 'cascade' }).notNull(),
 	name: t.text().notNull(),
 	description: t.text(),
 	avatar: t.text(),
