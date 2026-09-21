@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 
-import { validate } from '#middleware/validator.ts';
+import { requireAuth, validate } from '#middleware/index.ts';
 
 import { UserParams, UserQuery } from './contracts/dtos.ts';
 import { userRepository } from './repository.ts';
@@ -8,9 +8,12 @@ import { userService } from './services.ts';
 
 export const users = new Hono();
 
-users.get('/', validate('query', UserQuery), async (c) => {
+users.get('/', validate('query', UserQuery), requireAuth, async (c) => {
+	const { user } = c.var.auth;
 	const query = c.req.valid('query');
-	const data = await userRepository.find({ query });
+
+	const data = await userRepository.find({ userId: user.id, query });
+
 	return c.json({ data });
 });
 
