@@ -25,7 +25,7 @@ const Env = z.object({
 	// Supabase
 	SUPABASE_PUBLISHABLE_KEY: z.string(),
 	SUPABASE_URL: z
-		.url({ protocol: /^https?$/, hostname: /[a-z0-9]{20}\.supabase\.co\/?$/ })
+		.url({ protocol: /^https?$/, hostname: /^[a-z0-9]{20}\.supabase\.co\/?$/ })
 		.normalize(),
 });
 
