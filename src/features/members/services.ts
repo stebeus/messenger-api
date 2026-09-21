@@ -9,7 +9,7 @@ import type {
 	RoleManagement,
 } from './types.ts';
 
-import { banRepository } from '#features/bans/repository.ts';
+import { authorizeGroupJoin } from '#features/bans/authorization.ts';
 import { ConflictError, ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
 import { canManage, canManageMember } from './helpers.ts';
@@ -22,8 +22,7 @@ const create = async ({ userId, conversationId, role, tx }: DatabaseContext<NewM
 };
 
 const joinGroup = async ({ userId, groupId }: GroupMember) => {
-	const ban = await banRepository.findOne({ userId, groupId });
-	if (ban != null) throw new ForbiddenError();
+	await authorizeGroupJoin({ userId, groupId });
 	return await create({ userId, conversationId: groupId });
 };
 
