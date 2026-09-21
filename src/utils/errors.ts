@@ -65,6 +65,12 @@ export class ConflictError extends HttpError {
 	}
 }
 
+export class ContentTooLargeError extends HttpError {
+	constructor(options?: HttpErrorOptions) {
+		super(413, options);
+	}
+}
+
 export class UnprocessableContentError extends HttpError {
 	constructor(options?: HttpErrorOptions) {
 		super(422, options);
