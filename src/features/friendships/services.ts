@@ -38,10 +38,4 @@ const unfriend = async ({ user1Id, user2Id }: UserPair) =>
 		});
 	});
 
-export const friendshipService = {
-	create,
-	find,
-	findOne: findFriendship,
-	getOne,
-	unfriend,
-} as const;
+export const friendshipService = { create, find, getOne, unfriend } as const;
