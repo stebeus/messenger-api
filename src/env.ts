@@ -11,11 +11,11 @@ try {
 	if (caught.code !== 'ENOENT') throw caught;
 }
 
-const dbUrlRegex = /(postgres(?:ql)?):\/\/(?:([^@\s]+)@)?([^/\s]+)(?:\/(\w+))?(?:\?(.+))?/;
-
 const Env = z.object({
 	CLIENT_URL: z.url().normalize().default('*'),
-	DATABASE_URL: z.url().regex(dbUrlRegex),
+	DATABASE_URL: z
+		.url()
+		.regex(/(postgres(?:ql)?):\/\/(?:([^@\s]+)@)?([^/\s]+)(?:\/(\w+))?(?:\?(.+))?/),
 	PORT: z.coerce.number().int().positive().default(3000),
 
 	// Better Auth
