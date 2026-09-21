@@ -20,7 +20,7 @@ const Env = z.object({
 
 	// Better Auth
 	BETTER_AUTH_SECRET: z.string(),
-	BETTER_AUTH_URL: z.url().normalize(),
+	BETTER_AUTH_URL: z.union([z.httpUrl().normalize(), z.url({ hostname: /^localhost$/ })]),
 });
 
 const { success, error, data } = z.safeParse(Env, process.env);
