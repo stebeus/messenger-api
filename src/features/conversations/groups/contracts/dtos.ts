@@ -14,7 +14,7 @@ export const GroupMemberParams = z.object({ ...GroupParams.shape, ...MemberParam
 
 export const GroupMessageParams = z.object({ ...GroupParams.shape, ...MessageParams.shape });
 
-export const CreateGroupBody = NewGroup.omit({ conversationId: true });
+export const CreateGroupBody = NewGroup.omit({ conversationId: true, ownerId: true });
 
 export const UpdateGroupBody = GroupUpdate.omit({ conversationId: true });
 
