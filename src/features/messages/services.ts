@@ -57,13 +57,13 @@ const editWithPermission = async ({
 	body,
 }: EditManagedMessageArgs) => {
 	const { id, senderId } = await getOne({ messageId });
-	await memberService.authorizeMemberManagement({ actorId, groupId, targetId: senderId });
+	await memberService.authorizeMemberManagement({ actorId, targetId: senderId, groupId });
 	return await messageRepository.update({ ...body, id });
 };
 
 const destroyWithPermission = async ({ actorId, groupId, messageId }: MessageManagement) => {
 	const { id, senderId } = await getOne({ messageId });
-	await memberService.authorizeMemberManagement({ actorId, groupId, targetId: senderId });
+	await memberService.authorizeMemberManagement({ actorId, targetId: senderId, groupId });
 	return await messageRepository.destroy({ id });
 };
 
