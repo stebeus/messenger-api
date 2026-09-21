@@ -51,10 +51,4 @@ const update = async ({ conversationId, tx = db, ...values }: DatabaseContext<Gr
 	return data;
 };
 
-export const groupRepository = {
-	create,
-	find,
-	findOne,
-	findByMembership,
-	update,
-} as const;
+export const groupRepository = { create, find, findOne, findByMembership, update } as const;
