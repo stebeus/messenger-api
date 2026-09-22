@@ -5,7 +5,7 @@ import { type FileOptions, StorageClient } from '@supabase/storage-js';
 import { env } from '#env.ts';
 import { HttpError } from '#utils/errors.ts';
 
-type Bucket = 'avatar';
+type Bucket = 'avatars';
 
 export const storage = new StorageClient(`${env.SUPABASE_URL}/storage/v1`, {
 	Authorization: `Bearer ${env.SUPABASE_PUBLISHABLE_KEY}`,
@@ -30,4 +30,4 @@ export const maybeUpload = async (
 ) => (file == null ? undefined : await upload(bucket, path, file, options));
 
 export const maybeUploadAvatar = async (path: string, file?: File | null, options?: FileOptions) =>
-	file == null ? undefined : await upload('avatar', path, file, options);
+	file == null ? undefined : await upload('avatars', path, file, options);
