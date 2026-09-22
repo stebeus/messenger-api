@@ -26,10 +26,10 @@ export const UpdateGroupBody = z.object({
 
 export type GroupParams = z.infer<typeof GroupParams>;
 
-export type CreateGroupBody = z.input<typeof CreateGroupBody>;
-
-export type UpdateGroupBody = z.infer<typeof UpdateGroupBody>;
-
 export type GroupMemberParams = z.infer<typeof GroupMemberParams>;
 
 export type GroupMessageParams = z.infer<typeof GroupMessageParams>;
+
+export type CreateGroupBody = z.input<typeof CreateGroupBody>;
+
+export type UpdateGroupBody = z.infer<typeof UpdateGroupBody>;
