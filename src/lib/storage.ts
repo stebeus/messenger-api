@@ -36,4 +36,4 @@ export const maybeUpload = async (
 ) => (file == null ? undefined : await upload(bucket, path, file, options));
 
 export const maybeUploadAvatar = async (path: string, file?: File | null, options?: FileOptions) =>
-	file == null ? undefined : await upload('avatars', path, file, options);
+	await maybeUpload('avatars', path, file, options);
