@@ -30,6 +30,6 @@ app.notFound((c) => {
 
 app.onError((error, c) => {
 	const httpError = HttpError.isHttpError(error) ? error : new HttpError();
-	if (!HttpError.isHttpError(error)) console.error(error);
+	if (httpError.status >= 500) console.error(error);
 	return c.json({ error: httpError }, httpError.status);
 });
