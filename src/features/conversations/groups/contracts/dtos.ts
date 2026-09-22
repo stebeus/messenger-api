@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { id } from '#contracts/entities.ts';
+import { avatar, id } from '#contracts/entities.ts';
 import { MemberParams } from '#features/members/contracts/dtos.ts';
 import { MessageParams } from '#features/messages/contracts/dtos.ts';
 
@@ -14,9 +14,15 @@ export const GroupMemberParams = z.object({ ...GroupParams.shape, ...MemberParam
 
 export const GroupMessageParams = z.object({ ...GroupParams.shape, ...MessageParams.shape });
 
-export const CreateGroupBody = NewGroup.omit({ conversationId: true, ownerId: true });
+export const CreateGroupBody = z.object({
+	...NewGroup.omit({ conversationId: true, ownerId: true }).shape,
+	avatar,
+});
 
-export const UpdateGroupBody = GroupUpdate.omit({ conversationId: true });
+export const UpdateGroupBody = z.object({
+	...GroupUpdate.omit({ conversationId: true }).shape,
+	avatar,
+});
 
 export type GroupParams = z.infer<typeof GroupParams>;
 
