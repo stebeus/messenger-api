@@ -5,7 +5,7 @@ import { bans } from '#features/bans/routes.ts';
 import { members } from '#features/members/routes.ts';
 import { UpdateMessageBody } from '#features/messages/contracts/dtos.ts';
 import { messageService } from '#features/messages/index.ts';
-import { requireAuth, validate } from '#middleware/index.ts';
+import { limitBody, requireAuth, validate } from '#middleware/index.ts';
 
 import {
 	CreateGroupBody,
@@ -36,9 +36,9 @@ groups.get('/me', validate('query', Query), requireAuth, async (c) => {
 	return c.json({ data });
 });
 
-groups.post('/', validate('json', CreateGroupBody), requireAuth, async (c) => {
+groups.post('/', limitBody(), validate('form', CreateGroupBody), requireAuth, async (c) => {
 	const { user } = c.var.auth;
-	const body = c.req.valid('json');
+	const body = c.req.valid('form');
 
 	const data = await groupService.create({ userId: user.id, body });
 
@@ -47,13 +47,14 @@ groups.post('/', validate('json', CreateGroupBody), requireAuth, async (c) => {
 
 groups.patch(
 	'/:groupId',
+	limitBody(),
 	validate('param', GroupParams),
-	validate('json', UpdateGroupBody),
+	validate('form', UpdateGroupBody),
 	requireAuth,
 	async (c) => {
 		const { groupId } = c.req.valid('param');
 		const { user } = c.var.auth;
-		const body = c.req.valid('json');
+		const body = c.req.valid('form');
 
 		const data = await groupService.update({ groupId, userId: user.id, body });
 

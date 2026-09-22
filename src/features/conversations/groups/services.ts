@@ -5,17 +5,21 @@ import type { CreateGroupArgs, EditGroupArgs } from './types.ts';
 import { db } from '#db/client.ts';
 import { conversationRepository } from '#features/conversations/repository.ts';
 import { memberService } from '#features/members/services.ts';
+import { maybeUploadAvatar } from '#lib/storage.ts';
 import { ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
 import { groupRepository } from './repository.ts';
 
-const create = async ({ userId, body }: CreateGroupArgs) =>
+const create = async ({ userId, body: { avatar, ...body } }: CreateGroupArgs) =>
 	await db.transaction(async (tx) => {
 		const { id } = await conversationRepository.create({ type: 'group', tx });
 		const member = await memberService.create({ userId, conversationId: id, role: 'owner', tx });
 
+		const avatarUpload = await maybeUploadAvatar(`/groups/${id}`, avatar);
+
 		return await groupRepository.create({
 			...body,
+			avatar: avatarUpload?.fullPath,
 			conversationId: member.conversationId,
 			ownerId: member.userId,
 			tx,
@@ -34,9 +38,10 @@ const getOneByOwnership = async ({ userId, groupId }: GroupMember) => {
 	return group;
 };
 
-const update = async ({ userId, groupId, body }: EditGroupArgs) => {
+const update = async ({ userId, groupId, body: { avatar, ...body } }: EditGroupArgs) => {
 	const { conversationId } = await getOneByOwnership({ userId, groupId });
-	return await groupRepository.update({ ...body, conversationId });
+	const avatarUpload = await maybeUploadAvatar(`/groups/${conversationId}`, avatar);
+	return await groupRepository.update({ ...body, conversationId, avatar: avatarUpload?.path });
 };
 
 const destroy = async ({ userId, groupId }: GroupMember) => {
