@@ -11,23 +11,25 @@ try {
 	if (caught.code !== 'ENOENT') throw caught;
 }
 
-const Env = z.object({
-	CLIENT_URL: z.url().normalize().default('*'),
-	DATABASE_URL: z
-		.url()
-		.regex(/(postgres(?:ql)?):\/\/(?:([^@\s]+)@)?([^/\s]+)(?:\/(\w+))?(?:\?(.+))?/),
-	PORT: z.coerce.number().int().positive().default(3000),
+const Env = z
+	.object({
+		CLIENT_URL: z.url().normalize().default('*'),
+		DATABASE_URL: z
+			.url()
+			.regex(/(postgres(?:ql)?):\/\/(?:([^@\s]+)@)?([^/\s]+)(?:\/(\w+))?(?:\?(.+))?/),
+		PORT: z.coerce.number().int().positive().default(3000),
 
-	// Better Auth
-	BETTER_AUTH_SECRET: z.string(),
-	BETTER_AUTH_URL: z.union([z.httpUrl().normalize(), z.url({ hostname: /^localhost$/ })]),
+		// Better Auth
+		BETTER_AUTH_SECRET: z.string(),
+		BETTER_AUTH_URL: z.union([z.httpUrl().normalize(), z.url({ hostname: /^localhost$/ })]),
 
-	// Supabase
-	SUPABASE_PUBLISHABLE_KEY: z.string(),
-	SUPABASE_URL: z
-		.url({ protocol: /^https?$/, hostname: /^[a-z0-9]{20}\.supabase\.co\/?$/ })
-		.normalize(),
-});
+		// Supabase
+		SUPABASE_PUBLISHABLE_KEY: z.string(),
+		SUPABASE_URL: z
+			.url({ protocol: /^https?$/, hostname: /^[a-z0-9]{20}\.supabase\.co\/?$/ })
+			.normalize(),
+	})
+	.readonly();
 
 const { success, error, data } = z.safeParse(Env, process.env);
 
