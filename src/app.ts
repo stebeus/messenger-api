@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 
-import { env } from './env.ts';
+import { config } from './config/index.ts';
 import { auth } from './lib/auth.ts';
 import { routes } from './routes.ts';
 import { HttpError, NotFoundError } from './utils/errors.ts';
@@ -15,7 +15,7 @@ app.all('/auth/*', (c) => auth.handler(c.req.raw));
 
 app.use(
 	cors({
-		origin: env.CLIENT_URL,
+		origin: config.clientUrl,
 		allowMethods: ['GET', 'POST', 'PATCH', 'DELETE'],
 		credentials: true,
 	}),

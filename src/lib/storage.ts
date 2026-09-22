@@ -2,14 +2,14 @@ import type { ContentfulStatusCode } from 'hono/utils/http-status';
 
 import { type FileOptions, StorageClient } from '@supabase/storage-js';
 
-import { env } from '#env.ts';
+import { config } from '#config/index.ts';
 import { HttpError } from '#utils/errors.ts';
 
 type Bucket = 'avatars';
 
-export const storage = new StorageClient(`${env.SUPABASE_URL}/storage/v1`, {
-	Authorization: `Bearer ${env.SUPABASE_PUBLISHABLE_KEY}`,
-	apikey: env.SUPABASE_PUBLISHABLE_KEY,
+export const storage = new StorageClient(config.storage.url, {
+	Authorization: `Bearer ${config.storage.secret}`,
+	apikey: config.storage.secret,
 });
 
 export const upload = async (bucket: Bucket, path: string, file: File, options?: FileOptions) => {

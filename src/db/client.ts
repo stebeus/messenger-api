@@ -1,10 +1,10 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 
-import { env } from '#env.ts';
+import { config } from '#config/index.ts';
 
 import { conversationRelations, socialRelations, userRelations } from './relations/index.ts';
 
 export const db = drizzle({
-	connection: env.DATABASE_URL,
+	connection: config.dbUrl,
 	relations: { ...conversationRelations, ...socialRelations, ...userRelations },
 });
