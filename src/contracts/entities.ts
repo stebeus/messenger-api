@@ -6,6 +6,14 @@ export const createdAt = z.date();
 
 export const updatedAt = z.date();
 
+export const avatar = z
+	.instanceof(File)
+	.refine(
+		({ type }) => ['image/jpeg', 'image/png', 'image/webp'].includes(type),
+		'Invalid image format. Only JPEG, PNG, and, WebP are accepted',
+	)
+	.nullish();
+
 export const timestamps = { createdAt: true, updatedAt: true } as const;
 
 export const base = { ...timestamps, id: true } as const;
