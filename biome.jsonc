@@ -30,6 +30,9 @@
 				"noProcessGlobal": "on",
 				"noUnusedInstantiation": "on"
 			},
+			"nursery": {
+				"useExplicitType": "on"
+			},
 			"style": {
 				"noCommonJs": "on",
 				"noNegationElse": "on",
