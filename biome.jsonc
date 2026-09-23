@@ -93,6 +93,12 @@
 								"selector": {
 									"kind": "objectLiteralMember"
 								}
+							},
+							{
+								"formats": ["camelCase", "CONSTANT_CASE", "PascalCase"],
+								"selector": {
+									"kind": "typeMember"
+								}
 							}
 						]
 					}
