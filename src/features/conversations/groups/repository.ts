@@ -20,7 +20,10 @@ const find = async ({
 	tx = db,
 }: DatabaseContext<GroupsSelection>) =>
 	await tx.query.groups.findMany({
-		where: { ...containsName(q), NOT: { OR: [{ ownerId: userId }, { bans: { userId } }] } },
+		where: {
+			...containsName(q),
+			NOT: { OR: [{ ownerId: userId }, memberOfGroup(userId), { bans: { userId } }] },
+		},
 		with: groupSearchRelations,
 		...orderBy(sort, order),
 	});
