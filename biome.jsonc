@@ -31,8 +31,7 @@
 				"noUnusedInstantiation": "on"
 			},
 			"nursery": {
-				"noFloatingPromises": "on",
-				"useExplicitType": "on"
+				"noFloatingPromises": "on"
 			},
 			"style": {
 				"noCommonJs": "on",
