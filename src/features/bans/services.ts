@@ -1,8 +1,8 @@
-import type { GroupMember, MemberManagement } from '#features/members/types.ts';
 import type { CreateBanArgs, ListBanArgs, UpdateBanArgs } from './types.ts';
 
 import { type DatabaseContext, db } from '#db/index.ts';
-import { memberService } from '#features/members/services.ts';
+import { conversationEvents } from '#features/conversations/events.ts';
+import { type GroupMember, type MemberManagement, memberService } from '#features/members/index.ts';
 import { ConflictError, NotFoundError } from '#utils/errors.ts';
 
 import { banRepository } from './repository.ts';
@@ -12,8 +12,24 @@ const create = async ({ actorId, targetId, groupId, reason, expiresAt }: CreateB
 		const ban = await banRepository.findOne({ userId: targetId, groupId, tx });
 		if (ban != null) throw new ConflictError({ message: 'User is already banned' });
 
-		const { userId, conversationId } = await memberService.kick({ actorId, targetId, groupId, tx });
-		return await banRepository.create({ userId, groupId: conversationId, reason, expiresAt, tx });
+		const { userId, conversationId } = await memberService.destroy({
+			actorId,
+			targetId,
+			groupId,
+			tx,
+		});
+
+		const data = await banRepository.create({
+			userId,
+			groupId: conversationId,
+			reason,
+			expiresAt,
+			tx,
+		});
+
+		conversationEvents.publish(data.groupId, { type: 'member_banned', data });
+
+		return data;
 	});
 
 const find = async ({ userId, groupId, query }: ListBanArgs) => {
@@ -43,7 +59,11 @@ const destroy = async ({ actorId, targetId, groupId }: MemberManagement) =>
 	await db.transaction(async (tx) => {
 		const { conversationId } = await memberService.authorizeManagement({ actorId, groupId, tx });
 		const ban = await getOne({ userId: targetId, groupId: conversationId, tx });
-		return await banRepository.destroy({ ...ban, tx });
+		const data = await banRepository.destroy({ ...ban, tx });
+
+		conversationEvents.publish(data.groupId, { type: 'member_unbanned', data });
+
+		return data;
 	});
 
 export const banService = { create, find, getOne, update, destroy } as const;

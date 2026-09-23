@@ -4,6 +4,7 @@ import type { UserPair } from '#features/users/contracts/entity.ts';
 import type { DirectMessageMember } from './types.ts';
 
 import { conversationRepository } from '#features/conversations/repository.ts';
+import { conversationService } from '#features/conversations/services.ts';
 import { memberService } from '#features/members/services.ts';
 import { NotFoundError } from '#utils/errors.ts';
 
@@ -34,7 +35,7 @@ const getOneByPair = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>)
 
 const destroyByPair = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
 	const { id } = await getOneByPair({ user1Id, user2Id, tx });
-	return await conversationRepository.destroy({ id, tx });
+	return await conversationService.destroy({ id, tx });
 };
 
 export const dmService = { create, getOne, getOneByPair, destroyByPair } as const;

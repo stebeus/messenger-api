@@ -1,3 +1,4 @@
+import { upgradeWebSocket } from '@hono/node-server';
 import { Hono } from 'hono';
 
 import { Query } from '#contracts/dtos.ts';
@@ -6,8 +7,45 @@ import { messageService } from '#features/messages/services.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
 import { ConversationParams } from './contracts/dtos.ts';
+import { conversationEvents } from './events.ts';
 
 export const conversations = new Hono();
+
+// app.get(
+// 	'/conversations/:id/ws',
+// 	upgradeWebSocket((c) => {
+// 		const id = c.req.valid('param').id;
+
+// 		return {
+// 			onOpen(_event, ws) {
+// 				const unsubscribe = conversationEvents.subscribe(id, (event) => {
+// 					ws.send(JSON.stringify(event));
+// 				});
+
+// 				ws.onClose(() => {
+// 					unsubscribe();
+// 				});
+// 			},
+// 		};
+// 	}),
+// );
+
+conversations.get(
+	'/:conversationId/ws',
+	upgradeWebSocket((c) => {
+		let unsubscribe: (() => void) | undefined;
+
+		return {
+			onOpen: (_event, ws) => {
+				unsubscribe = conversationEvents.subscribe('1', (event) => {
+					ws.send(JSON.stringify(event));
+				});
+			},
+
+			onClose: () => unsubscribe?.(),
+		};
+	}),
+);
 
 conversations.get(
 	'/:conversationId/messages',

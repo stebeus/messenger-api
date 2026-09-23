@@ -1,0 +1,13 @@
+import type { IdArgs } from '#contracts/entities.ts';
+import type { DatabaseContext } from '#db/types.ts';
+
+import { conversationEvents } from './events.ts';
+import { conversationRepository } from './repository.ts';
+
+const destroy = async ({ id, tx }: DatabaseContext<IdArgs>) => {
+	const data = await conversationRepository.destroy({ id, tx });
+	conversationEvents.publish(id, { type: 'conversation_deleted', data });
+	return data;
+};
+
+export const conversationService = { destroy } as const;

@@ -1,10 +1,11 @@
-import type { GroupMember } from '#features/members/types.ts';
 import type { GroupParams } from './contracts/dtos.ts';
 import type { CreateGroupArgs, EditGroupArgs } from './types.ts';
 
 import { db } from '#db/client.ts';
+import { conversationEvents } from '#features/conversations/events.ts';
 import { conversationRepository } from '#features/conversations/repository.ts';
-import { memberService } from '#features/members/services.ts';
+import { conversationService } from '#features/conversations/services.ts';
+import { type GroupMember, memberService } from '#features/members/index.ts';
 import { maybeUploadAvatar } from '#lib/storage.ts';
 import { ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
@@ -41,12 +42,21 @@ const getOneByOwnership = async ({ userId, groupId }: GroupMember) => {
 const update = async ({ userId, groupId, body: { avatar, ...body } }: EditGroupArgs) => {
 	const { conversationId } = await getOneByOwnership({ userId, groupId });
 	const avatarUpload = await maybeUploadAvatar(`/groups/${conversationId}`, avatar);
-	return await groupRepository.update({ ...body, conversationId, avatar: avatarUpload?.path });
+
+	const data = await groupRepository.update({
+		...body,
+		conversationId,
+		avatar: avatarUpload?.path,
+	});
+
+	conversationEvents.publish(data.conversationId, { type: 'group_updated', data });
+
+	return data;
 };
 
 const destroy = async ({ userId, groupId }: GroupMember) => {
 	const { conversationId } = await getOneByOwnership({ userId, groupId });
-	return await conversationRepository.destroy({ id: conversationId });
+	return await conversationService.destroy({ id: conversationId });
 };
 
 export const groupService = { create, update, destroy } as const;

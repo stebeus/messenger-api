@@ -10,6 +10,7 @@ import type {
 } from './types.ts';
 
 import { authorizeGroupJoin } from '#features/bans/authorization.ts';
+import { conversationEvents } from '#features/conversations/events.ts';
 import { ConflictError, ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
 import { canManage, canManageMember } from './helpers.ts';
@@ -18,7 +19,12 @@ import { memberRepository } from './repository.ts';
 const create = async ({ userId, conversationId, role, tx }: DatabaseContext<NewMember>) => {
 	const member = await memberRepository.findOne({ userId, conversationId, tx });
 	if (member != null) throw new ConflictError({ message: 'Member already exists' });
-	return await memberRepository.create({ userId, conversationId, role, tx });
+
+	const data = await memberRepository.create({ userId, conversationId, role, tx });
+
+	conversationEvents.publish(data.conversationId, { type: 'member_joined', data });
+
+	return data;
 };
 
 const joinGroup = async ({ userId, groupId }: GroupMember) => {
@@ -35,7 +41,12 @@ const getOne = async ({ userId, groupId, tx }: DatabaseContext<GroupMember>) => 
 const leaveGroup = async ({ userId, groupId }: GroupMember) => {
 	const member = await getOne({ userId, groupId });
 	if (member.role === 'owner') throw new ForbiddenError();
-	return memberRepository.destroy(member);
+
+	const data = await memberRepository.destroy(member);
+
+	conversationEvents.publish(data.conversationId, { type: 'member_left', data });
+
+	return data;
 };
 
 const requireMembership = async ({ userId, conversationId, tx }: DatabaseContext<MemberArgs>) => {
@@ -65,17 +76,32 @@ const authorizeMemberManagement = async ({
 
 	if (!canManageMember(actor, target)) throw new ForbiddenError();
 
-	return target;
+	return { actor, target } as const;
 };
 
 const changeRole = async ({ actorId, targetId, groupId, role }: RoleManagement) => {
-	const { userId } = await authorizeMemberManagement({ actorId, targetId, groupId });
-	return await memberRepository.update({ userId, conversationId: groupId, role });
+	const { actor, target } = await authorizeMemberManagement({ actorId, targetId, groupId });
+
+	const data = await memberRepository.update({
+		userId: target.userId,
+		conversationId: groupId,
+		role,
+	});
+
+	conversationEvents.publish(data.conversationId, { type: 'member_updated', data });
+
+	return data;
 };
 
-const kick = async ({ actorId, targetId, groupId, tx }: DatabaseContext<MemberManagement>) => {
-	const { userId } = await authorizeMemberManagement({ actorId, targetId, groupId, tx });
-	return await memberRepository.destroy({ userId, conversationId: groupId, tx });
+const destroy = async ({ actorId, targetId, groupId, tx }: DatabaseContext<MemberManagement>) => {
+	const { target } = await authorizeMemberManagement({ actorId, targetId, groupId, tx });
+	return await memberRepository.destroy({ userId: target.userId, conversationId: groupId, tx });
+};
+
+const kick = async ({ actorId, targetId, groupId }: MemberManagement) => {
+	const data = await destroy({ actorId, targetId, groupId });
+	conversationEvents.publish(data.conversationId, { type: 'member_kicked', data });
+	return data;
 };
 
 export const memberService = {
@@ -88,5 +114,6 @@ export const memberService = {
 	authorizeManagement,
 	authorizeMemberManagement,
 	changeRole,
+	destroy,
 	kick,
 } as const;
