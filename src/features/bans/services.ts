@@ -18,7 +18,7 @@ const create = async ({ actorId, targetId, groupId, reason, expiresAt }: CreateB
 
 const find = async ({ userId, groupId, query }: ListBanArgs) => {
 	const { conversationId } = await memberService.authorizeManagement({ actorId: userId, groupId });
-	return banRepository.find({ groupId: conversationId, query });
+	return await banRepository.find({ groupId: conversationId, query });
 };
 
 const getOne = async ({ userId, groupId, tx }: DatabaseContext<GroupMember>) => {

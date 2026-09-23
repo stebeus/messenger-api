@@ -46,7 +46,7 @@ const requireMembership = async ({ userId, conversationId, tx }: DatabaseContext
 
 const find = async ({ userId, groupId, query }: ListMemberArgs) => {
 	const { conversationId } = await requireMembership({ userId, conversationId: groupId });
-	return memberRepository.find({ conversationId, query });
+	return await memberRepository.find({ conversationId, query });
 };
 
 const authorizeManagement = async ({ actorId, groupId, tx }: DatabaseContext<Management>) => {

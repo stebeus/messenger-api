@@ -34,7 +34,7 @@ const getOneByPair = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>)
 
 const destroyByPair = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
 	const { id } = await getOneByPair({ user1Id, user2Id, tx });
-	return conversationRepository.destroy({ id, tx });
+	return await conversationRepository.destroy({ id, tx });
 };
 
 export const dmService = { create, getOne, getOneByPair, destroyByPair } as const;
