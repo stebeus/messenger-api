@@ -1,5 +1,5 @@
 import type { GroupParams } from './contracts/dtos.ts';
-import type { CreateGroupArgs, EditGroupArgs } from './types.ts';
+import type { CreateGroupArgs, UpdateGroupArgs } from './types.ts';
 
 import { db } from '#db/client.ts';
 import { conversationEvents } from '#features/conversations/events.ts';
@@ -39,7 +39,7 @@ const getOneByOwnership = async ({ userId, groupId }: GroupMember) => {
 	return group;
 };
 
-const update = async ({ userId, groupId, body: { avatar, ...body } }: EditGroupArgs) => {
+const update = async ({ userId, groupId, body: { avatar, ...body } }: UpdateGroupArgs) => {
 	const { conversationId } = await getOneByOwnership({ userId, groupId });
 	const avatarUpload = await maybeUploadAvatar(`/groups/${conversationId}`, avatar);
 

@@ -10,4 +10,4 @@ export type GroupSelection = Selection<Group>;
 
 export type CreateGroupArgs = UserParams & BodyArgs<CreateGroupBody>;
 
-export type EditGroupArgs = GroupMember & BodyArgs<UpdateGroupBody>;
+export type UpdateGroupArgs = GroupMember & BodyArgs<UpdateGroupBody>;
