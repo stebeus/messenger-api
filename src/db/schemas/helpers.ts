@@ -1,6 +1,8 @@
 import { type SQLWrapper, sql } from 'drizzle-orm';
 import * as p from 'drizzle-orm/pg-core';
 
+export type SatisfiesContract<Table extends Entity, Entity> = Table;
+
 const mode = 'string';
 
 export const withTimezone = true;
@@ -21,13 +23,13 @@ export const base = { ...timestamps, id } as const;
 
 export const castToBigInt = (column: SQLWrapper) => sql<bigint>`${column}::bigint`;
 
-export const greatest = (first: unknown, second: unknown) => sql`least(${first}, ${second})`;
+export const greatest = (first: unknown, second: unknown) =>
+	sql<number>`least(${first}, ${second})`;
 
-export const least = (first: unknown, second: unknown) => sql`greatest(${first}, ${second})`;
+export const least = (first: unknown, second: unknown) =>
+	sql<number>`greatest(${first}, ${second})`;
 
 export const reference = <PrimaryKey extends p.AnyPgColumn>(
 	primaryKey: () => PrimaryKey,
 	options?: p.ReferenceConfig['config'],
 ) => p.bigint({ mode }).references(primaryKey, options);
-
-export type SatisfiesContract<Table extends Entity, Entity> = Table;
