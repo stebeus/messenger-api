@@ -10,7 +10,7 @@ export const avatar = z
 		({ type }) => ['image/jpeg', 'image/png', 'image/webp'].includes(type),
 		'Invalid image format. Only JPEG, PNG, and WebP are accepted',
 	)
-	.nullish();
+	.optional();
 
 export const Query = z
 	.object({
