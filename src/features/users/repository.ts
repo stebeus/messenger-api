@@ -1,4 +1,4 @@
-import type { ListUserArgs, UserSelection } from './types.ts';
+import type { UserSelection, UsersSelection } from './types.ts';
 
 import { type DatabaseContext, db, orderBy } from '#db/index.ts';
 
@@ -8,7 +8,7 @@ const find = async ({
 	userId,
 	query: { q, sort, order },
 	tx = db,
-}: DatabaseContext<ListUserArgs>) =>
+}: DatabaseContext<UsersSelection>) =>
 	await tx.query.users.findMany({
 		where: { ...containsName(q), NOT: { id: userId } },
 		with: userRelations,

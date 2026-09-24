@@ -11,7 +11,7 @@ import {
 	orderBy,
 } from '#db/index.ts';
 import { friendships } from '#db/schemas/social.ts';
-import { containsName, type ListUserArgs } from '#features/users/index.ts';
+import { containsName, type UsersSelection } from '#features/users/index.ts';
 
 import { isFriendship } from './helpers.ts';
 
@@ -25,7 +25,7 @@ const find = async ({
 	userId,
 	query: { q, sort, order },
 	tx = db,
-}: DatabaseContext<ListUserArgs>) => {
+}: DatabaseContext<UsersSelection>) => {
 	const displayName = containsName(q);
 	const userFilter = exclude(userId);
 

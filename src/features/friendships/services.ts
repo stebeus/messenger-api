@@ -1,5 +1,5 @@
 import type { UserPair } from '#features/users/contracts/entity.ts';
-import type { ListUserArgs } from '#features/users/types.ts';
+import type { UsersSelection } from '#features/users/types.ts';
 
 import { type DatabaseContext, db } from '#db/index.ts';
 import { dmService } from '#features/conversations/dms/services.ts';
@@ -13,7 +13,7 @@ const create = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
 	return await friendshipRepository.create({ ...friendshipId, tx });
 };
 
-const find = async ({ userId, query }: ListUserArgs) => {
+const find = async ({ userId, query }: UsersSelection) => {
 	const friendships = await friendshipRepository.find({ userId, query });
 	return friendships.map(mergeFriend);
 };
@@ -33,9 +33,9 @@ const unfriend = async ({ user1Id, user2Id }: UserPair) =>
 	db.transaction(async (tx) => {
 		const friendship = await getOne({ user1Id, user2Id, tx });
 
-		await dmService.purgeByPair({ user1Id: friendship.user1Id, user2Id: friendship.user2Id, tx });
+		await dmService.destroyByPair({ user1Id: friendship.user1Id, user2Id: friendship.user2Id, tx });
 
-		return await friendshipRepository.purge({
+		return await friendshipRepository.destroy({
 			user1Id: friendship.user1Id,
 			user2Id: friendship.user2Id,
 			tx,

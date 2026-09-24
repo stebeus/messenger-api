@@ -3,7 +3,7 @@ import type { UserPair } from '#features/users/contracts/entity.ts';
 
 import { type DatabaseContext, db, orderBy } from '#db/index.ts';
 import { conversationRelations, memberOf } from '#features/conversations/helpers.ts';
-import { containsName, type ListUserArgs } from '#features/users/index.ts';
+import { containsName, type UsersSelection } from '#features/users/index.ts';
 
 const type = 'direct';
 const columns = { type: false } as const;
@@ -12,7 +12,7 @@ const find = async ({
 	userId,
 	query: { q, sort, order },
 	tx = db,
-}: DatabaseContext<ListUserArgs>) =>
+}: DatabaseContext<UsersSelection>) =>
 	await tx.query.conversations.findMany({
 		where: { members: { userId, user: containsName(q) }, type },
 		with: conversationRelations,
