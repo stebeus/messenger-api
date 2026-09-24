@@ -3,8 +3,8 @@ import { toTitleCase } from '#utils/formatters.ts';
 type RepositoryInput = Record<string, unknown>;
 
 class RepositoryError extends Error {
-	static isRepositoryError(value: unknown) {
-		return value instanceof RepositoryError;
+	static isRepositoryError(error: unknown) {
+		return error instanceof RepositoryError;
 	}
 
 	readonly operation;
