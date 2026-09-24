@@ -12,6 +12,6 @@ routes.route('/friends', friends);
 routes.route('/friend-requests', friendRequests);
 
 routes.route('/conversations', conversations);
+routes.route('/messages', messages);
 routes.route('/dms', dms);
 routes.route('/groups', groups);
-routes.route('/messages', messages);
