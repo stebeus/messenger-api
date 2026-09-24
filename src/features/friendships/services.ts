@@ -33,9 +33,9 @@ const unfriend = async ({ user1Id, user2Id }: UserPair) =>
 	db.transaction(async (tx) => {
 		const friendship = await getOne({ user1Id, user2Id, tx });
 
-		await dmService.destroyByPair({ user1Id: friendship.user1Id, user2Id: friendship.user2Id, tx });
+		await dmService.purgeByPair({ user1Id: friendship.user1Id, user2Id: friendship.user2Id, tx });
 
-		return await friendshipRepository.destroy({
+		return await friendshipRepository.purge({
 			user1Id: friendship.user1Id,
 			user2Id: friendship.user2Id,
 			tx,
