@@ -9,8 +9,8 @@ import type {
 	RoleManagement,
 } from './types.ts';
 
-import { authorizeGroupJoin } from '#features/bans/authorization.ts';
 import { conversationEvents } from '#features/conversations/events.ts';
+import { authorizeGroupJoin } from '#features/conversations/groups/bans/authorization.ts';
 import { ConflictError, ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
 import { canManage, canManageMember } from './helpers.ts';

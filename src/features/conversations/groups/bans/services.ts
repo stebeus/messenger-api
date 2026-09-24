@@ -2,7 +2,11 @@ import type { CreateBanArgs, ListBanArgs, UpdateBanArgs } from './types.ts';
 
 import { type DatabaseContext, db } from '#db/index.ts';
 import { conversationEvents } from '#features/conversations/events.ts';
-import { type GroupMember, type MemberManagement, memberService } from '#features/members/index.ts';
+import {
+	type GroupMember,
+	type MemberManagement,
+	memberService,
+} from '#features/conversations/members/index.ts';
 import { ConflictError, NotFoundError } from '#utils/errors.ts';
 
 import { banRepository } from './repository.ts';

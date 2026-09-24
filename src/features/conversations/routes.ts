@@ -2,8 +2,8 @@ import { upgradeWebSocket } from '@hono/node-server';
 import { Hono } from 'hono';
 
 import { Query } from '#contracts/dtos.ts';
-import { CreateMessageBody } from '#features/messages/contracts/dtos.ts';
-import { messageService } from '#features/messages/services.ts';
+import { CreateMessageBody } from '#features/conversations/messages/contracts/dtos.ts';
+import { messageService } from '#features/conversations/messages/services.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
 import { ConversationParams } from './contracts/dtos.ts';

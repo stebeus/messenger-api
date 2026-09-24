@@ -1,11 +1,11 @@
-import type { Ban } from '#features/bans/contracts/entity.ts';
-import type { Message } from '#features/messages/contracts/entity.ts';
+import type { Ban } from '#features/conversations/groups/bans/contracts/entity.ts';
+import type { Message } from '#features/conversations/messages/contracts/entity.ts';
 
 import { snakeCase, unique } from 'drizzle-orm/pg-core';
 
 import { Conversation, conversationTypes } from '#features/conversations/contracts/entity.ts';
 import { Group, visibilities } from '#features/conversations/groups/contracts/entity.ts';
-import { Member, roles } from '#features/members/contracts/entity.ts';
+import { Member, roles } from '#features/conversations/members/contracts/entity.ts';
 
 import { users } from './auth.ts';
 import {

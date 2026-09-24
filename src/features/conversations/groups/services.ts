@@ -3,9 +3,9 @@ import type { CreateGroupArgs, EditGroupArgs } from './types.ts';
 
 import { db } from '#db/client.ts';
 import { conversationEvents } from '#features/conversations/events.ts';
+import { type GroupMember, memberService } from '#features/conversations/members/index.ts';
 import { conversationRepository } from '#features/conversations/repository.ts';
 import { conversationService } from '#features/conversations/services.ts';
-import { type GroupMember, memberService } from '#features/members/index.ts';
 import { maybeUploadAvatar } from '#lib/storage.ts';
 import { ForbiddenError, NotFoundError } from '#utils/errors.ts';
 

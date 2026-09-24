@@ -1,7 +1,8 @@
-import type { GroupMember } from '#features/members/types.ts';
+import type { GroupMember } from '#features/conversations/members/types.ts';
 
-import { banRepository } from '#features/bans/repository.ts';
 import { ForbiddenError } from '#utils/errors.ts';
+
+import { banRepository } from './repository.ts';
 
 export const authorizeGroupJoin = async ({ userId, groupId }: GroupMember) => {
 	const ban = await banRepository.findOne({ userId, groupId });

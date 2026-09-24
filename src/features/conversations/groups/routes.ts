@@ -1,12 +1,12 @@
 import { Hono } from 'hono';
 
 import { Query } from '#contracts/dtos.ts';
-import { bans } from '#features/bans/routes.ts';
-import { members } from '#features/members/routes.ts';
-import { UpdateMessageBody } from '#features/messages/contracts/dtos.ts';
-import { messageService } from '#features/messages/index.ts';
+import { members } from '#features/conversations/members/routes.ts';
+import { UpdateMessageBody } from '#features/conversations/messages/contracts/dtos.ts';
+import { messageService } from '#features/conversations/messages/index.ts';
 import { limitImageSize, requireAuth, validate } from '#middleware/index.ts';
 
+import { bans } from './bans/routes.ts';
 import {
 	CreateGroupBody,
 	GroupMessageParams,

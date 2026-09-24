@@ -1,9 +1,9 @@
 import type { Id } from '#contracts/entity.ts';
-import type { Ban } from '#features/bans/contracts/entity.ts';
-import type { Member } from '#features/members/contracts/entity.ts';
-import type { Message } from '#features/messages/contracts/entity.ts';
 import type { Conversation } from './contracts/entity.ts';
+import type { Ban } from './groups/bans/contracts/entity.ts';
 import type { Group } from './groups/contracts/entity.ts';
+import type { Member } from './members/contracts/entity.ts';
+import type { Message } from './messages/contracts/entity.ts';
 
 import EventEmitter from 'node:events';
 
