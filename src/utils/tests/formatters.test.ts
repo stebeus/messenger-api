@@ -18,12 +18,12 @@ describe('toTitleCase', () => {
 
 describe('formatMinLength', () => {
 	describe('Given invalid lengths', () => {
-		it('rejects floats', () => {
+		it.for`
+			case                   | length | expected
+			${'floats'}            | ${0.1} | ${'an integer'}
+			${'negative integers'} | ${-1}  | ${'positive'}
+		`('rejects $case', () => {
 			expect(() => formatMinLength(0.1, 'field')).toThrow('Length must be an integer');
-		});
-
-		it('rejects negative integers', () => {
-			expect(() => formatMinLength(-1, 'field')).toThrow('Length must be positive');
 		});
 	});
 
@@ -40,12 +40,12 @@ describe('formatMinLength', () => {
 
 describe('formatMaxLength', () => {
 	describe('Given invalid lengths', () => {
-		it('rejects floats', () => {
+		it.for`
+			case                   | length | expected
+			${'floats'}            | ${0.1} | ${'an integer'}
+			${'negative integers'} | ${-1}  | ${'positive'}
+		`('rejects $case', () => {
 			expect(() => formatMinLength(0.1, 'field')).toThrow('Length must be an integer');
-		});
-
-		it('rejects negative integers', () => {
-			expect(() => formatMinLength(-1, 'field')).toThrow('Length must be positive');
 		});
 	});
 
