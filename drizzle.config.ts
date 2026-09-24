@@ -1,6 +1,6 @@
 import { defineConfig } from 'drizzle-kit';
 
-import { config } from './src/config/index.ts';
+import { config } from './src/config.ts';
 
 // https://orm.drizzle.team/docs/drizzle-config-file
 export default defineConfig({
