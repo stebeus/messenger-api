@@ -41,10 +41,10 @@ const update = async ({ id, content, tx = db }: DatabaseContext<MessageUpdate>) 
 	return data;
 };
 
-const destroy = async ({ id, tx = db }: DatabaseContext<IdArgs>) => {
+const purge = async ({ id, tx = db }: DatabaseContext<IdArgs>) => {
 	const [data] = await tx.delete(messages).where(eq(messages.id, id)).returning();
 	if (data == null) throw new DeletionError('message', { id });
 	return data;
 };
 
-export const messageRepository = { create, find, findOne, update, destroy } as const;
+export const messageRepository = { create, find, findOne, update, purge } as const;

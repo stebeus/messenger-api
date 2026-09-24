@@ -27,7 +27,7 @@ messages.delete('/:messageId', validate('param', MessageParams), requireAuth, as
 	const { user } = c.var.auth;
 	const { messageId } = c.req.valid('param');
 
-	const data = await messageService.destroy({ userId: user.id, messageId });
+	const data = await messageService.purge({ userId: user.id, messageId });
 
 	return c.json({ data });
 });

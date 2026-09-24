@@ -54,9 +54,9 @@ const edit = async ({ userId, messageId, body }: EditMessageArgs) => {
 	return data;
 };
 
-const destroy = async ({ userId, messageId }: SentMessage) => {
+const purge = async ({ userId, messageId }: SentMessage) => {
 	const { id } = await getOneBySender({ userId, messageId });
-	const data = await messageRepository.destroy({ id });
+	const data = await messageRepository.purge({ id });
 
 	conversationEvents.publish(data.conversationId, { type: 'message_deleted', data });
 
@@ -79,11 +79,11 @@ const editWithPermission = async ({
 	return data;
 };
 
-const destroyWithPermission = async ({ actorId, groupId, messageId }: MessageManagement) => {
+const purgeWithPermission = async ({ actorId, groupId, messageId }: MessageManagement) => {
 	const { id, senderId } = await getOne({ messageId });
 	await memberService.authorizeMemberManagement({ actorId, targetId: senderId, groupId });
 
-	const data = await messageRepository.destroy({ id });
+	const data = await messageRepository.purge({ id });
 
 	conversationEvents.publish(data.conversationId, { type: 'message_deleted', data });
 
@@ -94,7 +94,7 @@ export const messageService = {
 	send,
 	find,
 	edit,
-	destroy,
+	purge,
 	editWithPermission,
-	destroyWithPermission,
+	purgeWithPermission,
 } as const;

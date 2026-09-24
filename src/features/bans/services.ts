@@ -12,7 +12,7 @@ const create = async ({ actorId, targetId, groupId, reason, expiresAt }: CreateB
 		const ban = await banRepository.findOne({ userId: targetId, groupId, tx });
 		if (ban != null) throw new ConflictError({ message: 'User is already banned' });
 
-		const { userId, conversationId } = await memberService.destroy({
+		const { userId, conversationId } = await memberService.purge({
 			actorId,
 			targetId,
 			groupId,
@@ -55,15 +55,15 @@ const update = async ({ actorId, targetId, groupId, reason, expiresAt }: UpdateB
 	});
 };
 
-const destroy = async ({ actorId, targetId, groupId }: MemberManagement) =>
+const purge = async ({ actorId, targetId, groupId }: MemberManagement) =>
 	await db.transaction(async (tx) => {
 		const { conversationId } = await memberService.authorizeManagement({ actorId, groupId, tx });
 		const ban = await getOne({ userId: targetId, groupId: conversationId, tx });
-		const data = await banRepository.destroy({ ...ban, tx });
+		const data = await banRepository.purge({ ...ban, tx });
 
 		conversationEvents.publish(data.groupId, { type: 'member_unbanned', data });
 
 		return data;
 	});
 
-export const banService = { create, find, getOne, update, destroy } as const;
+export const banService = { create, find, getOne, update, purge } as const;

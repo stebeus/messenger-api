@@ -40,10 +40,10 @@ const update = async ({ role, tx = db, ...values }: DatabaseContext<MemberUpdate
 	return data;
 };
 
-const destroy = async ({ tx = db, ...values }: DatabaseContext<MemberArgs>) => {
+const purge = async ({ tx = db, ...values }: DatabaseContext<MemberArgs>) => {
 	const [data] = await tx.delete(members).where(isMember(values)).returning();
 	if (data == null) throw new DeletionError('member', values);
 	return data;
 };
 
-export const memberRepository = { create, find, findOne, update, destroy } as const;
+export const memberRepository = { create, find, findOne, update, purge } as const;

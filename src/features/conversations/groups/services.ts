@@ -54,9 +54,9 @@ const update = async ({ userId, groupId, body: { avatar, ...body } }: EditGroupA
 	return data;
 };
 
-const destroy = async ({ userId, groupId }: GroupMember) => {
+const purge = async ({ userId, groupId }: GroupMember) => {
 	const { conversationId } = await getOneByOwnership({ userId, groupId });
-	return await conversationService.destroy({ id: conversationId });
+	return await conversationService.purge({ id: conversationId });
 };
 
-export const groupService = { create, update, destroy } as const;
+export const groupService = { create, update, purge } as const;

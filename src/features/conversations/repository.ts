@@ -12,10 +12,10 @@ const create = async ({ tx = db, ...values }: DatabaseContext<NewConversation>) 
 	return data;
 };
 
-const destroy = async ({ id, tx = db }: DatabaseContext<IdArgs>) => {
+const purge = async ({ id, tx = db }: DatabaseContext<IdArgs>) => {
 	const [data] = await tx.delete(conversations).where(eq(conversations.id, id)).returning();
 	if (data == null) throw new DeletionError('conversation', { id });
 	return data;
 };
 
-export const conversationRepository = { create, destroy } as const;
+export const conversationRepository = { create, purge } as const;

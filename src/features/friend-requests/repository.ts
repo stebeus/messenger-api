@@ -57,10 +57,10 @@ const findOne = async ({ user1Id, user2Id, tx = db }: DatabaseContext<UserPair>)
 		with: { requester: true, recipient: true },
 	});
 
-const destroy = async ({ tx = db, ...values }: DatabaseContext<FriendRequestArgs>) => {
+const purge = async ({ tx = db, ...values }: DatabaseContext<FriendRequestArgs>) => {
 	const [data] = await tx.delete(friendRequests).where(isFriendRequest(values)).returning();
 	if (data == null) throw new DeletionError('friend request', values);
 	return data;
 };
 
-export const friendRequestRepository = { create, find, findOne, destroy } as const;
+export const friendRequestRepository = { create, find, findOne, purge } as const;

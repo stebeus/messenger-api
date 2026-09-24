@@ -10,7 +10,7 @@ export const authorizeGroupJoin = async ({ userId, groupId }: GroupMember) => {
 	const { reason, expiresAt } = ban;
 
 	if (expiresAt != null && expiresAt <= new Date()) {
-		return await banRepository.destroy({ userId, groupId });
+		return await banRepository.purge({ userId, groupId });
 	}
 
 	throw new ForbiddenError({

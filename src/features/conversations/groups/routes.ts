@@ -66,7 +66,7 @@ groups.delete('/:groupId', validate('param', GroupParams), requireAuth, async (c
 	const { groupId } = c.req.valid('param');
 	const { user } = c.var.auth;
 
-	const data = await groupService.destroy({ groupId, userId: user.id });
+	const data = await groupService.purge({ groupId, userId: user.id });
 
 	return c.json({ data });
 });
@@ -100,7 +100,7 @@ groups.delete(
 		const { groupId, messageId } = c.req.valid('param');
 		const { user } = c.var.auth;
 
-		const data = await messageService.destroyWithPermission({
+		const data = await messageService.purgeWithPermission({
 			actorId: user.id,
 			groupId,
 			messageId,

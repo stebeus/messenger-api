@@ -42,7 +42,7 @@ const leaveGroup = async ({ userId, groupId }: GroupMember) => {
 	const member = await getOne({ userId, groupId });
 	if (member.role === 'owner') throw new ForbiddenError();
 
-	const data = await memberRepository.destroy(member);
+	const data = await memberRepository.purge(member);
 
 	conversationEvents.publish(data.conversationId, { type: 'member_left', data });
 
@@ -93,13 +93,13 @@ const changeRole = async ({ actorId, targetId, groupId, role }: RoleManagement) 
 	return data;
 };
 
-const destroy = async ({ actorId, targetId, groupId, tx }: DatabaseContext<MemberManagement>) => {
+const purge = async ({ actorId, targetId, groupId, tx }: DatabaseContext<MemberManagement>) => {
 	const { target } = await authorizeMemberManagement({ actorId, targetId, groupId, tx });
-	return await memberRepository.destroy({ userId: target.userId, conversationId: groupId, tx });
+	return await memberRepository.purge({ userId: target.userId, conversationId: groupId, tx });
 };
 
 const kick = async ({ actorId, targetId, groupId }: MemberManagement) => {
-	const data = await destroy({ actorId, targetId, groupId });
+	const data = await purge({ actorId, targetId, groupId });
 	conversationEvents.publish(data.conversationId, { type: 'member_kicked', data });
 	return data;
 };
@@ -114,6 +114,6 @@ export const memberService = {
 	authorizeManagement,
 	authorizeMemberManagement,
 	changeRole,
-	destroy,
+	purge,
 	kick,
 } as const;
