@@ -33,9 +33,9 @@ const getOneByPair = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>)
 	return dm;
 };
 
-const purgeByPair = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
+const destroyByPair = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
 	const { id } = await getOneByPair({ user1Id, user2Id, tx });
-	return await conversationService.purge({ id, tx });
+	return await conversationService.destroy({ id, tx });
 };
 
-export const dmService = { create, getOne, getOneByPair, purgeByPair } as const;
+export const dmService = { create, getOne, getOneByPair, destroyByPair } as const;

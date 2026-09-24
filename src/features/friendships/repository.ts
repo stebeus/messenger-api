@@ -44,10 +44,10 @@ const find = async ({
 const findOne = async ({ tx = db, ...values }: DatabaseContext<FriendshipSelection>) =>
 	await tx.query.friendships.findFirst({ where: values, with: { user1: true, user2: true } });
 
-const purge = async ({ tx = db, ...values }: DatabaseContext<UserPair>) => {
+const destroy = async ({ tx = db, ...values }: DatabaseContext<UserPair>) => {
 	const [data] = await tx.delete(friendships).where(isFriendship(values)).returning();
 	if (data == null) throw new DeletionError('friendship', values);
 	return data;
 };
 
-export const friendshipRepository = { create, find, findOne, purge } as const;
+export const friendshipRepository = { create, find, findOne, destroy } as const;

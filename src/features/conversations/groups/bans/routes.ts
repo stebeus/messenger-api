@@ -71,7 +71,7 @@ bans.delete('/:memberId', validate('param', GroupMemberParams), requireAuth, asy
 	const { user } = c.var.auth;
 	const { groupId, memberId } = c.req.valid('param');
 
-	const data = await banService.purge({ actorId: user.id, targetId: memberId, groupId });
+	const data = await banService.destroy({ actorId: user.id, targetId: memberId, groupId });
 
 	return c.json({ data });
 });

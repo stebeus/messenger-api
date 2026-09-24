@@ -39,7 +39,7 @@ const accept = async ({ requesterId, recipientId }: FriendRequestArgs) =>
 	db.transaction(async (tx) => {
 		const friendRequest = await getOne({ user1Id: recipientId, user2Id: requesterId, tx });
 
-		await friendRequestRepository.purge({ requesterId, recipientId, tx });
+		await friendRequestRepository.destroy({ requesterId, recipientId, tx });
 
 		await dmService.create({
 			user1Id: friendRequest.requesterId,
@@ -56,7 +56,7 @@ const accept = async ({ requesterId, recipientId }: FriendRequestArgs) =>
 
 const cancel = async ({ user1Id, user2Id }: UserPair) => {
 	const { requesterId, recipientId } = await getOne({ user1Id, user2Id });
-	return await friendRequestRepository.purge({ requesterId, recipientId });
+	return await friendRequestRepository.destroy({ requesterId, recipientId });
 };
 
 export const friendRequestService = { send, accept, cancel } as const;

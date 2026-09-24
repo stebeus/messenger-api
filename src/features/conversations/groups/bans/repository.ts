@@ -41,10 +41,10 @@ const update = async ({ tx = db, userId, groupId, ...values }: DatabaseContext<B
 	return data;
 };
 
-const purge = async ({ tx = db, ...values }: DatabaseContext<GroupMember>) => {
+const destroy = async ({ tx = db, ...values }: DatabaseContext<GroupMember>) => {
 	const [data] = await tx.delete(bans).where(isBan(values)).returning();
 	if (data == null) throw new DeletionError('ban', values);
 	return data;
 };
 
-export const banRepository = { create, find, findOne, update, purge } as const;
+export const banRepository = { create, find, findOne, update, destroy } as const;
