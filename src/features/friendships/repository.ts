@@ -26,17 +26,17 @@ const find = async ({
 	query: { q, sort, order },
 	tx = db,
 }: DatabaseContext<UsersSelection>) => {
-	const displayName = containsName(q);
-	const userFilter = exclude(userId);
+	const friendName = containsName(q);
+	const notCurrentUser = exclude(userId);
 
 	return await tx.query.friendships.findMany({
 		where: {
 			OR: [
-				{ user1Id: userId, user2: displayName },
-				{ user2Id: userId, user1: displayName },
+				{ user1Id: userId, user2: friendName },
+				{ user2Id: userId, user1: friendName },
 			],
 		},
-		with: { user1: { where: userFilter }, user2: { where: userFilter } },
+		with: { user1: { where: notCurrentUser }, user2: { where: notCurrentUser } },
 		...orderBy(sort, order),
 	});
 };
