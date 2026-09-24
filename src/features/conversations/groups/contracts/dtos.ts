@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { avatar, id } from '#contracts/entity.ts';
+import { avatar, id } from '#contracts/index.ts';
 import { MemberParams } from '#features/members/contracts/dtos.ts';
 import { MessageParams } from '#features/messages/contracts/dtos.ts';
 
