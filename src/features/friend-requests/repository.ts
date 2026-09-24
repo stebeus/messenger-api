@@ -1,6 +1,6 @@
 import type { UserPair } from '#features/users/contracts/entity.ts';
 import type { NewFriendRequest } from './contracts/entity.ts';
-import type { FriendRequestArgs, ListFriendRequestArgs } from './types.ts';
+import type { FriendRequestArgs, FriendRequestsSelection } from './types.ts';
 
 import {
 	CreationError,
@@ -25,7 +25,7 @@ const find = async ({
 	userId,
 	query: { q, direction, sort, order },
 	tx = db,
-}: DatabaseContext<ListFriendRequestArgs>) => {
+}: DatabaseContext<FriendRequestsSelection>) => {
 	const name = containsName(q);
 	const notCurrentUser = exclude(userId);
 
