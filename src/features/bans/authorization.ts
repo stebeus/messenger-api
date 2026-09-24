@@ -15,6 +15,6 @@ export const authorizeGroupJoin = async ({ userId, groupId }: GroupMember) => {
 
 	throw new ForbiddenError({
 		message: 'You have been banned from this group',
-		cause: { reason, duration: expiresAt ?? 'Permanent' },
+		details: { reason, duration: expiresAt ?? 'Permanent' },
 	});
 };
