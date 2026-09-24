@@ -26,22 +26,22 @@ const find = async ({
 	query: { q, direction, sort, order },
 	tx = db,
 }: DatabaseContext<ListFriendRequestArgs>) => {
-	const displayName = containsName(q);
-	const userFilter = exclude(userId);
+	const name = containsName(q);
+	const notCurrentUser = exclude(userId);
 
-	const directionFilter = {
-		incoming: { recipientId: userId, requester: displayName },
-		outgoing: { requesterId: userId, recipient: displayName },
+	const requestDirection = {
+		incoming: { recipientId: userId, requester: name },
+		outgoing: { requesterId: userId, recipient: name },
 	} as const;
 
 	const where =
 		direction == null
-			? { OR: [directionFilter.incoming, directionFilter.outgoing] }
-			: directionFilter[direction];
+			? { OR: [requestDirection.incoming, requestDirection.outgoing] }
+			: requestDirection[direction];
 
 	return await tx.query.friendRequests.findMany({
 		where,
-		with: { requester: { where: userFilter }, recipient: { where: userFilter } },
+		with: { requester: { where: notCurrentUser }, recipient: { where: notCurrentUser } },
 		...orderBy(sort, order),
 	});
 };
