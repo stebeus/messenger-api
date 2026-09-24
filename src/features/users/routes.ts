@@ -18,7 +18,7 @@ users.get('/', validate('query', UserQuery), requireAuth, async (c) => {
 });
 
 users.get('/:userId', validate('param', UserParams), async (c) => {
-	const params = c.req.valid('param');
-	const data = await userService.getOne(params);
+	const { userId } = c.req.valid('param');
+	const data = await userService.getOne({ userId });
 	return c.json({ data });
 });
