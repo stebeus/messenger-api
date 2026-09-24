@@ -14,8 +14,8 @@ export const users = authSchema.table('users', (t) => ({
 	avatar: t.text(),
 
 	// ! Unused columns from Better Auth
-	name: text().default('').notNull(),
-	email: text().default('').notNull(),
+	name: text().notNull(),
+	email: text().notNull().unique(),
 	emailVerified: boolean().default(false).notNull(),
 }));
 
