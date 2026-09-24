@@ -5,39 +5,30 @@ import { Query } from '#contracts/dtos.ts';
 import { CreateMessageBody } from '#features/conversations/messages/contracts/dtos.ts';
 import { messageService } from '#features/conversations/messages/services.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
+import { BadRequestError } from '#utils/errors.ts';
 
 import { ConversationParams } from './contracts/dtos.ts';
 import { conversationEvents } from './events.ts';
+import { conversationService } from './services.ts';
 
 export const conversations = new Hono();
 
-// app.get(
-// 	'/conversations/:id/ws',
-// 	upgradeWebSocket((c) => {
-// 		const id = c.req.valid('param').id;
-
-// 		return {
-// 			onOpen(_event, ws) {
-// 				const unsubscribe = conversationEvents.subscribe(id, (event) => {
-// 					ws.send(JSON.stringify(event));
-// 				});
-
-// 				ws.onClose(() => {
-// 					unsubscribe();
-// 				});
-// 			},
-// 		};
-// 	}),
-// );
-
 conversations.get(
 	'/:conversationId/ws',
-	upgradeWebSocket((c) => {
+	upgradeWebSocket(async (c) => {
+		const { success, data } = ConversationParams.safeParse({
+			conversationId: c.req.param('conversationId'),
+		});
+
+		if (!success) throw new BadRequestError({ message: 'Invalid conversation ID' });
+
+		const { id } = await conversationService.getOne(data);
+
 		let unsubscribe: (() => void) | undefined;
 
 		return {
 			onOpen: (_event, ws) => {
-				unsubscribe = conversationEvents.subscribe('1', (event) => {
+				unsubscribe = conversationEvents.subscribe(id, (event) => {
 					ws.send(JSON.stringify(event));
 				});
 			},
