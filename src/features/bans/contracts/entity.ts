@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { id, Timestamps, timestamps } from '#contracts/entities.ts';
+import { id, Timestamps, timestamps } from '#contracts/entity.ts';
 import { formatMaxLength, formatMinLength } from '#utils/formatters.ts';
 
 import { reason } from './constants.ts';

@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { Base, base, id } from '#contracts/entities.ts';
+import { Base, base, id } from '#contracts/entity.ts';
 import { formatMaxLength, formatMinLength } from '#utils/formatters.ts';
 
 import { content } from './constants.ts';

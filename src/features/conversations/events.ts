@@ -1,4 +1,4 @@
-import type { Id } from '#contracts/entities.ts';
+import type { Id } from '#contracts/entity.ts';
 import type { Ban } from '#features/bans/contracts/entity.ts';
 import type { Member } from '#features/members/contracts/entity.ts';
 import type { Message } from '#features/messages/contracts/entity.ts';

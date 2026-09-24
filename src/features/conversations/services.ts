@@ -1,4 +1,4 @@
-import type { IdArgs } from '#contracts/entities.ts';
+import type { IdArgs } from '#contracts/entity.ts';
 import type { DatabaseContext } from '#db/types.ts';
 
 import { conversationEvents } from './events.ts';

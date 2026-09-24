@@ -1,4 +1,4 @@
-import type { Id } from '#contracts/entities.ts';
+import type { Id } from '#contracts/entity.ts';
 
 import { contains } from '#db/helpers.ts';
 import { conversationRelations, memberOf } from '#features/conversations/helpers.ts';

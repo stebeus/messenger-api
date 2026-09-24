@@ -1,4 +1,4 @@
-import type { IdArgs } from '#contracts/entities.ts';
+import type { IdArgs } from '#contracts/entity.ts';
 import type { MessageUpdate, NewMessage } from './contracts/entity.ts';
 import type { MessageSelection, MessagesSelection } from './types.ts';
 

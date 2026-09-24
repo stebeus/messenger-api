@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { id } from '#contracts/entities.ts';
+import { id } from '#contracts/entity.ts';
 
 import { MemberUpdate } from './entity.ts';
 

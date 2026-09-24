@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { createdAt } from '#contracts/entities.ts';
+import { createdAt } from '#contracts/entity.ts';
 import { UserPair } from '#features/users/contracts/entity.ts';
 
 export const Friendship = z.object({

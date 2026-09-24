@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { createdAt, id } from '#contracts/entities.ts';
+import { createdAt, id } from '#contracts/entity.ts';
 
 export const FriendRequest = z.object({
 	requesterId: id,

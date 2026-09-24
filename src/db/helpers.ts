@@ -1,4 +1,4 @@
-import type { Id } from '#contracts/entities.ts';
+import type { Id } from '#contracts/entity.ts';
 
 export const contains = (query?: string) =>
 	query == null ? undefined : ({ like: `%${query}%` } as const);

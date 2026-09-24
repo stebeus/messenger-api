@@ -1,4 +1,4 @@
-import type { IdArgs } from '#contracts/entities.ts';
+import type { IdArgs } from '#contracts/entity.ts';
 import type { NewConversation } from './contracts/entity.ts';
 
 import { eq } from 'drizzle-orm';

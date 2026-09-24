@@ -1,4 +1,4 @@
-import type { Id } from '#contracts/entities.ts';
+import type { Id } from '#contracts/entity.ts';
 import type { DatabaseContext } from '#db/types.ts';
 import type { UserPair } from '#features/users/contracts/entity.ts';
 import type { DirectMessageMember } from './types.ts';

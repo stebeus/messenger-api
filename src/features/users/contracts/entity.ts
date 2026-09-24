@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { Base, base, id, timestamps } from '#contracts/entities.ts';
+import { Base, base, id, timestamps } from '#contracts/entity.ts';
 import { formatMaxLength, formatMinLength } from '#utils/formatters.ts';
 
 import { bio, displayName, password, username } from './constants.ts';
