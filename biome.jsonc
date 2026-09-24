@@ -43,7 +43,6 @@
 				"noUselessElse": "on",
 				"noYodaExpression": "on",
 				"useAsConstAssertion": "on",
-				"useBlockStatements": "on",
 				"useCollapsedElseIf": "on",
 				"useCollapsedIf": "on",
 				"useConsistentArrayType": "on",
