@@ -1,4 +1,5 @@
 import type { Id } from '#contracts/entity.ts';
+import type { EventMap, EventValues } from '#types.ts';
 import type { Conversation } from './contracts/entity.ts';
 import type { Ban } from './groups/bans/contracts/entity.ts';
 import type { Group } from './groups/contracts/entity.ts';
@@ -7,7 +8,7 @@ import type { Message } from './messages/contracts/entity.ts';
 
 import EventEmitter from 'node:events';
 
-type Events = {
+type ConversationEvents = {
 	conversation: {
 		deleted: Conversation;
 	};
@@ -29,22 +30,9 @@ type Events = {
 	};
 };
 
-type Event<Domain extends keyof Events, Type extends keyof Events[Domain]> = {
-	type: `${Domain}_${Type & string}`;
-	data: Events[Domain][Type];
-};
+type ConversationEvent = EventValues<ConversationEvents>;
 
-type DomainEvent<Domain extends keyof Events> = {
-	[Type in keyof Events[Domain]]: Event<Domain, Type>;
-}[keyof Events[Domain]];
-
-type ConversationEvent = {
-	[Domain in keyof Events]: DomainEvent<Domain>;
-}[keyof Events];
-
-type ConversationEventMap = {
-	[key: string]: [event: ConversationEvent];
-};
+type ConversationEventMap = EventMap<ConversationEvent>;
 
 const events = new EventEmitter<ConversationEventMap>();
 
