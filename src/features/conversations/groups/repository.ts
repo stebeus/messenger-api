@@ -27,7 +27,7 @@ const find = async ({
 	await tx.query.groups.findMany({
 		where: {
 			...containsGroupName(q),
-			NOT: { OR: [{ ownerId: userId }, filterGroupMember(userId), { bans: { userId } }] },
+			NOT: { OR: [filterGroupMember(userId), { bans: { userId } }] },
 		},
 		with: groupSearchRelations,
 		...orderBy(sort, order),
