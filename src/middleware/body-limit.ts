@@ -1,11 +1,19 @@
 import { bodyLimit } from 'hono/body-limit';
 
-import { ContentTooLargeError } from '#utils/errors.ts';
+import { ContentTooLargeError, type HttpErrorMessageFormatOptions } from '#utils/errors.ts';
 
-export const limitBody = (maxSizeInKbs = 512) =>
+type FileSizeLimitOptions = HttpErrorMessageFormatOptions & {
+	maxSizeInKiB?: number;
+};
+
+export const limitBody = ({
+	maxSizeInKiB = 1024,
+	resource = 'file',
+	message,
+}: FileSizeLimitOptions = {}) =>
 	bodyLimit({
-		maxSize: maxSizeInKbs * 1024,
+		maxSize: maxSizeInKiB * 1024,
 		onError: () => {
-			throw new ContentTooLargeError({ resource: 'file' });
+			throw new ContentTooLargeError({ resource, message });
 		},
 	});
