@@ -29,10 +29,10 @@ conversations.get(
 		return {
 			onOpen: (_event, ws) => {
 				unsubscribe = conversationEvents.subscribe(id, (event) => {
-					ws.send(JSON.stringify(event));
+					const data = JSON.stringify(event);
+					ws.send(data);
 				});
 			},
-
 			onClose: () => unsubscribe?.(),
 		};
 	}),
