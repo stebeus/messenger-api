@@ -6,6 +6,6 @@ export const limitBody = (maxSizeInKbs = 512) =>
 	bodyLimit({
 		maxSize: maxSizeInKbs * 1024,
 		onError: () => {
-			throw new ContentTooLargeError({ message: 'File is too large' });
+			throw new ContentTooLargeError({ resource: 'file' });
 		},
 	});

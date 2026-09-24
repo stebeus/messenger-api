@@ -7,30 +7,37 @@ import { HTTPException } from 'hono/http-exception';
 import { toTitleCase } from './formatters.ts';
 
 type HttpErrorOptions = Partial<{
-	res: Response;
 	message: string;
-	cause: unknown;
+	details: unknown;
+	res: Response;
 }>;
 
-type NotFoundErrorOptions = Omit<HttpErrorOptions, 'message'> & {
+type HttpResourceErrorOptions = HttpErrorOptions & {
 	resource?: string;
 };
 
+export type HttpErrorMessageFormatOptions = Pick<HttpResourceErrorOptions, 'resource' | 'message'>;
+
+const formatHttpErrorMessage = (
+	template: string,
+	{ resource, message }: HttpErrorMessageFormatOptions,
+) => (resource != null && message == null ? toTitleCase(`${resource} ${template}`) : message);
+
 export class HttpError extends HTTPException {
-	static isHttpError(value: unknown) {
-		return value instanceof HTTPException;
+	static isHttpError(error: unknown) {
+		return error instanceof HTTPException;
 	}
 
 	readonly message;
-	readonly cause;
+	readonly details;
 
 	constructor(
 		status: ContentfulStatusCode = 500,
-		{ res, message = STATUS_CODES[status], cause }: HttpErrorOptions = {},
+		{ message = STATUS_CODES[status], details, res }: HttpErrorOptions = {},
 	) {
-		super(status, { res, message, cause });
+		super(status, { message, res });
 		this.message = message ?? 'Internal Server Error';
-		this.cause = cause;
+		this.details = details;
 	}
 }
 
@@ -53,21 +60,26 @@ export class ForbiddenError extends HttpError {
 }
 
 export class NotFoundError extends HttpError {
-	constructor({ resource, ...options }: NotFoundErrorOptions = {}) {
-		const resourcePrefix = resource == null ? '' : `${toTitleCase(resource)} `;
-		super(404, { ...options, message: `${resourcePrefix}Not Found` });
+	constructor({ resource, message, ...options }: HttpResourceErrorOptions = {}) {
+		super(404, { ...options, message: formatHttpErrorMessage('not found', { resource, message }) });
 	}
 }
 
 export class ConflictError extends HttpError {
-	constructor(options?: HttpErrorOptions) {
-		super(409, options);
+	constructor({ resource, message, ...options }: HttpResourceErrorOptions = {}) {
+		super(409, {
+			...options,
+			message: formatHttpErrorMessage('already exists', { resource, message }),
+		});
 	}
 }
 
 export class ContentTooLargeError extends HttpError {
-	constructor(options?: HttpErrorOptions) {
-		super(413, options);
+	constructor({ resource, message, ...options }: HttpResourceErrorOptions = {}) {
+		super(413, {
+			...options,
+			message: formatHttpErrorMessage('is too large', { resource, message }),
+		});
 	}
 }
 
@@ -77,13 +89,13 @@ export class UnprocessableContentError extends HttpError {
 	}
 }
 
-export const catchError = (value: unknown): NodeJS.ErrnoException => {
-	if (Error.isError(value)) return value;
+export const catchError = (error: unknown): NodeJS.ErrnoException => {
+	if (Error.isError(error)) return error;
 
 	let serialized = '[Non-serializable value]';
 
 	try {
-		serialized = JSON.stringify(value, undefined, '\t');
+		serialized = JSON.stringify(error, undefined, '\t');
 	} catch {}
 
 	return new Error(`Unexpected throw: ${serialized}`);

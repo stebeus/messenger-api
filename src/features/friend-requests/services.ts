@@ -21,10 +21,10 @@ const send = async ({ requesterId, recipientId }: FriendRequestArgs) => {
 		user2Id: id,
 	});
 
-	if (friendRequest != null) throw new ConflictError({ message: 'Friend request already exists' });
+	if (friendRequest != null) throw new ConflictError({ resource: 'friend request' });
 
 	const friendship = await friendshipService.findOne({ user1Id: requesterId, user2Id: id });
-	if (friendship != null) throw new ConflictError({ message: 'Friendship already exists' });
+	if (friendship != null) throw new ConflictError({ resource: 'friendship' });
 
 	return await friendRequestRepository.create({ requesterId, recipientId: id });
 };

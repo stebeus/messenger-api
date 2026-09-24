@@ -10,5 +10,5 @@ export const validate = <Target extends keyof ValidationTargets, Schema extends 
 	schema: Schema,
 ) =>
 	sValidator(target, schema, (result) => {
-		if (!result.success) throw new BadRequestError({ cause: flattenErrors(result.error) });
+		if (!result.success) throw new BadRequestError({ details: flattenErrors(result.error) });
 	});
