@@ -17,3 +17,9 @@ export const limitFileSize = ({
 			throw new ContentTooLargeError({ resource, message });
 		},
 	});
+
+export const limitImageSize = ({
+	maxSizeInKiB = 512,
+	resource = 'image',
+	message,
+}: FileSizeLimitOptions = {}) => limitFileSize({ maxSizeInKiB, resource, message });

@@ -5,7 +5,7 @@ import { bans } from '#features/bans/routes.ts';
 import { members } from '#features/members/routes.ts';
 import { UpdateMessageBody } from '#features/messages/contracts/dtos.ts';
 import { messageService } from '#features/messages/index.ts';
-import { limitBody, requireAuth, validate } from '#middleware/index.ts';
+import { limitImageSize, requireAuth, validate } from '#middleware/index.ts';
 
 import {
 	CreateGroupBody,
@@ -36,24 +36,18 @@ groups.get('/me', validate('query', Query), requireAuth, async (c) => {
 	return c.json({ data });
 });
 
-groups.post(
-	'/',
-	limitBody({ maxSizeInKiB: 512 }),
-	validate('form', CreateGroupBody),
-	requireAuth,
-	async (c) => {
-		const { user } = c.var.auth;
-		const body = c.req.valid('form');
+groups.post('/', limitImageSize(), validate('form', CreateGroupBody), requireAuth, async (c) => {
+	const { user } = c.var.auth;
+	const body = c.req.valid('form');
 
-		const data = await groupService.create({ userId: user.id, body });
+	const data = await groupService.create({ userId: user.id, body });
 
-		return c.json({ data }, 201);
-	},
-);
+	return c.json({ data }, 201);
+});
 
 groups.patch(
 	'/:groupId',
-	limitBody({ maxSizeInKiB: 512 }),
+	limitImageSize(),
 	validate('param', GroupParams),
 	validate('form', UpdateGroupBody),
 	requireAuth,
