@@ -7,7 +7,7 @@ import { CreationError, type DatabaseContext, db, orderBy, UpdateError } from '#
 import { groups } from '#db/schemas/conversation.ts';
 
 import {
-	containsName,
+	containsGroupName,
 	filterGroupMember,
 	groupRelations,
 	groupSearchRelations,
@@ -26,7 +26,7 @@ const find = async ({
 }: DatabaseContext<GroupsSelection>) =>
 	await tx.query.groups.findMany({
 		where: {
-			...containsName(q),
+			...containsGroupName(q),
 			NOT: { OR: [{ ownerId: userId }, filterGroupMember(userId), { bans: { userId } }] },
 		},
 		with: groupSearchRelations,
@@ -42,7 +42,7 @@ const findByMembership = async ({
 	tx = db,
 }: DatabaseContext<GroupsSelection>) =>
 	await tx.query.groups.findMany({
-		where: { ...filterGroupMember(userId), ...containsName(q) },
+		where: { ...filterGroupMember(userId), ...containsGroupName(q) },
 		with: groupRelations,
 		...orderBy(sort, order),
 	});

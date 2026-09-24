@@ -15,7 +15,7 @@ export const groupRelations = createGroupRelations(conversationRelations);
 
 export const groupSearchRelations = createGroupRelations({ members: true });
 
-export const containsName = (name?: string) =>
+export const containsGroupName = (name?: string) =>
 	name == null ? undefined : ({ name: contains(name) } as const);
 
 export const filterGroupMember = (userId: Id) =>
