@@ -3,7 +3,7 @@ import type { FriendshipSelectionResult } from './types.ts';
 
 import { and, eq } from 'drizzle-orm';
 
-import { parseId } from '#db/index.ts';
+import { parseId } from '#db/helpers.ts';
 import { friendships } from '#db/schemas/social.ts';
 
 export const isFriendship = ({ user1Id, user2Id }: UserPair) =>
