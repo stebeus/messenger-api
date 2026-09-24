@@ -22,10 +22,10 @@ export const Query = z
 
 export type Query = z.infer<typeof Query>;
 
-export type QueryDto<Dto = Query> = {
+export type QueryArgs<Dto = Query> = {
 	query: Dto;
 };
 
-export type BodyDto<Dto> = {
+export type BodyArgs<Dto> = {
 	body: Dto;
 };

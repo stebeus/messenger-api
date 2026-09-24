@@ -1,4 +1,4 @@
-import type { BodyDto, QueryDto } from '#contracts/dtos.ts';
+import type { BodyArgs, QueryArgs } from '#contracts/dtos.ts';
 import type { Selection } from '#db/types.ts';
 import type { ConversationParams } from '#features/conversations/contracts/dtos.ts';
 import type { Management, MemberArgs } from '#features/members/types.ts';
@@ -10,15 +10,15 @@ import type {
 	UpdateMessageBody,
 } from './contracts/index.ts';
 
-type UpdateMessageDto = BodyDto<UpdateMessageBody>;
+type UpdateMessageDto = BodyArgs<UpdateMessageBody>;
 
-export type MessagesSelection = ConversationParams & QueryDto;
+export type MessagesSelection = ConversationParams & QueryArgs;
 
 export type MessageSelection = Selection<Message>;
 
-export type ListMessageArgs = MemberArgs & QueryDto;
+export type ListMessageArgs = MemberArgs & QueryArgs;
 
-export type SendMessageArgs = MemberArgs & BodyDto<CreateMessageBody>;
+export type SendMessageArgs = MemberArgs & BodyArgs<CreateMessageBody>;
 
 export type SentMessage = UserParams & MessageParams;
 

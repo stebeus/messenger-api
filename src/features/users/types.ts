@@ -1,8 +1,8 @@
-import type { QueryDto } from '#contracts/dtos.ts';
+import type { QueryArgs } from '#contracts/dtos.ts';
 import type { Selection } from '#db/types.ts';
 import type { User, UserParams, UserQuery } from './contracts/index.ts';
 
-export type UsersSelection = QueryDto<UserQuery>;
+export type UsersSelection = QueryArgs<UserQuery>;
 
 export type UserSelection = Selection<User>;
 
