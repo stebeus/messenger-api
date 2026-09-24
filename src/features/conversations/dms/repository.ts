@@ -2,7 +2,7 @@ import type { ConversationMember } from '#features/conversations/types.ts';
 import type { UserPair } from '#features/users/contracts/entity.ts';
 
 import { type DatabaseContext, db, orderBy } from '#db/index.ts';
-import { conversationRelations, memberOf } from '#features/conversations/helpers.ts';
+import { conversationRelations, filterMember } from '#features/conversations/helpers.ts';
 import { containsName, type UsersSelection } from '#features/users/index.ts';
 
 const type = 'direct';
@@ -22,14 +22,14 @@ const find = async ({
 
 const findOne = async ({ id, userId, tx = db }: DatabaseContext<ConversationMember>) =>
 	await tx.query.conversations.findFirst({
-		where: { ...memberOf(userId), id, type },
+		where: { ...filterMember(userId), id, type },
 		with: conversationRelations,
 		columns,
 	});
 
 const findOneByPair = async ({ user1Id, user2Id, tx = db }: DatabaseContext<UserPair>) =>
 	await tx.query.conversations.findFirst({
-		where: { AND: [memberOf(user1Id), memberOf(user2Id)], type },
+		where: { AND: [filterMember(user1Id), filterMember(user2Id)], type },
 		columns,
 	});
 

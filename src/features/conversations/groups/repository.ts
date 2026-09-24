@@ -6,7 +6,12 @@ import { eq } from 'drizzle-orm';
 import { CreationError, type DatabaseContext, db, orderBy, UpdateError } from '#db/index.ts';
 import { groups } from '#db/schemas/conversation.ts';
 
-import { containsName, groupRelations, groupSearchRelations, memberOfGroup } from './helpers.ts';
+import {
+	containsName,
+	filterGroupMember,
+	groupRelations,
+	groupSearchRelations,
+} from './helpers.ts';
 
 const create = async ({ tx = db, ...values }: DatabaseContext<NewGroup>) => {
 	const [data] = await tx.insert(groups).values(values).returning();
@@ -22,7 +27,7 @@ const find = async ({
 	await tx.query.groups.findMany({
 		where: {
 			...containsName(q),
-			NOT: { OR: [{ ownerId: userId }, memberOfGroup(userId), { bans: { userId } }] },
+			NOT: { OR: [{ ownerId: userId }, filterGroupMember(userId), { bans: { userId } }] },
 		},
 		with: groupSearchRelations,
 		...orderBy(sort, order),
@@ -37,7 +42,7 @@ const findByMembership = async ({
 	tx = db,
 }: DatabaseContext<GroupsSelection>) =>
 	await tx.query.groups.findMany({
-		where: { ...memberOfGroup(userId), ...containsName(q) },
+		where: { ...filterGroupMember(userId), ...containsName(q) },
 		with: groupRelations,
 		...orderBy(sort, order),
 	});
