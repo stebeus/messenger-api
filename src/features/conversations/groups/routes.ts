@@ -18,6 +18,9 @@ import { groupService } from './services.ts';
 
 export const groups = new Hono();
 
+groups.route('/members', members);
+groups.route('/bans', bans);
+
 groups.get('/', validate('query', Query), requireAuth, async (c) => {
 	const { user } = c.var.auth;
 	const query = c.req.valid('query');
@@ -109,6 +112,3 @@ groups.delete(
 		return c.json({ data });
 	},
 );
-
-groups.route('/:groupId/bans', bans);
-groups.route('/:groupId/members', members);
