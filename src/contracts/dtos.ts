@@ -4,6 +4,14 @@ export const sorts = ['createdAt', 'updatedAt'] as const;
 
 export const orders = ['asc', 'desc'] as const;
 
+export const avatar = z
+	.instanceof(File)
+	.refine(
+		({ type }) => ['image/jpeg', 'image/png', 'image/webp'].includes(type),
+		'Invalid image format. Only JPEG, PNG, and WebP are accepted',
+	)
+	.nullish();
+
 export const Query = z
 	.object({
 		q: z.string(),
