@@ -3,6 +3,8 @@ import type { Id } from '#contracts/entity.ts';
 export const contains = (query?: string) =>
 	query == null ? undefined : ({ like: `%${query}%` } as const);
 
+export const exclude = (id: Id) => ({ NOT: { id } }) as const;
+
 export const orderBy = (sort = 'createdAt', order = 'asc') =>
 	({ orderBy: { [sort]: order } }) as const;
 

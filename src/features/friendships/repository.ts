@@ -2,9 +2,16 @@ import type { UserPair } from '#features/users/contracts/entity.ts';
 import type { NewFriendship } from './contracts/entity.ts';
 import type { FriendshipSelection } from './types.ts';
 
-import { CreationError, type DatabaseContext, DeletionError, db, orderBy } from '#db/index.ts';
+import {
+	CreationError,
+	type DatabaseContext,
+	DeletionError,
+	db,
+	exclude,
+	orderBy,
+} from '#db/index.ts';
 import { friendships } from '#db/schemas/social.ts';
-import { containsName, createUserFilter, type ListUserArgs } from '#features/users/index.ts';
+import { containsName, type ListUserArgs } from '#features/users/index.ts';
 
 import { isFriendship } from './helpers.ts';
 
@@ -20,7 +27,7 @@ const find = async ({
 	tx = db,
 }: DatabaseContext<ListUserArgs>) => {
 	const displayName = containsName(q);
-	const userFilter = createUserFilter(userId);
+	const userFilter = exclude(userId);
 
 	return await tx.query.friendships.findMany({
 		where: {
@@ -29,7 +36,7 @@ const find = async ({
 				{ user2Id: userId, user1: displayName },
 			],
 		},
-		with: { user1: userFilter, user2: userFilter },
+		with: { user1: { where: userFilter }, user2: { where: userFilter } },
 		...orderBy(sort, order),
 	});
 };
