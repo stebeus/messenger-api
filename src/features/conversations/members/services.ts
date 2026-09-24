@@ -1,19 +1,17 @@
 import type { DatabaseContext } from '#db/types.ts';
-import type { NewMember } from './contracts/entity.ts';
 import type {
 	GroupMember,
-	ListMemberArgs,
-	Management,
-	MemberArgs,
 	MemberManagement,
 	RoleManagement,
-} from './types.ts';
+} from '#features/conversations/groups/types.ts';
+import type { NewMember } from './contracts/entity.ts';
+import type { ListMemberArgs } from './types.ts';
 
 import { conversationEvents } from '#features/conversations/events.ts';
-import { authorizeGroupJoin } from '#features/conversations/groups/bans/authorization.ts';
+import { groupPolicy } from '#features/conversations/groups/policies.ts';
+import { conversationPolicy } from '#features/conversations/policies.ts';
 import { ConflictError, ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
-import { canManage, canManageMember } from './helpers.ts';
 import { memberRepository } from './repository.ts';
 
 const create = async ({ userId, conversationId, role, tx }: DatabaseContext<NewMember>) => {
@@ -28,8 +26,17 @@ const create = async ({ userId, conversationId, role, tx }: DatabaseContext<NewM
 };
 
 const joinGroup = async ({ userId, groupId }: GroupMember) => {
-	await authorizeGroupJoin({ userId, groupId });
+	await groupPolicy.authorizeJoin({ userId, groupId });
 	return await create({ userId, conversationId: groupId });
+};
+
+const find = async ({ userId, groupId, query }: ListMemberArgs) => {
+	const { conversationId } = await conversationPolicy.requireMembership({
+		userId,
+		conversationId: groupId,
+	});
+
+	return await memberRepository.find({ conversationId, query });
 };
 
 const getOne = async ({ userId, groupId, tx }: DatabaseContext<GroupMember>) => {
@@ -49,41 +56,11 @@ const leaveGroup = async ({ userId, groupId }: GroupMember) => {
 	return data;
 };
 
-const requireMembership = async ({ userId, conversationId, tx }: DatabaseContext<MemberArgs>) => {
-	const member = await memberRepository.findOne({ userId, conversationId, tx });
-	if (member == null) throw new ForbiddenError();
-	return member;
-};
-
-const find = async ({ userId, groupId, query }: ListMemberArgs) => {
-	const { conversationId } = await requireMembership({ userId, conversationId: groupId });
-	return await memberRepository.find({ conversationId, query });
-};
-
-const authorizeManagement = async ({ actorId, groupId, tx }: DatabaseContext<Management>) => {
-	const actor = await requireMembership({ userId: actorId, conversationId: groupId, tx });
-	if (!canManage(actor)) throw new ForbiddenError();
-	return actor;
-};
-
-const authorizeMemberManagement = async ({
-	actorId,
-	targetId,
-	groupId,
-}: DatabaseContext<MemberManagement>) => {
-	const actor = await authorizeManagement({ actorId, groupId });
-	const target = await getOne({ userId: targetId, groupId });
-
-	if (!canManageMember(actor, target)) throw new ForbiddenError();
-
-	return { actor, target } as const;
-};
-
 const changeRole = async ({ actorId, targetId, groupId, role }: RoleManagement) => {
-	const { actor, target } = await authorizeMemberManagement({ actorId, targetId, groupId });
+	const { userId } = await groupPolicy.authorizeMemberManagement({ actorId, targetId, groupId });
 
 	const data = await memberRepository.update({
-		userId: target.userId,
+		userId,
 		conversationId: groupId,
 		role,
 	});
@@ -94,8 +71,14 @@ const changeRole = async ({ actorId, targetId, groupId, role }: RoleManagement) 
 };
 
 const destroy = async ({ actorId, targetId, groupId, tx }: DatabaseContext<MemberManagement>) => {
-	const { target } = await authorizeMemberManagement({ actorId, targetId, groupId, tx });
-	return await memberRepository.destroy({ userId: target.userId, conversationId: groupId, tx });
+	const { userId } = await groupPolicy.authorizeMemberManagement({
+		actorId,
+		targetId,
+		groupId,
+		tx,
+	});
+
+	return await memberRepository.destroy({ userId, conversationId: groupId, tx });
 };
 
 const kick = async ({ actorId, targetId, groupId }: MemberManagement) => {
@@ -110,9 +93,6 @@ export const memberService = {
 	leaveGroup,
 	find,
 	getOne,
-	requireMembership,
-	authorizeManagement,
-	authorizeMemberManagement,
 	changeRole,
 	destroy,
 	kick,

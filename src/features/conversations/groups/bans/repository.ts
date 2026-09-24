@@ -1,4 +1,4 @@
-import type { GroupMember } from '#features/conversations/members/types.ts';
+import type { GroupMember } from '#features/conversations/groups/types.ts';
 import type { BanUpdate, NewBan } from './contracts/entity.ts';
 import type { BanSelection, BansSelection } from './types.ts';
 

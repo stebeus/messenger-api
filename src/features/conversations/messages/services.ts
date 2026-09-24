@@ -1,7 +1,8 @@
-import type { MessageParams } from './contracts/dtos.ts';
+import type { IdArgs } from '#contracts/entity.ts';
+import type { MessageParams, MessageUpdate } from './contracts/index.ts';
 import type {
 	EditManagedMessageArgs,
-	EditMessageArgs,
+	EditSentMessageArgs,
 	ListMessageArgs,
 	MessageManagement,
 	SendMessageArgs,
@@ -9,13 +10,14 @@ import type {
 } from './types.ts';
 
 import { conversationEvents } from '#features/conversations/events.ts';
-import { memberService } from '#features/conversations/members/services.ts';
+import { groupPolicy } from '#features/conversations/groups/policies.ts';
+import { conversationPolicy } from '#features/conversations/policies.ts';
 import { ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
 import { messageRepository } from './repository.ts';
 
 const send = async ({ userId, conversationId, body }: SendMessageArgs) => {
-	const member = await memberService.requireMembership({ conversationId, userId });
+	const member = await conversationPolicy.requireMembership({ userId, conversationId });
 
 	const data = await messageRepository.create({
 		...body,
@@ -29,7 +31,7 @@ const send = async ({ userId, conversationId, body }: SendMessageArgs) => {
 };
 
 const find = async ({ userId, conversationId, query }: ListMessageArgs) => {
-	const member = await memberService.requireMembership({ userId, conversationId });
+	const member = await conversationPolicy.requireMembership({ userId, conversationId });
 	return messageRepository.find({ conversationId: member.conversationId, query });
 };
 
@@ -39,28 +41,21 @@ const getOne = async ({ messageId }: MessageParams) => {
 	return message;
 };
 
-const getOneBySender = async ({ messageId, userId }: SentMessage) => {
+const getOneBySender = async ({ userId, messageId }: SentMessage) => {
 	const message = await getOne({ messageId });
 	if (message.senderId !== userId) throw new ForbiddenError();
 	return message;
 };
 
-const edit = async ({ userId, messageId, body }: EditMessageArgs) => {
-	const { id } = await getOneBySender({ userId, messageId });
-	const data = await messageRepository.update({ ...body, id });
-
+const edit = async ({ id, ...values }: MessageUpdate) => {
+	const data = await messageRepository.update({ ...values, id });
 	conversationEvents.publish(data.conversationId, { type: 'message_edited', data });
-
 	return data;
 };
 
-const destroy = async ({ userId, messageId }: SentMessage) => {
+const editBySender = async ({ userId, messageId, body }: EditSentMessageArgs) => {
 	const { id } = await getOneBySender({ userId, messageId });
-	const data = await messageRepository.destroy({ id });
-
-	conversationEvents.publish(data.conversationId, { type: 'message_deleted', data });
-
-	return data;
+	return await edit({ ...body, id });
 };
 
 const editWithPermission = async ({
@@ -70,31 +65,32 @@ const editWithPermission = async ({
 	body,
 }: EditManagedMessageArgs) => {
 	const { id, senderId } = await getOne({ messageId });
-	await memberService.authorizeMemberManagement({ actorId, targetId: senderId, groupId });
+	await groupPolicy.authorizeMemberManagement({ actorId, targetId: senderId, groupId });
+	return await edit({ ...body, id });
+};
 
-	const data = await messageRepository.update({ ...body, id });
-
-	conversationEvents.publish(data.conversationId, { type: 'message_edited', data });
-
+const destroy = async ({ id }: IdArgs) => {
+	const data = await messageRepository.destroy({ id });
+	conversationEvents.publish(data.conversationId, { type: 'message_deleted', data });
 	return data;
+};
+
+const destroyBySender = async ({ userId, messageId }: SentMessage) => {
+	const { id } = await getOneBySender({ userId, messageId });
+	return await destroy({ id });
 };
 
 const destroyWithPermission = async ({ actorId, groupId, messageId }: MessageManagement) => {
 	const { id, senderId } = await getOne({ messageId });
-	await memberService.authorizeMemberManagement({ actorId, targetId: senderId, groupId });
-
-	const data = await messageRepository.destroy({ id });
-
-	conversationEvents.publish(data.conversationId, { type: 'message_deleted', data });
-
-	return data;
+	await groupPolicy.authorizeMemberManagement({ actorId, targetId: senderId, groupId });
+	return await destroy({ id });
 };
 
 export const messageService = {
 	send,
 	find,
-	edit,
-	destroy,
+	edit: editBySender,
+	destroy: destroyBySender,
 	editWithPermission,
 	destroyWithPermission,
 } as const;

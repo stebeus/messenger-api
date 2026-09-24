@@ -34,9 +34,15 @@ const find = async ({
 const findOne = async ({ tx = db, ...values }: DatabaseContext<MemberSelection>) =>
 	await tx.query.members.findFirst({ where: values, with: memberRelations });
 
-const update = async ({ role, tx = db, ...values }: DatabaseContext<MemberUpdate>) => {
-	const [data] = await tx.update(members).set({ role }).where(isMember(values)).returning();
-	if (data == null) throw new UpdateError('member', { ...values, role });
+const update = async ({ userId, conversationId, role, tx = db }: DatabaseContext<MemberUpdate>) => {
+	const [data] = await tx
+		.update(members)
+		.set({ role })
+		.where(isMember({ userId, conversationId }))
+		.returning();
+
+	if (data == null) throw new UpdateError('member', { userId, conversationId, role });
+
 	return data;
 };
 
