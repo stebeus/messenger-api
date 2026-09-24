@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { id } from '#contracts/index.ts';
+import { id } from '#contracts/entity.ts';
 import { UserQuery } from '#features/users/contracts/dtos.ts';
 
 export const FriendRequestParams = z.object({
