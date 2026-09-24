@@ -2,7 +2,7 @@ import { drizzleAdapter } from '@better-auth/drizzle-adapter/relations-v2';
 import { betterAuth } from 'better-auth/minimal';
 import { username } from 'better-auth/plugins';
 
-import { config } from '#config/index.ts';
+import { config } from '#config.ts';
 import { db } from '#db/client.ts';
 import * as schema from '#db/schemas/auth.ts';
 import * as user from '#features/users/contracts/constants.ts';

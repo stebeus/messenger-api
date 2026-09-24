@@ -2,7 +2,7 @@ import type { ContentfulStatusCode } from 'hono/utils/http-status';
 
 import { type FileOptions, StorageClient } from '@supabase/storage-js';
 
-import { config } from '#config/index.ts';
+import { config } from '#config.ts';
 import { HttpError } from '#utils/errors.ts';
 
 type Bucket = 'avatars';

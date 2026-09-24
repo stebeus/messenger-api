@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 
-import { config } from '#config/index.ts';
+import { config } from '#config.ts';
 
 import { conversationRelations, socialRelations, userRelations } from './relations/index.ts';
 

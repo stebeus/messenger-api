@@ -2,7 +2,7 @@ import { serve } from '@hono/node-server';
 import { WebSocketServer } from 'ws';
 
 import { app } from './app.ts';
-import { config } from './config/index.ts';
+import { config } from './config.ts';
 
 const wss = new WebSocketServer({ noServer: true });
 

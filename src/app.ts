@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 
-import { config } from './config/index.ts';
+import { config } from './config.ts';
 import { auth } from './lib/auth.ts';
 import { routes } from './routes.ts';
 import { HttpError, NotFoundError } from './utils/errors.ts';
