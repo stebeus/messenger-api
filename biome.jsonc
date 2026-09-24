@@ -35,6 +35,7 @@
 			},
 			"style": {
 				"noCommonJs": "on",
+				"noInferrableTypes": "on",
 				"noNegationElse": "on",
 				"noNestedTernary": "on",
 				"noParameterAssign": "on",
