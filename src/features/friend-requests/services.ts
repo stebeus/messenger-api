@@ -35,7 +35,7 @@ const getOne = async ({ user1Id, user2Id }: DatabaseContext<UserPair>) => {
 	return friendRequest;
 };
 
-const accept = async ({ requesterId, recipientId }: FriendRequestArgs) =>
+const accept = async ({ recipientId, requesterId }: FriendRequestArgs) =>
 	db.transaction(async (tx) => {
 		const friendRequest = await getOne({ user1Id: recipientId, user2Id: requesterId, tx });
 
