@@ -9,7 +9,8 @@ type Bucket = 'avatars';
 
 const createFilePath = (path: string, file: File) => {
 	const fileExtension = file.name.split('.').pop();
-	return `${path}/${crypto.randomUUID()}.${fileExtension}`;
+	const fileName = crypto.randomUUID();
+	return `${path}/${fileName}.${fileExtension}`;
 };
 
 export const storage = new StorageClient(config.storage.url, {
@@ -31,9 +32,9 @@ export const upload = async (bucket: Bucket, path: string, file: File, options?:
 export const maybeUpload = async (
 	bucket: Bucket,
 	path: string,
-	file?: File | null,
+	file?: File,
 	options?: FileOptions,
 ) => (file == null ? undefined : await upload(bucket, path, file, options));
 
-export const maybeUploadAvatar = async (path: string, file?: File | null, options?: FileOptions) =>
+export const maybeUploadAvatar = async (path: string, file?: File, options?: FileOptions) =>
 	await maybeUpload('avatars', path, file, options);
