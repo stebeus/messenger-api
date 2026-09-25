@@ -1,14 +1,14 @@
 import type { IdArgs } from '#contracts/entity.ts';
 import type { DatabaseContext } from '#db/types.ts';
-import type { ConversationParams } from './contracts/dtos.ts';
+import type { ConversationMember } from './types.ts';
 
 import { NotFoundError } from '#utils/errors.ts';
 
 import { conversationEvents } from './events.ts';
 import { conversationRepository } from './repository.ts';
 
-const getOne = async ({ conversationId }: ConversationParams) => {
-	const conversation = await conversationRepository.findOne({ id: conversationId });
+const getOne = async ({ conversationId, userId }: ConversationMember) => {
+	const conversation = await conversationRepository.findOne({ id: conversationId, userId });
 	if (conversation == null) throw new NotFoundError({ resource: 'conversation' });
 	return conversation;
 };

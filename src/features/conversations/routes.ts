@@ -1,11 +1,10 @@
 import { upgradeWebSocket } from '@hono/node-server';
-import { Hono } from 'hono';
+import { type Context, Hono } from 'hono';
 
 import { Query } from '#contracts/dtos.ts';
 import { CreateMessageBody } from '#features/conversations/messages/contracts/dtos.ts';
 import { messageService } from '#features/conversations/messages/services.ts';
-import { requireAuth, validate } from '#middleware/index.ts';
-import { BadRequestError } from '#utils/errors.ts';
+import { type AuthEnv, requireAuth, validate } from '#middleware/index.ts';
 
 import { ConversationParams } from './contracts/dtos.ts';
 import { conversationEvents } from './events.ts';
@@ -13,24 +12,44 @@ import { conversationService } from './services.ts';
 
 export const conversations = new Hono();
 
+type ConversationWsContext = Context<
+	AuthEnv,
+	'/:conversationId/ws',
+	{
+		out: {
+			param: ConversationParams;
+		};
+	}
+>;
+
 conversations.get(
 	'/:conversationId/ws',
-	upgradeWebSocket(async (c) => {
-		const { success, data } = ConversationParams.safeParse({
-			conversationId: c.req.param('conversationId'),
-		});
+	validate('param', ConversationParams),
+	requireAuth,
+	upgradeWebSocket(async (c: ConversationWsContext) => {
+		const { user } = c.var.auth;
+		const { conversationId } = c.req.valid('param');
 
-		if (!success) throw new BadRequestError({ message: 'Invalid conversation ID' });
-
-		const { id } = await conversationService.getOne(data);
+		const conversation = await conversationService.getOne({ userId: user.id, conversationId });
 
 		let unsubscribe: (() => void) | undefined;
 
 		return {
 			onOpen: (_event, ws) => {
-				unsubscribe = conversationEvents.subscribe(id, (event) => {
-					const data = JSON.stringify(event);
-					ws.send(data);
+				unsubscribe = conversationEvents.subscribe(conversation.id, (event) => {
+					const { type, data } = event;
+					const payload = JSON.stringify(event);
+
+					if (type === 'conversation_deleted') ws.close(1011, 'Conversation was deleted');
+
+					for (const expulsionType of ['kicked', 'banned']) {
+						const expelled =
+							type === (`member_${expulsionType}` as const) && data.userId === user.id;
+
+						if (expelled) ws.close(1008, `You have been ${expulsionType} from the group`);
+					}
+
+					ws.send(payload);
 				});
 			},
 			onClose: () => unsubscribe?.(),

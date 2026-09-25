@@ -22,7 +22,7 @@ const create = async ({ user1Id, user2Id, tx }: DatabaseContext<UserPair>) => {
 };
 
 const getOne = async ({ dmId, userId }: DirectMessageMember) => {
-	const dm = await dmRepository.findOne({ id: dmId, userId });
+	const dm = await conversationRepository.findOne({ id: dmId, userId, type: 'direct' });
 	if (dm == null) throw new NotFoundError({ resource: 'direct message' });
 	return dm;
 };

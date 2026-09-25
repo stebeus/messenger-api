@@ -1,12 +1,14 @@
-import type { ConversationMember } from '#features/conversations/types.ts';
 import type { UserPair } from '#features/users/contracts/entity.ts';
 
 import { type DatabaseContext, db, orderBy } from '#db/index.ts';
-import { conversationRelations, filterMember } from '#features/conversations/helpers.ts';
+import {
+	conversationColumns,
+	conversationRelations,
+	filterMember,
+} from '#features/conversations/helpers.ts';
 import { containsName, type UsersSelection } from '#features/users/index.ts';
 
 const type = 'direct';
-const columns = { type: false } as const;
 
 const find = async ({
 	userId,
@@ -16,21 +18,14 @@ const find = async ({
 	await tx.query.conversations.findMany({
 		where: { members: { userId, user: containsName(q) }, type },
 		with: conversationRelations,
-		columns,
+		columns: conversationColumns,
 		...orderBy(sort, order),
-	});
-
-const findOne = async ({ id, userId, tx = db }: DatabaseContext<ConversationMember>) =>
-	await tx.query.conversations.findFirst({
-		where: { ...filterMember(userId), id, type },
-		with: conversationRelations,
-		columns,
 	});
 
 const findOneByPair = async ({ user1Id, user2Id, tx = db }: DatabaseContext<UserPair>) =>
 	await tx.query.conversations.findFirst({
 		where: { AND: [filterMember(user1Id), filterMember(user2Id)], type },
-		columns,
+		columns: conversationColumns,
 	});
 
-export const dmRepository = { find, findOne, findOneByPair } as const;
+export const dmRepository = { find, findOneByPair } as const;
