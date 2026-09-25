@@ -7,10 +7,10 @@ import { HttpError } from '#utils/errors.ts';
 
 type Bucket = 'avatars';
 
-const createFilePath = (path: string, file: File) => {
-	const fileExtension = file.name.split('.').pop();
+const createFilePath = (path: string, { name }: File) => {
 	const fileName = crypto.randomUUID();
-	return `${path}/${fileName}.${fileExtension}`;
+	const extension = name.split('.').pop();
+	return `${path}/${fileName}.${extension}`;
 };
 
 export const storage = new StorageClient(config.storage.url, {
