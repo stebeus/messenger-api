@@ -4,7 +4,7 @@ import { STATUS_CODES } from 'node:http';
 
 import { HTTPException } from 'hono/http-exception';
 
-import { toTitleCase } from './formatters.ts';
+import { capitalize } from './formatters.ts';
 
 type HttpErrorOptions = Partial<{
 	message: string;
@@ -21,7 +21,7 @@ export type HttpErrorMessageFormatOptions = Pick<HttpResourceErrorOptions, 'reso
 const formatHttpErrorMessage = (
 	template: string,
 	{ resource, message }: HttpErrorMessageFormatOptions,
-) => (resource != null && message == null ? toTitleCase(`${resource} ${template}`) : message);
+) => (resource != null && message == null ? `${capitalize(resource)} ${template}` : message);
 
 export class HttpError extends HTTPException {
 	static isHttpError(error: unknown) {
