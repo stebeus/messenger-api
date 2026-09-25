@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { containsName } from './helpers.ts';
+import { containsName } from '#features/users/helpers.ts';
 
 describe('containsName', () => {
 	it('creates nothing when given no name', () => {
