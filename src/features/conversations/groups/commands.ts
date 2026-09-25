@@ -1,4 +1,3 @@
-import type { GroupParams } from './contracts/dtos.ts';
 import type { CreateGroupArgs, GroupMember, UpdateGroupArgs } from './types.ts';
 
 import { db } from '#db/client.ts';
@@ -7,8 +6,8 @@ import { memberService } from '#features/conversations/members/services.ts';
 import { conversationRepository } from '#features/conversations/repository.ts';
 import { conversationService } from '#features/conversations/services.ts';
 import { maybeUploadAvatar } from '#lib/storage.ts';
-import { ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
+import { groupQueries } from './queries.ts';
 import { groupRepository } from './repository.ts';
 
 const create = async ({ userId, body: { avatar, ...body } }: CreateGroupArgs) =>
@@ -27,20 +26,8 @@ const create = async ({ userId, body: { avatar, ...body } }: CreateGroupArgs) =>
 		});
 	});
 
-const getOne = async ({ groupId }: GroupParams) => {
-	const group = await groupRepository.findOne({ conversationId: groupId });
-	if (group == null) throw new NotFoundError({ resource: 'group' });
-	return group;
-};
-
-const getOneByOwnership = async ({ userId, groupId }: GroupMember) => {
-	const group = await getOne({ groupId });
-	if (group.ownerId !== userId) throw new ForbiddenError();
-	return group;
-};
-
 const update = async ({ userId, groupId, body: { avatar, ...body } }: UpdateGroupArgs) => {
-	const { conversationId } = await getOneByOwnership({ userId, groupId });
+	const { conversationId } = await groupQueries.getOneByOwnership({ userId, groupId });
 	const avatarUpload = await maybeUploadAvatar(`/groups/${conversationId}`, avatar);
 
 	const data = await groupRepository.update({
@@ -55,7 +42,7 @@ const update = async ({ userId, groupId, body: { avatar, ...body } }: UpdateGrou
 };
 
 const destroy = async ({ userId, groupId }: GroupMember) => {
-	const { conversationId } = await getOneByOwnership({ userId, groupId });
+	const { conversationId } = await groupQueries.getOneByOwnership({ userId, groupId });
 	return await conversationService.destroy({ id: conversationId });
 };
 

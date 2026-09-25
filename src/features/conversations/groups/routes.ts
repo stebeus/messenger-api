@@ -7,6 +7,7 @@ import { messageService } from '#features/conversations/messages/index.ts';
 import { limitImageSize, requireAuth, validate } from '#middleware/index.ts';
 
 import { bans } from './bans/routes.ts';
+import { groupService } from './commands.ts';
 import {
 	CreateGroupBody,
 	GroupMessageParams,
@@ -14,7 +15,6 @@ import {
 	UpdateGroupBody,
 } from './contracts/dtos.ts';
 import { groupRepository } from './repository.ts';
-import { groupService } from './services.ts';
 
 export const groups = new Hono();
 

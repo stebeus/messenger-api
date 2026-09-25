@@ -9,6 +9,7 @@ import type { ListMemberArgs } from './types.ts';
 
 import { conversationEvents } from '#features/conversations/events.ts';
 import { groupPolicy } from '#features/conversations/groups/policies.ts';
+import { groupQueries } from '#features/conversations/groups/queries.ts';
 import { conversationPolicy } from '#features/conversations/policies.ts';
 import { ConflictError, ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
@@ -26,8 +27,9 @@ const create = async ({ userId, conversationId, role, tx }: DatabaseContext<NewM
 };
 
 const joinGroup = async ({ userId, groupId }: GroupMember) => {
-	await groupPolicy.authorizeJoin({ userId, groupId });
-	return await create({ userId, conversationId: groupId });
+	const { conversationId } = await groupQueries.getOne({ groupId });
+	await groupPolicy.authorizeJoin({ userId, groupId: conversationId });
+	return await create({ userId, conversationId });
 };
 
 const find = async ({ userId, groupId, query }: ListMemberArgs) => {
