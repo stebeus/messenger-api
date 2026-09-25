@@ -10,6 +10,7 @@ import type { ListMemberArgs } from './types.ts';
 import { conversationEvents } from '#features/conversations/events.ts';
 import { groupPolicy } from '#features/conversations/groups/policies.ts';
 import { groupQueries } from '#features/conversations/groups/queries.ts';
+import { messageRepository } from '#features/conversations/messages/repository.ts';
 import { conversationPolicy } from '#features/conversations/policies.ts';
 import { ConflictError, ForbiddenError, NotFoundError } from '#utils/errors.ts';
 
@@ -79,6 +80,8 @@ const destroy = async ({ actorId, targetId, groupId, tx }: DatabaseContext<Membe
 		groupId,
 		tx,
 	});
+
+	await messageRepository.destroyByMember({ userId, conversationId: groupId });
 
 	return await memberRepository.destroy({ userId, conversationId: groupId, tx });
 };

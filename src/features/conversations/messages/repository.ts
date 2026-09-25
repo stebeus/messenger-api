@@ -1,8 +1,9 @@
 import type { IdArgs } from '#contracts/entity.ts';
+import type { ConversationMember } from '#features/conversations/types.ts';
 import type { MessageUpdate, NewMessage } from './contracts/entity.ts';
 import type { MessageSelection, MessagesSelection } from './types.ts';
 
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import {
 	CreationError,
@@ -47,4 +48,26 @@ const destroy = async ({ id, tx = db }: DatabaseContext<IdArgs>) => {
 	return data;
 };
 
-export const messageRepository = { create, find, findOne, update, destroy } as const;
+const destroyByMember = async ({
+	userId,
+	conversationId,
+	tx = db,
+}: DatabaseContext<ConversationMember>) => {
+	const [data] = await tx
+		.delete(messages)
+		.where(and(eq(messages.senderId, userId), eq(messages.conversationId, conversationId)))
+		.returning();
+
+	if (data == null) throw new DeletionError('member message', { userId });
+
+	return data;
+};
+
+export const messageRepository = {
+	create,
+	find,
+	findOne,
+	update,
+	destroy,
+	destroyByMember,
+} as const;
