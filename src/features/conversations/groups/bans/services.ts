@@ -29,7 +29,7 @@ const create = async ({ actorId, targetId, groupId, reason, expiresAt }: CreateB
 			tx,
 		});
 
-		conversationEvents.publish(data.groupId, { type: 'member_banned', data });
+		conversationEvents.publish(data.groupId, { type: 'member.banned', data });
 
 		return data;
 	});
@@ -63,7 +63,7 @@ const destroy = async ({ actorId, targetId, groupId }: MemberManagement) =>
 		const ban = await getOne({ userId: targetId, groupId: conversationId, tx });
 		const data = await banRepository.destroy({ ...ban, tx });
 
-		conversationEvents.publish(data.groupId, { type: 'member_unbanned', data });
+		conversationEvents.publish(data.groupId, { type: 'member.unbanned', data });
 
 		return data;
 	});

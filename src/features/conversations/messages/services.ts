@@ -25,7 +25,7 @@ const send = async ({ userId, conversationId, body }: SendMessageArgs) => {
 		conversationId: member.conversationId,
 	});
 
-	conversationEvents.publish(data.conversationId, { type: 'message_sent', data });
+	conversationEvents.publish(data.conversationId, { type: 'message.sent', data });
 
 	return data;
 };
@@ -49,7 +49,7 @@ const getOneBySender = async ({ userId, messageId }: SentMessage) => {
 
 const edit = async ({ id, ...values }: MessageUpdate) => {
 	const data = await messageRepository.update({ ...values, id });
-	conversationEvents.publish(data.conversationId, { type: 'message_edited', data });
+	conversationEvents.publish(data.conversationId, { type: 'message.edited', data });
 	return data;
 };
 
@@ -71,7 +71,7 @@ const editWithPermission = async ({
 
 const destroy = async ({ id }: IdArgs) => {
 	const data = await messageRepository.destroy({ id });
-	conversationEvents.publish(data.conversationId, { type: 'message_deleted', data });
+	conversationEvents.publish(data.conversationId, { type: 'message.deleted', data });
 	return data;
 };
 

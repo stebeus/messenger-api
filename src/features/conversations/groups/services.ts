@@ -49,7 +49,7 @@ const update = async ({ userId, groupId, body: { avatar, ...body } }: UpdateGrou
 		avatar: avatarUpload?.path,
 	});
 
-	conversationEvents.publish(data.conversationId, { type: 'group_updated', data });
+	conversationEvents.publish(data.conversationId, { type: 'group.updated', data });
 
 	return data;
 };

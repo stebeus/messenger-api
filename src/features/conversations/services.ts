@@ -15,7 +15,7 @@ const getOne = async ({ conversationId, userId }: ConversationMember) => {
 
 const destroy = async ({ id, tx }: DatabaseContext<IdArgs>) => {
 	const data = await conversationRepository.destroy({ id, tx });
-	conversationEvents.publish(id, { type: 'conversation_deleted', data });
+	conversationEvents.publish(id, { type: 'conversation.deleted', data });
 	return data;
 };
 

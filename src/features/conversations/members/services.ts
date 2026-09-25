@@ -20,7 +20,7 @@ const create = async ({ userId, conversationId, role, tx }: DatabaseContext<NewM
 
 	const data = await memberRepository.create({ userId, conversationId, role, tx });
 
-	conversationEvents.publish(data.conversationId, { type: 'member_joined', data });
+	conversationEvents.publish(data.conversationId, { type: 'member.joined', data });
 
 	return data;
 };
@@ -51,7 +51,7 @@ const leaveGroup = async ({ userId, groupId }: GroupMember) => {
 
 	const data = await memberRepository.destroy(member);
 
-	conversationEvents.publish(data.conversationId, { type: 'member_left', data });
+	conversationEvents.publish(data.conversationId, { type: 'member.left', data });
 
 	return data;
 };
@@ -65,7 +65,7 @@ const changeRole = async ({ actorId, targetId, groupId, role }: RoleManagement) 
 		role,
 	});
 
-	conversationEvents.publish(data.conversationId, { type: 'member_updated', data });
+	conversationEvents.publish(data.conversationId, { type: 'member.updated', data });
 
 	return data;
 };
@@ -83,7 +83,7 @@ const destroy = async ({ actorId, targetId, groupId, tx }: DatabaseContext<Membe
 
 const kick = async ({ actorId, targetId, groupId }: MemberManagement) => {
 	const data = await destroy({ actorId, targetId, groupId });
-	conversationEvents.publish(data.conversationId, { type: 'member_kicked', data });
+	conversationEvents.publish(data.conversationId, { type: 'member.kicked', data });
 	return data;
 };
 

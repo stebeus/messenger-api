@@ -1,5 +1,5 @@
 type Event<Events, Domain extends keyof Events, Type extends keyof Events[Domain]> = {
-	type: `${Domain & string}_${Type & string}`;
+	type: `${Domain & string}.${Type & string}`;
 	data: Events[Domain][Type];
 };
 

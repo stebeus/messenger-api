@@ -40,11 +40,11 @@ conversations.get(
 					const { type, data } = event;
 					const payload = JSON.stringify(event);
 
-					if (type === 'conversation_deleted') ws.close(1011, 'Conversation was deleted');
+					if (type === 'conversation.deleted') ws.close(1011, 'Conversation was deleted');
 
 					for (const expulsionType of ['kicked', 'banned']) {
 						const expelled =
-							type === (`member_${expulsionType}` as const) && data.userId === user.id;
+							type === (`member.${expulsionType}` as const) && data.userId === user.id;
 
 						if (expelled) ws.close(1008, `You have been ${expulsionType} from the group`);
 					}
