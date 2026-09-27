@@ -59,7 +59,7 @@ describe('GET /users/:userId', () => {
 		expect(res.status).toBe(404);
 	});
 
-	it('retrieves users', async () => {
+	it('retrieves a user', async () => {
 		// Arrange
 		const { headers, user } = await createAuthenticatedUser();
 
