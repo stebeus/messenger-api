@@ -9,7 +9,7 @@ import { conversations } from '#db/schemas/conversation.ts';
 
 import { conversationColumns, conversationRelations, filterMember } from './helpers.ts';
 
-const create = async ({ tx = db, ...values }: DatabaseContext<NewConversation>) => {
+const create = async ({ tx = db, ...values }: DatabaseContext<NewConversation> = {}) => {
 	const [data] = await tx.insert(conversations).values(values).returning();
 	if (data == null) throw new CreationError('conversation', values);
 	return data;
