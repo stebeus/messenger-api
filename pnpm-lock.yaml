@@ -185,8 +185,8 @@ importers:
         specifier: 1.0.0-rc.4
         version: 1.0.0-rc.4(postgres@3.4.9)(zod@4.6.5)
       drizzle-seed:
-        specifier: ^0.3.1
-        version: 0.3.1(drizzle-orm@1.0.0-rc.4(postgres@3.4.9)(zod@4.6.5))
+        specifier: 1.0.0-rc.4
+        version: 1.0.0-rc.4(drizzle-orm@1.0.0-rc.4(postgres@3.4.9)(zod@4.6.5))
       hono:
         specifier: ^4.13.8
         version: 4.13.8
@@ -1044,13 +1044,10 @@ packages:
       zod:
         optional: true
 
-  drizzle-seed@0.3.1:
-    resolution: {integrity: sha512-F/0lgvfOAsqlYoHM/QAGut4xXIOXoE5VoAdv2FIl7DpGYVXlAzKuJO+IphkKUFK3Dz+rFlOsQLnMNrvoQ0cx7g==}
+  drizzle-seed@1.0.0-rc.4:
+    resolution: {integrity: sha512-WztS8tuuWV9Wqx5rMIhFlFuIfE0DPf7Zher3WtCumhSRgsAo5dASRmzS/w+6h22hEfOF/YJk6f3vKIqltKhUEg==}
     peerDependencies:
-      drizzle-orm: '>=0.36.4'
-    peerDependenciesMeta:
-      drizzle-orm:
-        optional: true
+      drizzle-orm: '>=1.0.0-beta.2'
 
   es-module-lexer@2.3.2:
     resolution: {integrity: sha512-poHGpORABojJJucnV9KbOavETW8lBVnphkW77ER5/BQ5Fz7oXSoCNek7IH3vR5nRjdsEz926ibFYX8KtLQmdyw==}
@@ -1770,11 +1767,10 @@ snapshots:
       postgres: 3.4.9
       zod: 4.6.5
 
-  drizzle-seed@0.3.1(drizzle-orm@1.0.0-rc.4(postgres@3.4.9)(zod@4.6.5)):
+  drizzle-seed@1.0.0-rc.4(drizzle-orm@1.0.0-rc.4(postgres@3.4.9)(zod@4.6.5)):
     dependencies:
-      pure-rand: 6.1.0
-    optionalDependencies:
       drizzle-orm: 1.0.0-rc.4(postgres@3.4.9)(zod@4.6.5)
+      pure-rand: 6.1.0
 
   es-module-lexer@2.3.2: {}
 
