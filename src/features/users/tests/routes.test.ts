@@ -48,6 +48,17 @@ describe('GET /users/:userId', () => {
 		expect(res.status).toBe(401);
 	});
 
+	it('retrieves not found for non-existent users', async () => {
+		// Arrange
+		const { headers } = await createAuthenticatedUser();
+
+		// Act
+		const res = await app.request(`${url}/${Number.MAX_SAFE_INTEGER}`, { headers });
+
+		// Assert
+		expect(res.status).toBe(404);
+	});
+
 	it('retrieves users', async () => {
 		// Arrange
 		const { headers, user } = await createAuthenticatedUser();
