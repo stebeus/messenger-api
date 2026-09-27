@@ -33,9 +33,10 @@ describe('GET /users', () => {
 
 		// Act
 		const res = await app.request(url, { headers });
-		const { data } = await res.json();
 
 		// Assert
+		const { data } = await res.json();
+
 		expect(res.status).toBe(200);
 		expect(data).toBeInstanceOf(Array);
 	});
@@ -53,9 +54,10 @@ describe('GET /users/:userId', () => {
 
 		// Act
 		const res = await app.request(`${url}/1`, { headers });
-		const { data } = await res.json();
 
 		// Assert
+		const { data } = await res.json();
+
 		expect(res.status).toBe(200);
 		expect(data).toBeDefined();
 	});
