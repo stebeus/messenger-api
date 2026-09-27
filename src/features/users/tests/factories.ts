@@ -35,8 +35,8 @@ export const createAuthenticatedUser = async (options?: UserOptions) => {
 
 	const user = createUser(options);
 
-	const { id } = await test.saveUser(user);
-	const headers = await test.getAuthHeaders({ userId: id });
+	const savedUser = await test.saveUser(user);
+	const headers = await test.getAuthHeaders({ userId: savedUser.id });
 
-	return { headers, user } as const;
+	return { headers, user: savedUser } as const;
 };
