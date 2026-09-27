@@ -1,8 +1,9 @@
 import type { Id } from '#contracts/entity.ts';
 
-import { sql } from 'drizzle-orm';
+import { reset } from 'drizzle-seed';
 
 import { testDb } from './client.ts';
+import * as schema from './schemas/index.ts';
 
 export const contains = (query?: string) =>
 	query == null ? undefined : ({ like: `%${query}%` } as const);
@@ -18,15 +19,4 @@ export const parseId = (id: Id) => {
 	return parsedId;
 };
 
-export const resetTestDb = async () => {
-	await testDb.execute(sql`
-		DO $$ 
-		DECLARE 
-			r RECORD;
-		BEGIN 
-			FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP 
-				EXECUTE 'TRUNCATE TABLE ' || quote_ident(r.tablename) || ' CASCADE;'; 
-			END LOOP; 
-		END $$;
-	`);
-};
+export const resetTestDb = async () => await reset(testDb, schema);
