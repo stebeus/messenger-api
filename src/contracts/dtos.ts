@@ -13,7 +13,7 @@ export const avatar = z
 	.optional();
 
 export const Query = z
-	.object({
+	.strictObject({
 		q: z.string(),
 		sort: z.enum(sorts).default('createdAt'),
 		order: z.enum(orders).default('asc'),

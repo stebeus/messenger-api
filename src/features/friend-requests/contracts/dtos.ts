@@ -10,7 +10,7 @@ export const FriendRequestParams = z.object({
 export const directions = ['incoming', 'outgoing'] as const;
 
 export const FriendRequestQuery = z
-	.object({
+	.strictObject({
 		...UserQuery.shape,
 		direction: z.enum(directions),
 	})

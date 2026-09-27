@@ -11,7 +11,7 @@ export const UserParams = z.object({
 export const userSorts = [...sorts, 'name'] as const;
 
 export const UserQuery = z
-	.object({
+	.strictObject({
 		...Query.shape,
 		sort: z.enum(userSorts).default('createdAt'),
 	})

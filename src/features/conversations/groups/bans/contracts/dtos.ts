@@ -7,7 +7,7 @@ import { BanUpdate, NewBan } from './entity.ts';
 export const banSorts = [...userSorts, 'expiresAt'] as const;
 
 export const BanQuery = z
-	.object({
+	.strictObject({
 		...UserQuery.shape,
 		sort: z.enum(banSorts).default('createdAt'),
 	})
