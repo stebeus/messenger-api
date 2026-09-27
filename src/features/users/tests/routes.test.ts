@@ -50,10 +50,10 @@ describe('GET /users/:userId', () => {
 
 	it('retrieves users', async () => {
 		// Arrange
-		const { headers } = await createAuthenticatedUser();
+		const { headers, user } = await createAuthenticatedUser();
 
 		// Act
-		const res = await app.request(`${url}/1`, { headers });
+		const res = await app.request(`${url}/${user.id}`, { headers });
 
 		// Assert
 		const { data } = await res.json();
