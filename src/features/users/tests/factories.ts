@@ -1,5 +1,6 @@
 import type { User } from '#features/users/contracts/entity.ts';
 
+import { testAuth } from '#lib/auth.ts';
 import { createTimestamps, defaultId } from '#utils/test.ts';
 
 type UserOptions = Partial<User>;
@@ -28,3 +29,14 @@ export const createUser = ({
 	}) as const;
 
 export type TestUserResult = ReturnType<typeof createUser>;
+
+export const createAuthenticatedUser = async (options?: UserOptions) => {
+	const { test } = await testAuth.$context;
+
+	const user = createUser(options);
+
+	const { id } = await test.saveUser(user);
+	const headers = await test.getAuthHeaders({ userId: id });
+
+	return { headers, user } as const;
+};
