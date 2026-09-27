@@ -7,7 +7,7 @@ import { messageService } from '#features/conversations/messages/index.ts';
 import { limitImageSize, requireAuth, validate } from '#middleware/index.ts';
 
 import { bans } from './bans/routes.ts';
-import { groupService } from './commands.ts';
+import { groupCommands } from './commands.ts';
 import {
 	CreateGroupBody,
 	GroupMessageParams,
@@ -43,7 +43,7 @@ groups.post('/', limitImageSize(), validate('form', CreateGroupBody), requireAut
 	const { user } = c.var.auth;
 	const body = c.req.valid('form');
 
-	const data = await groupService.create({ userId: user.id, body });
+	const data = await groupCommands.create({ userId: user.id, body });
 
 	return c.json({ data }, 201);
 });
@@ -59,7 +59,7 @@ groups.patch(
 		const { user } = c.var.auth;
 		const body = c.req.valid('form');
 
-		const data = await groupService.update({ groupId, userId: user.id, body });
+		const data = await groupCommands.update({ groupId, userId: user.id, body });
 
 		return c.json({ data });
 	},
@@ -69,7 +69,7 @@ groups.delete('/:groupId', validate('param', GroupParams), requireAuth, async (c
 	const { groupId } = c.req.valid('param');
 	const { user } = c.var.auth;
 
-	const data = await groupService.destroy({ groupId, userId: user.id });
+	const data = await groupCommands.destroy({ groupId, userId: user.id });
 
 	return c.json({ data });
 });

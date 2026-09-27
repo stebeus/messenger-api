@@ -46,4 +46,4 @@ const destroy = async ({ userId, groupId }: GroupMember) => {
 	return await conversationService.destroy({ id: conversationId });
 };
 
-export const groupService = { create, update, destroy } as const;
+export const groupCommands = { create, update, destroy } as const;
