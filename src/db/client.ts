@@ -12,6 +12,6 @@ export const db = drizzle({
 });
 
 export const testDb = drizzle({
-	connection: config.db.url,
+	connection: config.db.testUrl,
 	relations,
 });
