@@ -119,7 +119,7 @@ describe('DELETE /messages/:messageId', () => {
 		expect(res.status).toBe(401);
 	});
 
-	it('retrieves not found for unsent messages', async () => {
+	it('retrieves not found for non-existent messages', async () => {
 		// Arrange
 		const { headers } = await createAuthenticatedUser();
 

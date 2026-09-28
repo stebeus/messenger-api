@@ -103,7 +103,7 @@ describe('POST /groups/:groupId/bans/:memberId', () => {
 		expect(res.status).toBe(401);
 	});
 
-	it('rejects duplicating bans', async () => {
+	it('prevents duplicating bans', async () => {
 		// Arrange
 		await requestJson(app, `${url}/${member.id}`, { reason: 'Test' }, { headers: adminHeaders });
 

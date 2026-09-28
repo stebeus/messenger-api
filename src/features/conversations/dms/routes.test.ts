@@ -49,7 +49,7 @@ describe('GET /dms/:dmId', () => {
 		expect(res.status).toBe(401);
 	});
 
-	it('retrieves not found for non-existent users', async () => {
+	it('retrieves not found for non-existent DMs', async () => {
 		// Arrange
 		const { headers } = await createAuthenticatedUser();
 

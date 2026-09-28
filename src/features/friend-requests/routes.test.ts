@@ -78,7 +78,7 @@ describe('POST /friend-requests/:recipientId', () => {
 	});
 
 	describe('Given existing resources', () => {
-		it('rejects duplicating friend requests', async () => {
+		it('prevents duplicating friend requests', async () => {
 			// Arrange
 			const { headers } = await createAuthenticatedUser();
 			const { user } = await createAuthenticatedUser();
@@ -92,7 +92,7 @@ describe('POST /friend-requests/:recipientId', () => {
 			expect(res.status).toBe(409);
 		});
 
-		it('rejects requesting to existent friends', async () => {
+		it('prevents requesting existing friends', async () => {
 			// Arrange
 			const { headers, user } = await createAuthenticatedUser();
 			const { user: user2 } = await createAuthenticatedUser();
