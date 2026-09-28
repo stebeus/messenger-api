@@ -7,7 +7,15 @@ type TimestampsOptions = Partial<{
 	updatedAt: DateArgs;
 }>;
 
-type JsonRequestOptions = Omit<RequestInit, 'body'>;
+type RequestOptions = Omit<RequestInit, 'body'>;
+
+type RequestUrl = string | Request | URL;
+
+const requestApi = async (
+	app: Hono,
+	url: RequestUrl,
+	{ method = 'post', ...options }: RequestInit = {},
+) => await app.request(url, { ...options, method: method.toUpperCase() });
 
 export const defaultId = '1';
 
@@ -20,17 +28,27 @@ export const createTimestamps = ({ createdAt, updatedAt }: TimestampsOptions) =>
 
 export const requestJson = async (
 	app: Hono,
-	url: string | Request | URL,
+	url: RequestUrl,
 	body: unknown,
-	{ method = 'post', headers, ...options }: JsonRequestOptions = {},
+	{ headers, ...options }: RequestOptions = {},
 ) => {
 	const requestHeaders = new Headers(headers);
 	requestHeaders.set('content-type', 'application/json');
 
-	return await app.request(url, {
+	return await requestApi(app, url, {
 		...options,
-		method: method.toUpperCase(),
 		headers: requestHeaders,
 		body: JSON.stringify(body),
 	});
+};
+
+export const requestMultipartForm = async (
+	app: Hono,
+	url: RequestUrl,
+	body: Record<string, string | File>,
+	options?: RequestOptions,
+) => {
+	const form = new FormData();
+	for (const [key, value] of Object.entries(body)) form.append(key, value);
+	return await requestApi(app, url, { ...options, body: form });
 };
