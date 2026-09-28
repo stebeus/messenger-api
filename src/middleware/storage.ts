@@ -6,8 +6,12 @@ type FileSizeLimitOptions = HttpErrorMessageFormatOptions & {
 	maxSizeInKiB?: number;
 };
 
+export const maxFileSize = 1024;
+
+export const maxImageSize = 512;
+
 export const limitFileSize = ({
-	maxSizeInKiB = 1024,
+	maxSizeInKiB = maxFileSize,
 	resource = 'file',
 	message,
 }: FileSizeLimitOptions = {}) =>
@@ -19,7 +23,7 @@ export const limitFileSize = ({
 	});
 
 export const limitImageSize = ({
-	maxSizeInKiB = 512,
+	maxSizeInKiB = maxImageSize,
 	resource = 'image',
 	message,
 }: FileSizeLimitOptions = {}) => limitFileSize({ maxSizeInKiB, resource, message });
