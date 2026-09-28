@@ -16,7 +16,13 @@ beforeEach(async () => await resetTestDb());
 describe('PATCH /messages/:messageId', () => {
 	describe('Given invalid inputs', () => {
 		it('rejects invalid parameters', async () => {
-			const res = await app.request(`${url}/john_doe`, { method: 'PATCH' });
+			const res = await requestJson(
+				app,
+				`${url}/john_doe`,
+				{ content: 'Edited' },
+				{ method: 'PATCH' },
+			);
+
 			expect(res.status).toBe(400);
 		});
 
