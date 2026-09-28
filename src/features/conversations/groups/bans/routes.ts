@@ -35,12 +35,7 @@ bans.post(
 		const { groupId, memberId } = c.req.valid('param');
 		const body = c.req.valid('json');
 
-		const data = await banService.create({
-			...body,
-			actorId: user.id,
-			targetId: memberId,
-			groupId,
-		});
+		const data = await banService.create({ actorId: user.id, targetId: memberId, groupId, body });
 
 		return c.json({ data }, 201);
 	},
@@ -56,12 +51,7 @@ bans.patch(
 		const { groupId, memberId } = c.req.valid('param');
 		const body = c.req.valid('json');
 
-		const data = await banService.update({
-			...body,
-			actorId: user.id,
-			targetId: memberId,
-			groupId,
-		});
+		const data = await banService.update({ actorId: user.id, targetId: memberId, groupId, body });
 
 		return c.json({ data });
 	},

@@ -9,7 +9,7 @@ import { ConflictError, NotFoundError } from '#utils/errors.ts';
 
 import { banRepository } from './repository.ts';
 
-const create = async ({ actorId, targetId, groupId, reason, expiresAt }: CreateBanArgs) =>
+const create = async ({ actorId, targetId, groupId, body }: CreateBanArgs) =>
 	await db.transaction(async (tx) => {
 		const ban = await banRepository.findOne({ userId: targetId, groupId, tx });
 		if (ban != null) throw new ConflictError({ message: 'User is already banned' });
@@ -21,13 +21,7 @@ const create = async ({ actorId, targetId, groupId, reason, expiresAt }: CreateB
 			tx,
 		});
 
-		const data = await banRepository.create({
-			userId,
-			groupId: conversationId,
-			reason,
-			expiresAt,
-			tx,
-		});
+		const data = await banRepository.create({ ...body, userId, groupId: conversationId, tx });
 
 		conversationEvents.publish(data.groupId, { type: 'member.banned', data });
 
@@ -45,16 +39,10 @@ const getOne = async ({ userId, groupId, tx }: DatabaseContext<GroupMember>) => 
 	return ban;
 };
 
-const update = async ({ actorId, targetId, groupId, reason, expiresAt }: UpdateBanArgs) => {
+const update = async ({ actorId, targetId, groupId, body }: UpdateBanArgs) => {
 	const { conversationId } = await groupPolicy.authorizeManagement({ actorId, groupId });
 	const ban = await getOne({ userId: targetId, groupId: conversationId });
-
-	return await banRepository.update({
-		userId: ban.userId,
-		groupId: ban.groupId,
-		reason,
-		expiresAt,
-	});
+	return await banRepository.update({ ...body, userId: ban.userId, groupId: ban.groupId });
 };
 
 const destroy = async ({ actorId, targetId, groupId }: MemberManagement) =>
