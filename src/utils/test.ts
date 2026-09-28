@@ -7,7 +7,7 @@ type TimestampsOptions = Partial<{
 	updatedAt: DateArgs;
 }>;
 
-type PostJsonOptions = Omit<RequestInit, 'method' | 'body'>;
+type JsonRequestOptions = Omit<RequestInit, 'body'>;
 
 export const defaultId = '1';
 
@@ -18,15 +18,19 @@ export const createTimestamp = (timestamp: DateArgs = '2001-01-01T00:00:00') => 
 export const createTimestamps = ({ createdAt, updatedAt }: TimestampsOptions) =>
 	({ createdAt: createTimestamp(createdAt), updatedAt: createTimestamp(updatedAt) }) as const;
 
-export const postJson = async (
+export const requestJson = async (
 	app: Hono,
 	url: string | Request | URL,
 	body: unknown,
-	{ headers, ...rest }: PostJsonOptions = {},
-) =>
-	await app.request(url, {
-		method: 'POST',
-		headers: new Headers({ 'content-type': 'application/json', ...headers }),
+	{ method = 'post', headers, ...options }: JsonRequestOptions = {},
+) => {
+	const requestHeaders = new Headers(headers);
+	requestHeaders.set('content-type', 'application/json');
+
+	return await app.request(url, {
+		...options,
+		method: method.toUpperCase(),
+		headers: requestHeaders,
 		body: JSON.stringify(body),
-		...rest,
 	});
+};
