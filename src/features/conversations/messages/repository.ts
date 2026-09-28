@@ -58,8 +58,6 @@ const destroyByMember = async ({
 		.where(and(eq(messages.senderId, userId), eq(messages.conversationId, conversationId)))
 		.returning();
 
-	if (data == null) throw new DeletionError('member message', { userId });
-
 	return data;
 };
 
