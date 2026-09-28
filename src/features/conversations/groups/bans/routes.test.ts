@@ -3,13 +3,14 @@ import type { User } from 'better-auth';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { app } from '#app.ts';
-import { resetTestDb } from '#db/helpers.ts';
-import { groupCommands } from '#features/conversations/groups/commands.ts';
+import { type GroupSetup, setUpGroup } from '#features/conversations/groups/tests/setup.ts';
 import { memberRepository, memberService } from '#features/conversations/members/index.ts';
 import { createAuthenticatedUser } from '#features/users/tests/factories.ts';
 import { requestJson } from '#utils/test.ts';
 
 import { banService } from './services.ts';
+
+let setup: GroupSetup;
 
 let owner: User;
 let ownerHeaders: Headers;
@@ -24,33 +25,9 @@ let groupId: string;
 let url: `/api/v1/groups/${string}/bans`;
 
 beforeEach(async () => {
-	await resetTestDb();
-
-	const ownerAuth = await createAuthenticatedUser();
-	const adminAuth = await createAuthenticatedUser();
-	const memberAuth = await createAuthenticatedUser();
-
-	owner = ownerAuth.user;
-	ownerHeaders = ownerAuth.headers;
-
-	admin = adminAuth.user;
-	adminHeaders = adminAuth.headers;
-
-	member = memberAuth.user;
-	memberHeaders = memberAuth.headers;
-
-	const { conversationId } = await groupCommands.create({
-		userId: owner.id,
-		body: { name: 'Group' },
-	});
-
-	groupId = conversationId;
+	setup = await setUpGroup();
+	({ owner, ownerHeaders, admin, adminHeaders, member, memberHeaders, groupId } = setup);
 	url = `/api/v1/groups/${groupId}/bans`;
-
-	await memberService.joinGroup({ userId: admin.id, groupId });
-	await memberService.joinGroup({ userId: member.id, groupId });
-
-	await memberService.changeRole({ actorId: owner.id, targetId: admin.id, groupId, role: 'admin' });
 });
 
 describe('GET /groups/:groupId/bans', () => {
