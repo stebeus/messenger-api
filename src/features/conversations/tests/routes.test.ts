@@ -10,6 +10,29 @@ const url = '/api/v1/conversations';
 
 beforeEach(async () => await resetTestDb());
 
+describe('GET /conversations/:conversationId/ws', () => {
+	it('rejects invalid parameters', async () => {
+		const res = await app.request(`${url}/john_doe/ws`);
+		expect(res.status).toBe(400);
+	});
+
+	it('rejects unauthenticated users', async () => {
+		const res = await app.request(`${url}/1/ws`);
+		expect(res.status).toBe(401);
+	});
+
+	it('retrieves not found for non-existent joined conversations', async () => {
+		// Arrange
+		const { headers } = await createAuthenticatedUser();
+
+		// Act
+		const res = await app.request(`${url}/${Number.MAX_SAFE_INTEGER}/ws`, { headers });
+
+		// Assert
+		expect(res.status).toBe(404);
+	});
+});
+
 describe('GET /conversations/:conversationId/messages', () => {
 	describe('Given invalid inputs', () => {
 		it('rejects invalid parameters', async () => {
