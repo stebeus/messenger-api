@@ -177,13 +177,8 @@ describe('GET /conversations/:conversationId/messages', () => {
 
 	it('forbids nonmembers', async () => {
 		// Arrange
+		const { conversationId } = await setUpConversation();
 		const { headers } = await createAuthenticatedUser();
-		const { user } = await createAuthenticatedUser();
-
-		const { conversationId } = await groupCommands.create({
-			userId: user.id,
-			body: { name: 'Group' },
-		});
 
 		// Act
 		const res = await app.request(`${url}/${conversationId}/messages`, { headers });
@@ -194,15 +189,12 @@ describe('GET /conversations/:conversationId/messages', () => {
 
 	it('retrieves messages', async () => {
 		// Arrange
-		const { user, headers } = await createAuthenticatedUser();
-
-		const { conversationId } = await groupCommands.create({
-			userId: user.id,
-			body: { name: 'Group' },
-		});
+		const { ownerHeaders, conversationId } = await setUpConversation();
 
 		// Act
-		const res = await app.request(`${url}/${conversationId}/messages`, { headers });
+		const res = await app.request(`${url}/${conversationId}/messages`, {
+			headers: ownerHeaders,
+		});
 
 		// Assert
 		const { data } = await res.json();
@@ -238,13 +230,8 @@ describe('POST /conversations/:conversationId/messages', () => {
 
 	it('forbids nonmembers', async () => {
 		// Arrange
+		const { conversationId } = await setUpConversation();
 		const { headers } = await createAuthenticatedUser();
-		const { user } = await createAuthenticatedUser();
-
-		const { conversationId } = await groupCommands.create({
-			userId: user.id,
-			body: { name: 'Group' },
-		});
 
 		// Act
 		const res = await requestJson(
@@ -260,19 +247,14 @@ describe('POST /conversations/:conversationId/messages', () => {
 
 	it('sends messages', async () => {
 		// Arrange
-		const { user, headers } = await createAuthenticatedUser();
-
-		const { conversationId } = await groupCommands.create({
-			userId: user.id,
-			body: { name: 'Group' },
-		});
+		const { ownerHeaders, conversationId } = await setUpConversation();
 
 		// Act
 		const res = await requestJson(
 			app,
 			`${url}/${conversationId}/messages`,
 			{ content: 'Hello, world!' },
-			{ headers },
+			{ headers: ownerHeaders },
 		);
 
 		// Assert
