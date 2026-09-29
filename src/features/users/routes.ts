@@ -4,7 +4,7 @@ import { describeRoute, resolver } from 'hono-openapi';
 import { BadRequestErrorResponse, HttpErrorResponse } from '#contracts/dtos.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
-import { GetUserResponse, ListUserResponse, UserParams, UserQuery } from './contracts/dtos.ts';
+import { GetUserResponse, ListUsersResponse, UserParams, UserQuery } from './contracts/dtos.ts';
 import { userRepository } from './repository.ts';
 import { userService } from './services.ts';
 
@@ -17,7 +17,7 @@ users.get(
 		responses: {
 			200: {
 				description: 'Users matching the specified query.',
-				content: { 'application/json': { schema: resolver(ListUserResponse) } },
+				content: { 'application/json': { schema: resolver(ListUsersResponse) } },
 			},
 			400: {
 				description: 'Invalid query parameters.',

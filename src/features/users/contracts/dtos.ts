@@ -35,7 +35,7 @@ export const GetUserResponse = z.object({
 	memberships: z.array(Member),
 });
 
-export const ListUserResponse = z.array(GetUserResponse);
+export const ListUsersResponse = z.array(GetUserResponse);
 
 export type UserParams = z.infer<typeof UserParams>;
 
@@ -47,4 +47,4 @@ export type UpdateUserBodyRequest = z.infer<typeof UpdateUserBodyRequest>;
 
 export type GetUserResponse = z.infer<typeof GetUserResponse>;
 
-export type ListUserResponse = z.infer<typeof ListUserResponse>;
+export type ListUsersResponse = z.infer<typeof ListUsersResponse>;
