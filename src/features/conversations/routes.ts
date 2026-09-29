@@ -12,7 +12,7 @@ import { conversationService } from './services.ts';
 
 export const conversations = new Hono();
 
-type ConversationWsContext = Context<
+type ConversationWebSocketContext = Context<
 	AuthEnv,
 	'/:conversationId/ws',
 	{
@@ -26,7 +26,7 @@ conversations.get(
 	'/:conversationId/ws',
 	validate('param', ConversationParams),
 	requireAuth,
-	upgradeWebSocket(async (c: ConversationWsContext) => {
+	upgradeWebSocket(async (c: ConversationWebSocketContext) => {
 		const { user } = c.var.auth;
 		const { conversationId } = c.req.valid('param');
 
