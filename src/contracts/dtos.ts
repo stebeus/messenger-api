@@ -20,7 +20,24 @@ export const Query = z
 	})
 	.partial();
 
+export const HttpErrorResponse = z.object({
+	status: z.number(),
+	message: z.string(),
+});
+
+export const BadRequestErrorResponse = z.object({
+	...HttpErrorResponse.shape,
+	details: z.object({
+		formErrors: z.array(z.string()),
+		fieldErrors: z.record(z.string(), z.array(z.string())),
+	}),
+});
+
 export type Query = z.infer<typeof Query>;
+
+export type HttpErrorResponse = z.infer<typeof HttpErrorResponse>;
+
+export type BadRequestErrorResponse = z.infer<typeof BadRequestErrorResponse>;
 
 export type QueryArgs<Dto = Query> = {
 	query: Dto;
