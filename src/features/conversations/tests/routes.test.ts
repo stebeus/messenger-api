@@ -1,16 +1,30 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { app } from '#app.ts';
 import { resetTestDb } from '#db/helpers.ts';
+import { banService } from '#features/conversations/groups/bans/services.ts';
 import { groupCommands } from '#features/conversations/groups/commands.ts';
+import { memberService } from '#features/conversations/members/services.ts';
+import { messageService } from '#features/conversations/messages/services.ts';
 import { createAuthenticatedUser } from '#features/users/tests/factories.ts';
 import { requestJson } from '#utils/test.ts';
 
-const url = '/api/v1/conversations';
+import {
+	connectWebSocket,
+	serveWebSocket,
+	setUpConversation,
+	url,
+	type WebSocketServer,
+} from './setup.ts';
+
+let wss: WebSocketServer;
 
 beforeEach(async () => await resetTestDb());
 
-describe('GET /conversations/:conversationId/ws', () => {
+beforeAll(() => (wss = serveWebSocket()));
+afterAll(() => wss.server.close());
+
+describe('WS /conversations/:conversationId/ws', () => {
 	it('rejects invalid parameters', async () => {
 		const res = await app.request(`${url}/john_doe/ws`);
 		expect(res.status).toBe(400);
@@ -30,6 +44,111 @@ describe('GET /conversations/:conversationId/ws', () => {
 
 		// Assert
 		expect(res.status).toBe(404);
+	});
+
+	describe('Given connection closures', () => {
+		it('closes when the conversation is deleted', async () => {
+			// Arrange
+			const { ownerHeaders, owner, conversationId } = await setUpConversation();
+
+			const { closure } = await connectWebSocket({
+				port: wss.port,
+				headers: ownerHeaders,
+				conversationId,
+			});
+
+			// Act
+			await groupCommands.destroy({ userId: owner.id, groupId: conversationId });
+
+			// Assert
+			const { code } = await closure;
+			expect(code).toBe(1011);
+		});
+
+		it('closes when the current member is kicked', async () => {
+			// Arrange
+			const { owner, conversationId } = await setUpConversation();
+			const { user, headers } = await createAuthenticatedUser();
+
+			await memberService.joinGroup({ userId: user.id, groupId: conversationId });
+
+			const { closure } = await connectWebSocket({ port: wss.port, headers, conversationId });
+
+			// Act
+			await memberService.kick({ actorId: owner.id, targetId: user.id, groupId: conversationId });
+
+			// Assert
+			const { code } = await closure;
+			expect(code).toBe(1008);
+		});
+
+		it('closes when the current member is banned', async () => {
+			// Arrange
+			const { owner, conversationId } = await setUpConversation();
+			const { user, headers } = await createAuthenticatedUser();
+
+			await memberService.joinGroup({ userId: user.id, groupId: conversationId });
+
+			const { closure } = await connectWebSocket({ port: wss.port, headers, conversationId });
+
+			// Act
+			await banService.create({
+				actorId: owner.id,
+				targetId: user.id,
+				groupId: conversationId,
+				body: { reason: 'Test' },
+			});
+
+			// Assert
+			const { code } = await closure;
+			expect(code).toBe(1008);
+		});
+	});
+
+	describe('Given an active connection', () => {
+		it('receives group updates', async () => {
+			// Arrange
+			const { ownerHeaders, owner, conversationId } = await setUpConversation();
+
+			const { message } = await connectWebSocket({
+				port: wss.port,
+				headers: ownerHeaders,
+				conversationId,
+			});
+
+			// Act
+			await groupCommands.update({
+				userId: owner.id,
+				groupId: conversationId,
+				body: { description: 'Hi!' },
+			});
+
+			// Assert
+			const event = await message;
+			expect(event.type).toBe('group.updated');
+		});
+
+		it('receives sent messages', async () => {
+			// Arrange
+			const { ownerHeaders, owner, conversationId } = await setUpConversation();
+
+			const { message } = await connectWebSocket({
+				port: wss.port,
+				headers: ownerHeaders,
+				conversationId,
+			});
+
+			// Act
+			await messageService.send({
+				userId: owner.id,
+				conversationId,
+				body: { content: 'Hello, world!' },
+			});
+
+			// Assert
+			const event = await message;
+			expect(event.type).toBe('message.sent');
+		});
 	});
 });
 
