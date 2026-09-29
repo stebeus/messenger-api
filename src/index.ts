@@ -6,6 +6,9 @@ import { config } from './config.ts';
 
 const wss = new WebSocketServer({ noServer: true });
 
-serve({ fetch: app.fetch, port: config.port, websocket: { server: wss } }, ({ port }) =>
-	console.log(`Server running on port ${port}`),
-);
+export const createServer = (port: number) =>
+	serve({ fetch: app.fetch, port, websocket: { server: wss } }, ({ port }) =>
+		console.log(`Server running on port ${port}`),
+	);
+
+createServer(config.port);
