@@ -2,10 +2,10 @@ import type { Id } from '#contracts/entity.ts';
 
 import { WebSocket } from 'ws';
 
+import { createServer } from '#app.ts';
 import { config } from '#config.ts';
 import { groupCommands } from '#features/conversations/groups/commands.ts';
 import { createAuthenticatedUser } from '#features/users/tests/factories.ts';
-import { createServer } from '#index.ts';
 
 export const url = '/api/v1/conversations';
 
