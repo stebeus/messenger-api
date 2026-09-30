@@ -53,7 +53,7 @@ friends.get(
 friends.post(
 	'/:requesterId',
 	describeRoute({
-		description: 'Accepts a friend request.',
+		description: 'Accepts a friend request and creates a DM for the friends.',
 		tags: ['Friends'],
 		responses: {
 			201: {
