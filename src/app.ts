@@ -20,8 +20,6 @@ export const createServer = (port: number) =>
 
 app.use(logger());
 
-app.all('/auth/*', (c) => auth.handler(c.req.raw));
-
 app.use(
 	cors({
 		origin: config.app.clientUrl,
@@ -29,6 +27,8 @@ app.use(
 		credentials: true,
 	}),
 );
+
+app.all('/auth/*', (c) => auth.handler(c.req.raw));
 
 app.route('/v1', routes);
 
