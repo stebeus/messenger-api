@@ -89,6 +89,25 @@ app.get(
 					description: 'Operations for managing group bans.',
 				},
 			],
+			// @ts-expect-error Hono OpenAPI doesn't expose the Scalar's `x-tagGroups` extension
+			'x-tagGroups': [
+				{
+					name: 'Social',
+					tags: ['Users', 'Friend requests', 'Friends'],
+				},
+				{
+					name: 'Messaging',
+					tags: [
+						'Conversations',
+						'Direct messages',
+						'Groups',
+						'Members',
+						'Messages',
+						'Group messages',
+						'Bans',
+					],
+				},
+			],
 		},
 	}),
 );
