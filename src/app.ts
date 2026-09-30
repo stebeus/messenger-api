@@ -78,11 +78,11 @@ app.get(
 				},
 				{
 					name: 'Messages',
-					description: 'Operations for editing and deleting sent messages.',
+					description: 'Operations for editing and deleting your messages.',
 				},
 				{
 					name: 'Group messages',
-					description: 'Operations for editing and deleting sent group messages.',
+					description: 'Operations for editing and deleting group messages.',
 				},
 				{
 					name: 'Bans',
