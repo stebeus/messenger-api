@@ -1,12 +1,17 @@
 import { upgradeWebSocket } from '@hono/node-server';
 import { type Context, Hono } from 'hono';
+import { describeRoute, resolver } from 'hono-openapi';
 
-import { Query } from '#contracts/dtos.ts';
+import { BadRequestErrorResponse, HttpErrorResponse, Query } from '#contracts/dtos.ts';
 import { type AuthEnv, requireAuth, validate } from '#middleware/index.ts';
 
 import { ConversationParams } from './contracts/dtos.ts';
 import { conversationEvents } from './events.ts';
-import { CreateMessageBodyRequest } from './messages/contracts/dtos.ts';
+import {
+	CreateMessageBodyRequest,
+	ListMessagesResponse,
+	Message,
+} from './messages/contracts/index.ts';
 import { messageService } from './messages/services.ts';
 import { conversationService } from './services.ts';
 
@@ -24,6 +29,23 @@ type ConversationWebSocketContext = Context<
 
 conversations.get(
 	'/:conversationId/ws',
+	describeRoute({
+		description: 'Connects to the specified conversation.',
+		responses: {
+			400: {
+				description: 'Invalid conversation ID parameter.',
+				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+			},
+			401: {
+				description: 'Authentication is required.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			404: {
+				description: 'Conversation not found.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+		},
+	}),
 	validate('param', ConversationParams),
 	requireAuth,
 	upgradeWebSocket(async (c: ConversationWebSocketContext) => {
@@ -59,6 +81,27 @@ conversations.get(
 
 conversations.get(
 	'/:conversationId/messages',
+	describeRoute({
+		description: 'Retrieves messages matching the specified query.',
+		responses: {
+			200: {
+				description: 'Messages matching the specified query.',
+				content: { 'application/json': { schema: resolver(ListMessagesResponse) } },
+			},
+			400: {
+				description: 'Invalid conversation ID or query parameters.',
+				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+			},
+			401: {
+				description: 'Authentication is required.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			403: {
+				description: 'Membership is required.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+		},
+	}),
 	validate('param', ConversationParams),
 	validate('query', Query),
 	requireAuth,
@@ -75,6 +118,27 @@ conversations.get(
 
 conversations.post(
 	'/:conversationId/messages',
+	describeRoute({
+		description: 'Sends messages to the specified conversation.',
+		responses: {
+			200: {
+				description: 'The sent message.',
+				content: { 'application/json': { schema: resolver(Message) } },
+			},
+			400: {
+				description: 'Invalid conversation ID parameter or message content.',
+				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+			},
+			401: {
+				description: 'Authentication is required.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			403: {
+				description: 'Membership is required.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+		},
+	}),
 	validate('param', ConversationParams),
 	validate('json', CreateMessageBodyRequest),
 	requireAuth,
