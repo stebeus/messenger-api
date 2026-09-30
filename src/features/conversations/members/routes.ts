@@ -16,6 +16,7 @@ members.get(
 	'/',
 	describeRoute({
 		description: 'Retrieves bans matching the specified query.',
+		tags: ['Members'],
 		responses: {
 			200: {
 				description: 'Bans matching the specified query.',
@@ -53,6 +54,7 @@ members.post(
 	'/',
 	describeRoute({
 		description: 'Joins the specified group.',
+		tags: ['Members'],
 		responses: {
 			201: {
 				description: 'The joined group.',
@@ -92,6 +94,7 @@ members.delete(
 	'/me',
 	describeRoute({
 		description: 'Leaves the specified group.',
+		tags: ['Members'],
 		responses: {
 			200: {
 				description: 'The exited group.',
@@ -127,6 +130,7 @@ members.patch(
 	'/:memberId',
 	describeRoute({
 		description: 'Changes the specified member role.',
+		tags: ['Members'],
 		responses: {
 			200: {
 				description: 'The updated member.',
@@ -173,6 +177,7 @@ members.delete(
 	'/:memberId',
 	describeRoute({
 		description: 'Kicks the specified member.',
+		tags: ['Members'],
 		responses: {
 			200: {
 				description: 'The kicked user.',
