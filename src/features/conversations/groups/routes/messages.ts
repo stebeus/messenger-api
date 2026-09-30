@@ -10,7 +10,7 @@ import { requireAuth, validate } from '#middleware/index.ts';
 export const messages = new Hono();
 
 messages.patch(
-	'/:groupId/messages/:messageId',
+	'/:messageId',
 	describeRoute({
 		description: 'Edits the specified group message.',
 		responses: {
@@ -56,7 +56,7 @@ messages.patch(
 );
 
 messages.delete(
-	'/:groupId/messages/:messageId',
+	'/:messageId',
 	describeRoute({
 		description: 'Deletes the specified group message.',
 		responses: {
