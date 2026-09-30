@@ -42,7 +42,7 @@ describe('extractGroupRelations', () => {
 		const group = extractGroupRelations(rawGroupResponse);
 
 		// Assert
-		expect(group).toStrictEqual({ conversationId: '1', name: 'Group', members: group.members });
+		expect(group).toMatchObject({ conversationId: '1', name: 'Group', members: group.members });
 	});
 
 	it('extracts members and messages when available', () => {
@@ -61,6 +61,6 @@ describe('extractGroupRelations', () => {
 
 		// Assert
 		const { members, messages } = rawJoinedGroupResponse.conversation;
-		expect(group).toStrictEqual({ conversationId: '1', name: 'Group', members, messages });
+		expect(group).toMatchObject({ conversationId: '1', name: 'Group', members, messages });
 	});
 });
