@@ -31,6 +31,7 @@ conversations.get(
 	'/:conversationId/ws',
 	describeRoute({
 		description: 'Connects to the specified conversation.',
+		tags: ['Conversations'],
 		responses: {
 			400: {
 				description: 'Invalid conversation ID parameter.',
@@ -83,6 +84,7 @@ conversations.get(
 	'/:conversationId/messages',
 	describeRoute({
 		description: 'Retrieves messages matching the specified query.',
+		tags: ['Conversations'],
 		responses: {
 			200: {
 				description: 'Messages matching the specified query.',
@@ -120,6 +122,7 @@ conversations.post(
 	'/:conversationId/messages',
 	describeRoute({
 		description: 'Sends messages to the specified conversation.',
+		tags: ['Conversations'],
 		responses: {
 			200: {
 				description: 'The sent message.',
