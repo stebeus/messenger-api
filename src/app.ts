@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import { openAPIRouteHandler } from 'hono-openapi';
 import { WebSocketServer } from 'ws';
 
 import { config } from './config.ts';
@@ -29,6 +30,19 @@ app.use(
 );
 
 app.all('/auth/*', (c) => auth.handler(c.req.raw));
+
+app.get(
+	'/openapi',
+	openAPIRouteHandler(app, {
+		documentation: {
+			info: {
+				title: 'Messenger API',
+				version: '0.1.0',
+			},
+			servers: [{ url: config.app.url }],
+		},
+	}),
+);
 
 app.route('/v1', routes);
 
