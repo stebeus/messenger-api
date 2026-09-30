@@ -13,6 +13,7 @@ messages.patch(
 	'/:messageId',
 	describeRoute({
 		description: 'Edits the specified group message.',
+		tags: ['Group messages'],
 		responses: {
 			200: {
 				description: 'The edited message.',
@@ -59,6 +60,7 @@ messages.delete(
 	'/:messageId',
 	describeRoute({
 		description: 'Deletes the specified group message.',
+		tags: ['Group messages'],
 		responses: {
 			200: {
 				description: 'The deleted message.',
