@@ -15,7 +15,9 @@
 		"dev": "node --watch src/index.ts",
 		"lint": "biome check --fix --reporter=concise",
 		"start": "node src/index.ts",
-		"test": "vitest"
+		"test": "vitest",
+		"test:integration": "vitest --project integration",
+		"test:unit": "vitest --project unit"
 	},
 	"dependencies": {
 		"@better-auth/drizzle-adapter": "^1.7.5",
