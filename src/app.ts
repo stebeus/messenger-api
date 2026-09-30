@@ -65,7 +65,7 @@ app.get(
 					description: 'Operations for connecting to chat rooms and accessing messages.',
 				},
 				{
-					name: 'DMs',
+					name: 'Direct messages',
 					description: 'Operations for searching direct messages (DMs).',
 				},
 				{
