@@ -14,7 +14,7 @@ import {
 	GroupParams,
 	UpdateGroupBodyRequest,
 } from './contracts/dtos.ts';
-import { groupRepository } from './repository.ts';
+import { groupQueries } from './queries.ts';
 
 export const groups = new Hono();
 
@@ -25,7 +25,7 @@ groups.get('/', validate('query', Query), requireAuth, async (c) => {
 	const { user } = c.var.auth;
 	const query = c.req.valid('query');
 
-	const data = await groupRepository.find({ userId: user.id, query });
+	const data = await groupQueries.find({ userId: user.id, query });
 
 	return c.json({ data });
 });
@@ -34,7 +34,7 @@ groups.get('/me', validate('query', Query), requireAuth, async (c) => {
 	const { user } = c.var.auth;
 	const query = c.req.valid('query');
 
-	const data = await groupRepository.findByMembership({ userId: user.id, query });
+	const data = await groupQueries.findByMembership({ userId: user.id, query });
 
 	return c.json({ data });
 });
