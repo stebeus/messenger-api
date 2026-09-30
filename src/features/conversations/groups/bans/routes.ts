@@ -1,13 +1,20 @@
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 
-import { BadRequestErrorResponse, HttpErrorResponse } from '#contracts/dtos.ts';
+import {
+	BadRequestErrorResponse,
+	ForbiddenErrorResponse,
+	UnauthorizedErrorResponse,
+} from '#contracts/dtos.ts';
 import { GroupMemberParams, GroupParams } from '#features/conversations/groups/contracts/dtos.ts';
+import { MemberNotFoundErrorResponse } from '#features/conversations/members/contracts/dtos.ts';
 import { UserQuery } from '#features/users/contracts/dtos.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
 import {
 	Ban,
+	BanConflictErrorResponse,
+	BanNotFoundErrorResponse,
 	CreateBanBodyRequest,
 	ListBansResponse,
 	UpdateBanBodyRequest,
@@ -32,11 +39,11 @@ bans.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			403: {
 				description: 'You do not have permission to view bans.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),
@@ -70,19 +77,19 @@ bans.post(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			409: {
 				description: 'User is already banned.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(BanConflictErrorResponse) } },
 			},
 			404: {
-				description: 'Ban not found',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				description: 'Member not found.',
+				content: { 'application/json': { schema: resolver(MemberNotFoundErrorResponse) } },
 			},
 			403: {
 				description: 'You do not have permission to ban this member.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),
@@ -106,7 +113,7 @@ bans.patch(
 		description: 'Updates the specified ban.',
 		tags: ['Bans'],
 		responses: {
-			201: {
+			200: {
 				description: 'The updated ban.',
 				content: { 'application/json': { schema: resolver(Ban) } },
 			},
@@ -116,15 +123,15 @@ bans.patch(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
-				description: 'Ban not found',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				description: 'Ban not found.',
+				content: { 'application/json': { schema: resolver(BanNotFoundErrorResponse) } },
 			},
 			403: {
 				description: 'You do not have permission to update this ban.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),
@@ -148,7 +155,7 @@ bans.delete(
 		description: 'Unbans the specified user.',
 		tags: ['Bans'],
 		responses: {
-			201: {
+			200: {
 				description: 'The unbanned user.',
 				content: { 'application/json': { schema: resolver(Ban) } },
 			},
@@ -158,15 +165,15 @@ bans.delete(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
-				description: 'Ban not found',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				description: 'Ban not found.',
+				content: { 'application/json': { schema: resolver(BanNotFoundErrorResponse) } },
 			},
 			403: {
 				description: 'You do not have permission to unban this user.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),

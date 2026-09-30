@@ -1,8 +1,12 @@
 import * as z from 'zod';
 
-import { id } from '#contracts/entity.ts';
-import { UserQuery } from '#features/users/contracts/dtos.ts';
-import { User } from '#features/users/contracts/entity.ts';
+import {
+	createConflictErrorResponse,
+	createNotFoundErrorResponse,
+	createUnprocessableContentErrorResponse,
+	id,
+} from '#contracts/index.ts';
+import { User, UserQuery } from '#features/users/contracts/index.ts';
 
 import { FriendRequest } from './entity.ts';
 
@@ -25,6 +29,18 @@ export const ListFriendRequestsResponse = z.array(
 		requester: z.nullable(User),
 		recipient: z.nullable(User),
 	}),
+);
+
+export const FriendRequestNotFoundErrorResponse = createNotFoundErrorResponse({
+	resource: 'friend request',
+});
+
+export const FriendRequestConflictErrorResponse = createConflictErrorResponse({
+	resource: 'friend request',
+});
+
+export const FriendRequestUnprocessableErrorResponse = createUnprocessableContentErrorResponse(
+	'Cannot send a friend request to yourself',
 );
 
 export type FriendRequestParams = z.infer<typeof FriendRequestParams>;

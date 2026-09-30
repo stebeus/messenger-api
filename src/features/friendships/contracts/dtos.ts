@@ -1,7 +1,11 @@
 import * as z from 'zod';
 
-import { id } from '#contracts/entity.ts';
 import { User } from '#features/users/contracts/entity.ts';
+import {
+	createConflictErrorResponse,
+	createNotFoundErrorResponse,
+	id,
+} from '#root/src/contracts/index.ts';
 
 import { Friendship } from './entity.ts';
 
@@ -19,6 +23,14 @@ export const ListFriendsResponse = z.array(
 		friend: User,
 	}),
 );
+
+export const FriendshipNotFoundErrorResponse = createNotFoundErrorResponse({
+	resource: 'friendship',
+});
+
+export const FriendshipConflictErrorResponse = createConflictErrorResponse({
+	resource: 'friendship',
+});
 
 export type FriendParams = z.infer<typeof FriendParams>;
 

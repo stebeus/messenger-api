@@ -1,13 +1,23 @@
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 
-import { BadRequestErrorResponse, HttpErrorResponse } from '#contracts/dtos.ts';
-import { BanErrorResponse } from '#features/conversations/groups/bans/contracts/dtos.ts';
+import {
+	BadRequestErrorResponse,
+	ForbiddenErrorResponse,
+	UnauthorizedErrorResponse,
+} from '#contracts/dtos.ts';
+import { BanForbiddenErrorResponse } from '#features/conversations/groups/bans/contracts/dtos.ts';
 import { GroupMemberParams, GroupParams } from '#features/conversations/groups/contracts/dtos.ts';
 import { UserQuery } from '#features/users/contracts/dtos.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
-import { ListMembersResponse, Member, UpdateMemberBodyRequest } from './contracts/index.ts';
+import {
+	ListMembersResponse,
+	Member,
+	MemberConflictErrorResponse,
+	MemberNotFoundErrorResponse,
+	UpdateMemberBodyRequest,
+} from './contracts/index.ts';
 import { memberService } from './services.ts';
 
 export const members = new Hono();
@@ -15,11 +25,11 @@ export const members = new Hono();
 members.get(
 	'/',
 	describeRoute({
-		description: 'Retrieves bans matching the specified query.',
+		description: 'Retrieves members matching the specified query.',
 		tags: ['Members'],
 		responses: {
 			200: {
-				description: 'Bans matching the specified query.',
+				description: 'Members matching the specified query.',
 				content: { 'application/json': { schema: resolver(ListMembersResponse) } },
 			},
 			400: {
@@ -28,11 +38,11 @@ members.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			403: {
 				description: 'Membership is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),
@@ -61,20 +71,20 @@ members.post(
 				content: { 'application/json': { schema: resolver(Member) } },
 			},
 			400: {
-				description: 'Invalid group ID or query parameters.',
+				description: 'Invalid group ID parameter.',
 				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			403: {
 				description: 'You have been banned from this group.',
-				content: { 'application/json': { schema: resolver(BanErrorResponse) } },
+				content: { 'application/json': { schema: resolver(BanForbiddenErrorResponse) } },
 			},
 			409: {
 				description: 'Group already joined.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(MemberConflictErrorResponse) } },
 			},
 		},
 	}),
@@ -106,11 +116,11 @@ members.delete(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			403: {
 				description: 'Owners cannot leave their own groups.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),
@@ -142,15 +152,15 @@ members.patch(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Member not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(MemberNotFoundErrorResponse) } },
 			},
 			403: {
 				description: 'You do not have permission to update this member.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),
@@ -189,15 +199,15 @@ members.delete(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Member not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(MemberNotFoundErrorResponse) } },
 			},
 			403: {
 				description: 'You do not have permission to kick this member.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),

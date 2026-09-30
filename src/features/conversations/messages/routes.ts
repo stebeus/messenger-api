@@ -1,10 +1,19 @@
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 
-import { BadRequestErrorResponse, HttpErrorResponse } from '#contracts/dtos.ts';
+import {
+	BadRequestErrorResponse,
+	ForbiddenErrorResponse,
+	UnauthorizedErrorResponse,
+} from '#contracts/dtos.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
-import { Message, MessageParams, UpdateMessageBodyRequest } from './contracts/index.ts';
+import {
+	Message,
+	MessageNotFoundErrorResponse,
+	MessageParams,
+	UpdateMessageBodyRequest,
+} from './contracts/index.ts';
 import { messageService } from './services.ts';
 
 export const messages = new Hono();
@@ -25,15 +34,15 @@ messages.patch(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Message not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(MessageNotFoundErrorResponse) } },
 			},
 			403: {
 				description: 'You cannot edit messages sent by other users.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),
@@ -67,15 +76,15 @@ messages.delete(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Message not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(MessageNotFoundErrorResponse) } },
 			},
 			403: {
 				description: 'You cannot delete messages sent by other users.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),

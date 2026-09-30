@@ -2,10 +2,15 @@ import { upgradeWebSocket } from '@hono/node-server';
 import { type Context, Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 
-import { BadRequestErrorResponse, HttpErrorResponse, Query } from '#contracts/dtos.ts';
+import {
+	BadRequestErrorResponse,
+	ForbiddenErrorResponse,
+	Query,
+	UnauthorizedErrorResponse,
+} from '#contracts/dtos.ts';
 import { type AuthEnv, requireAuth, validate } from '#middleware/index.ts';
 
-import { ConversationParams } from './contracts/dtos.ts';
+import { ConversationNotFoundErrorResponse, ConversationParams } from './contracts/dtos.ts';
 import { conversationEvents } from './events.ts';
 import {
 	CreateMessageBodyRequest,
@@ -39,11 +44,11 @@ conversations.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Conversation not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ConversationNotFoundErrorResponse) } },
 			},
 		},
 	}),
@@ -96,11 +101,11 @@ conversations.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			403: {
 				description: 'Membership is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),
@@ -121,10 +126,10 @@ conversations.get(
 conversations.post(
 	'/:conversationId/messages',
 	describeRoute({
-		description: 'Sends messages to the specified conversation.',
+		description: 'Sends a message to the specified conversation.',
 		tags: ['Conversations'],
 		responses: {
-			200: {
+			201: {
 				description: 'The sent message.',
 				content: { 'application/json': { schema: resolver(Message) } },
 			},
@@ -134,11 +139,11 @@ conversations.post(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			403: {
 				description: 'Membership is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),

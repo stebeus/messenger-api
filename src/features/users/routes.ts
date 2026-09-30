@@ -1,10 +1,16 @@
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 
-import { BadRequestErrorResponse, HttpErrorResponse } from '#contracts/dtos.ts';
+import { BadRequestErrorResponse, UnauthorizedErrorResponse } from '#contracts/dtos.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
-import { GetUserResponse, ListUsersResponse, UserParams, UserQuery } from './contracts/dtos.ts';
+import {
+	GetUserResponse,
+	ListUsersResponse,
+	UserNotFoundErrorResponse,
+	UserParams,
+	UserQuery,
+} from './contracts/dtos.ts';
 import { userRepository } from './repository.ts';
 import { userService } from './services.ts';
 
@@ -26,7 +32,7 @@ users.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 		},
 	}),
@@ -58,11 +64,11 @@ users.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'User not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UserNotFoundErrorResponse) } },
 			},
 		},
 	}),

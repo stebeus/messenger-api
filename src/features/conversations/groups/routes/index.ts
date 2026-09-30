@@ -1,12 +1,19 @@
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 
-import { BadRequestErrorResponse, HttpErrorResponse, Query } from '#contracts/dtos.ts';
+import {
+	AvatarIsTooLargeErrorResponse,
+	BadRequestErrorResponse,
+	ForbiddenErrorResponse,
+	Query,
+	UnauthorizedErrorResponse,
+} from '#contracts/dtos.ts';
 import { bans } from '#features/conversations/groups/bans/routes.ts';
 import { groupCommands } from '#features/conversations/groups/commands.ts';
 import {
 	CreateGroupBodyRequest,
 	Group,
+	GroupNotFoundErrorResponse,
 	GroupParams,
 	ListGroupsResponse,
 	ListJoinedGroupsResponse,
@@ -40,7 +47,7 @@ groups.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 		},
 	}),
@@ -72,7 +79,7 @@ groups.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 		},
 	}),
@@ -94,13 +101,13 @@ groups.post(
 		description: 'Creates a group.',
 		tags: ['Groups'],
 		responses: {
-			200: {
+			201: {
 				description: 'The new group.',
 				content: { 'application/json': { schema: resolver(Group) } },
 			},
 			413: {
 				description: 'Avatar file size must not exceed 512 KB.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(AvatarIsTooLargeErrorResponse) } },
 			},
 			400: {
 				description: 'Invalid body.',
@@ -108,7 +115,7 @@ groups.post(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 		},
 	}),
@@ -137,7 +144,7 @@ groups.patch(
 			},
 			413: {
 				description: 'Avatar file size must not exceed 512 KB.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(AvatarIsTooLargeErrorResponse) } },
 			},
 			400: {
 				description: 'Invalid ID parameter or body.',
@@ -145,15 +152,15 @@ groups.patch(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Group not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(GroupNotFoundErrorResponse) } },
 			},
 			403: {
-				description: 'Group ownership is required',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				description: 'Group ownership is required.',
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),
@@ -188,15 +195,15 @@ groups.delete(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Group not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(GroupNotFoundErrorResponse) } },
 			},
 			403: {
-				description: 'Group ownership is required',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				description: 'Group ownership is required.',
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),

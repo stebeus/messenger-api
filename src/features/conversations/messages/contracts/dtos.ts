@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
-import { id } from '#contracts/entity.ts';
 import { User } from '#features/users/contracts/entity.ts';
+import { createNotFoundErrorResponse, id } from '#root/src/contracts/index.ts';
 
 import { Message, MessageUpdate, NewMessage } from './entity.ts';
 
@@ -19,6 +19,10 @@ export const ListMessagesResponse = z.array(
 		sender: User,
 	}),
 );
+
+export const MessageNotFoundErrorResponse = createNotFoundErrorResponse({
+	resource: 'message',
+});
 
 export type MessageParams = z.infer<typeof MessageParams>;
 

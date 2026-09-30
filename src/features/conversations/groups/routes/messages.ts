@@ -1,9 +1,17 @@
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 
-import { BadRequestErrorResponse, HttpErrorResponse } from '#contracts/dtos.ts';
-import { Group, GroupMessageParams } from '#features/conversations/groups/contracts/index.ts';
-import { UpdateMessageBodyRequest } from '#features/conversations/messages/contracts/dtos.ts';
+import {
+	BadRequestErrorResponse,
+	ForbiddenErrorResponse,
+	UnauthorizedErrorResponse,
+} from '#contracts/dtos.ts';
+import { GroupMessageParams } from '#features/conversations/groups/contracts/dtos.ts';
+import {
+	Message,
+	MessageNotFoundErrorResponse,
+	UpdateMessageBodyRequest,
+} from '#features/conversations/messages/contracts/index.ts';
 import { messageService } from '#features/conversations/messages/index.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
@@ -17,7 +25,7 @@ messages.patch(
 		responses: {
 			200: {
 				description: 'The edited message.',
-				content: { 'application/json': { schema: resolver(Group) } },
+				content: { 'application/json': { schema: resolver(Message) } },
 			},
 			400: {
 				description: 'Invalid ID parameters or message content.',
@@ -25,15 +33,15 @@ messages.patch(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Group message not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(MessageNotFoundErrorResponse) } },
 			},
 			403: {
-				description: 'You do not permission to edit this message.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				description: 'You do not have permission to edit this message.',
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),
@@ -64,7 +72,7 @@ messages.delete(
 		responses: {
 			200: {
 				description: 'The deleted message.',
-				content: { 'application/json': { schema: resolver(Group) } },
+				content: { 'application/json': { schema: resolver(Message) } },
 			},
 			400: {
 				description: 'Invalid ID parameters.',
@@ -72,15 +80,15 @@ messages.delete(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Group message not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(MessageNotFoundErrorResponse) } },
 			},
 			403: {
-				description: 'You do not permission to delete this message.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				description: 'You do not have permission to delete this message.',
+				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
 			},
 		},
 	}),

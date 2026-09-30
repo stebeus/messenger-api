@@ -1,14 +1,17 @@
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 
-import { BadRequestErrorResponse, HttpErrorResponse } from '#contracts/dtos.ts';
-import { UserParams } from '#features/users/contracts/dtos.ts';
+import { BadRequestErrorResponse, UnauthorizedErrorResponse } from '#contracts/dtos.ts';
+import { UserNotFoundErrorResponse, UserParams } from '#features/users/contracts/dtos.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
 import {
 	FriendRequest,
+	FriendRequestConflictErrorResponse,
+	FriendRequestNotFoundErrorResponse,
 	FriendRequestParams,
 	FriendRequestQuery,
+	FriendRequestUnprocessableErrorResponse,
 	ListFriendRequestsResponse,
 } from './contracts/index.ts';
 import { friendRequestRepository } from './repository.ts';
@@ -32,7 +35,7 @@ friendRequests.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 		},
 	}),
@@ -64,19 +67,21 @@ friendRequests.post(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Recipient user not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UserNotFoundErrorResponse) } },
 			},
 			422: {
 				description: 'A user cannot send a friend request to themselves.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(FriendRequestUnprocessableErrorResponse) },
+				},
 			},
 			409: {
 				description: 'A friend request already exists or the users are already friends.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(FriendRequestConflictErrorResponse) } },
 			},
 		},
 	}),
@@ -108,11 +113,11 @@ friendRequests.delete(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'Friend request not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(FriendRequestNotFoundErrorResponse) } },
 			},
 		},
 	}),

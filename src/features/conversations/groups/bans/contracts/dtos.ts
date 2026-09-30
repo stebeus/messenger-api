@@ -1,6 +1,10 @@
 import * as z from 'zod';
 
-import { HttpErrorResponse } from '#contracts/dtos.ts';
+import {
+	createConflictErrorResponse,
+	createNotFoundErrorResponse,
+	ForbiddenErrorResponse,
+} from '#contracts/dtos.ts';
 import { Group } from '#features/conversations/groups/contracts/entity.ts';
 import { UserQuery, userSorts } from '#features/users/contracts/dtos.ts';
 import { User } from '#features/users/contracts/entity.ts';
@@ -28,12 +32,19 @@ export const ListBansResponse = z.array(
 	}),
 );
 
-export const BanErrorResponse = z.object({
-	...HttpErrorResponse.shape,
+export const BanForbiddenErrorResponse = z.object({
+	...ForbiddenErrorResponse.shape,
+	message: z.literal('You have been banned from this group'),
 	details: z.object({
 		reason: Ban.shape.reason,
 		duration: z.union([z.date(), z.literal('Permanent')]),
 	}),
+});
+
+export const BanNotFoundErrorResponse = createNotFoundErrorResponse({ resource: 'ban' });
+
+export const BanConflictErrorResponse = createConflictErrorResponse({
+	message: 'User is already banned',
 });
 
 export type BanQuery = z.infer<typeof BanQuery>;
@@ -43,5 +54,3 @@ export type CreateBanBodyRequest = z.infer<typeof CreateBanBodyRequest>;
 export type UpdateBanBodyRequest = z.infer<typeof UpdateBanBodyRequest>;
 
 export type ListBansResponse = z.infer<typeof ListBansResponse>;
-
-export type BanErrorResponse = z.infer<typeof BanErrorResponse>;

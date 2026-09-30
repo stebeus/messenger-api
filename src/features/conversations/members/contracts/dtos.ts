@@ -1,7 +1,11 @@
 import * as z from 'zod';
 
-import { id } from '#contracts/entity.ts';
 import { User } from '#features/users/contracts/entity.ts';
+import {
+	createConflictErrorResponse,
+	createNotFoundErrorResponse,
+	id,
+} from '#root/src/contracts/index.ts';
 
 import { Member, MemberUpdate } from './entity.ts';
 
@@ -17,6 +21,14 @@ export const ListMembersResponse = z.array(
 		user: User,
 	}),
 );
+
+export const MemberNotFoundErrorResponse = createNotFoundErrorResponse({
+	resource: 'member',
+});
+
+export const MemberConflictErrorResponse = createConflictErrorResponse({
+	resource: 'member',
+});
 
 export type MemberParams = z.infer<typeof MemberParams>;
 

@@ -23,6 +23,15 @@ const formatHttpErrorMessage = (
 	{ resource, message }: HttpErrorMessageFormatOptions,
 ) => (resource != null && message == null ? `${capitalize(resource)} ${template}` : message);
 
+export const formatNotFoundErrorMessage = (options: HttpErrorMessageFormatOptions) =>
+	formatHttpErrorMessage('not found', options);
+
+export const formatConflictErrorMessage = (options: HttpErrorMessageFormatOptions) =>
+	formatHttpErrorMessage('already exists', options);
+
+export const formatContentTooLargeErrorMessage = (options: HttpErrorMessageFormatOptions) =>
+	formatHttpErrorMessage('is too large', options);
+
 export class HttpError extends HTTPException {
 	static isHttpError(error: unknown) {
 		return error instanceof HTTPException;
@@ -61,7 +70,7 @@ export class ForbiddenError extends HttpError {
 
 export class NotFoundError extends HttpError {
 	constructor({ resource, message, ...options }: HttpResourceErrorOptions = {}) {
-		super(404, { ...options, message: formatHttpErrorMessage('not found', { resource, message }) });
+		super(404, { ...options, message: formatNotFoundErrorMessage({ resource, message }) });
 	}
 }
 
@@ -69,7 +78,7 @@ export class ConflictError extends HttpError {
 	constructor({ resource, message, ...options }: HttpResourceErrorOptions = {}) {
 		super(409, {
 			...options,
-			message: formatHttpErrorMessage('already exists', { resource, message }),
+			message: formatConflictErrorMessage({ resource, message }),
 		});
 	}
 }
@@ -78,7 +87,7 @@ export class ContentTooLargeError extends HttpError {
 	constructor({ resource, message, ...options }: HttpResourceErrorOptions = {}) {
 		super(413, {
 			...options,
-			message: formatHttpErrorMessage('is too large', { resource, message }),
+			message: formatContentTooLargeErrorMessage({ resource, message }),
 		});
 	}
 }

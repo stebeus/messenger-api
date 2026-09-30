@@ -1,11 +1,16 @@
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 
-import { BadRequestErrorResponse, HttpErrorResponse } from '#contracts/dtos.ts';
+import { BadRequestErrorResponse, UnauthorizedErrorResponse } from '#contracts/dtos.ts';
 import { UserQuery } from '#features/users/contracts/dtos.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
-import { DirectMessageParams, ListDirectMessagesResponse } from './dtos.ts';
+import {
+	DirectMessageNotFoundErrorResponse,
+	DirectMessageParams,
+	GetDirectMessageResponse,
+	ListDirectMessagesResponse,
+} from './dtos.ts';
 import { dmRepository } from './repository.ts';
 import { dmService } from './services.ts';
 
@@ -28,7 +33,7 @@ dms.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 		},
 	}),
@@ -47,12 +52,12 @@ dms.get(
 dms.get(
 	'/:dmId',
 	describeRoute({
-		description: 'Retrieves the specified DM',
+		description: 'Retrieves the specified DM.',
 		tags: ['Direct messages'],
 		responses: {
 			200: {
 				description: 'The specified DM.',
-				content: { 'application/json': { schema: resolver(ListDirectMessagesResponse) } },
+				content: { 'application/json': { schema: resolver(GetDirectMessageResponse) } },
 			},
 			400: {
 				description: 'Invalid ID parameter.',
@@ -60,11 +65,11 @@ dms.get(
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
 			},
 			404: {
 				description: 'DM not found.',
-				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+				content: { 'application/json': { schema: resolver(DirectMessageNotFoundErrorResponse) } },
 			},
 		},
 	}),

@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { avatar, id, Query, sorts } from '#contracts/index.ts';
+import { avatar, createNotFoundErrorResponse, id, Query, sorts } from '#contracts/index.ts';
 import { Group } from '#features/conversations/groups/contracts/entity.ts';
 import { Member } from '#features/conversations/members/contracts/entity.ts';
 
@@ -36,6 +36,8 @@ export const GetUserResponse = z.object({
 });
 
 export const ListUsersResponse = z.array(GetUserResponse);
+
+export const UserNotFoundErrorResponse = createNotFoundErrorResponse({ resource: 'user' });
 
 export type UserParams = z.infer<typeof UserParams>;
 

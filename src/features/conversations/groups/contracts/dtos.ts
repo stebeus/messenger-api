@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { avatar, id } from '#contracts/index.ts';
+import { avatar, createNotFoundErrorResponse, id } from '#contracts/index.ts';
 import { Member, MemberParams } from '#features/conversations/members/contracts/index.ts';
 import { Message, MessageParams } from '#features/conversations/messages/contracts/index.ts';
 
@@ -37,6 +37,8 @@ export const ListJoinedGroupsResponse = z.array(
 		messages: z.array(Message),
 	}),
 );
+
+export const GroupNotFoundErrorResponse = createNotFoundErrorResponse({ resource: 'group' });
 
 export type GroupParams = z.infer<typeof GroupParams>;
 
