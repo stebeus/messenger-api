@@ -20,6 +20,7 @@ bans.get(
 	'/',
 	describeRoute({
 		description: 'Retrieves bans matching the specified query.',
+		tags: ['Bans'],
 		responses: {
 			200: {
 				description: 'Bans matching the specified query.',
@@ -57,6 +58,7 @@ bans.post(
 	'/:memberId',
 	describeRoute({
 		description: 'Bans the specified group member.',
+		tags: ['Bans'],
 		responses: {
 			201: {
 				description: 'The banned user.',
@@ -102,6 +104,7 @@ bans.patch(
 	'/:memberId',
 	describeRoute({
 		description: 'Updates the specified ban.',
+		tags: ['Bans'],
 		responses: {
 			201: {
 				description: 'The updated ban.',
@@ -143,6 +146,7 @@ bans.delete(
 	'/:memberId',
 	describeRoute({
 		description: 'Unbans the specified user.',
+		tags: ['Bans'],
 		responses: {
 			201: {
 				description: 'The unbanned user.',
