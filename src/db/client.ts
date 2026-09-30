@@ -5,6 +5,6 @@ import { config } from '#config.ts';
 import { conversationRelations, socialRelations, userRelations } from './relations/index.ts';
 
 export const db = drizzle({
-	connection: config.dbUrl,
+	connection: config.db.url,
 	relations: { ...conversationRelations, ...socialRelations, ...userRelations },
 });

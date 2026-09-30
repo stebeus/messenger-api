@@ -10,7 +10,7 @@ import { createAuthenticatedUser } from '#features/users/tests/factories.ts';
 export const url = '/api/v1/conversations';
 
 export const serveWebSocket = () => {
-	const server = createServer(config.port + 1);
+	const server = createServer(config.app.port + 1);
 	const address = server.address();
 
 	if (address == null || typeof address === 'string') {

@@ -8,7 +8,7 @@ import * as schema from '#db/schemas/auth.ts';
 import { userConstants } from '#features/users/contracts/index.ts';
 
 const authConfig = {
-	baseURL: config.auth.url,
+	baseURL: config.app.url,
 	database: drizzleAdapter(db, {
 		provider: 'pg',
 		schema,

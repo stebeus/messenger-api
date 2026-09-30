@@ -24,7 +24,7 @@ app.all('/auth/*', (c) => auth.handler(c.req.raw));
 
 app.use(
 	cors({
-		origin: config.clientUrl,
+		origin: config.app.clientUrl,
 		allowMethods: ['GET', 'POST', 'PATCH', 'DELETE'],
 		credentials: true,
 	}),

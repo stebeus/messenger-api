@@ -16,14 +16,12 @@ const supabaseHostnameRegex = /^[a-z0-9]{20}\.supabase\.co\/?$/;
 
 const Env = z
 	.object({
-		CLIENT_URL: z.url().normalize().default('*'),
-		DATABASE_URL: z.url().regex(dbUrlRegex),
 		NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+		API_URL: z.httpUrl().normalize().optional(),
+		CLIENT_URL: z.url().normalize().default('*'),
 		PORT: z.coerce.number().int().positive().default(3000),
-
+		DATABASE_URL: z.url().regex(dbUrlRegex),
 		AUTH_SECRET: z.string(),
-		AUTH_URL: z.httpUrl().normalize().optional(),
-
 		STORAGE_SECRET: z.string(),
 		STORAGE_URL: z.url({ protocol: /^https?$/, hostname: supabaseHostnameRegex }).normalize(),
 	})
@@ -36,12 +34,17 @@ const dbUrl = new URL(data.DATABASE_URL);
 if (data.NODE_ENV === 'test') dbUrl.pathname += '_test';
 
 export const config = {
-	clientUrl: data.CLIENT_URL,
-	dbUrl: dbUrl.toString(),
-	port: data.PORT,
+	env: data.NODE_ENV,
+	app: {
+		port: data.PORT,
+		url: data.API_URL ?? `http://localhost:${data.PORT}`,
+		clientUrl: data.CLIENT_URL,
+	},
+	db: {
+		url: dbUrl.toString(),
+	},
 	auth: {
 		secret: data.AUTH_SECRET,
-		url: data.AUTH_URL ?? `http://localhost:${data.PORT}`,
 	},
 	storage: {
 		secret: data.STORAGE_SECRET,
