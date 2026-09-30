@@ -5,7 +5,6 @@ import { defineConfig } from 'vitest/config';
 // https://vitest.dev/config/
 export default defineConfig({
 	test: {
-		root: 'src',
 		env: {
 			NODE_ENV: 'test',
 		},
@@ -13,8 +12,8 @@ export default defineConfig({
 			{
 				test: {
 					name: 'unit',
-					include: ['**/*.test.ts'],
-					exclude: ['**/tests/routes/**.test.ts', '**/routes.test.ts'],
+					include: ['src/**/*.test.ts'],
+					exclude: ['src/**/tests/routes/**.test.ts', 'src/**/routes.test.ts'],
 					sequence: {
 						groupOrder: 1,
 					},
@@ -23,7 +22,7 @@ export default defineConfig({
 			{
 				test: {
 					name: 'integration',
-					include: ['**/tests/routes/**.test.ts', '**/routes.test.ts'],
+					include: ['src/**/tests/routes/**.test.ts', 'src/**/routes.test.ts'],
 					fileParallelism: false,
 					sequence: {
 						groupOrder: 2,
