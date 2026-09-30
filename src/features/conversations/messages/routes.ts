@@ -13,6 +13,7 @@ messages.patch(
 	'/:messageId',
 	describeRoute({
 		description: 'Edits the specified sent message.',
+		tags: ['Messages'],
 		responses: {
 			200: {
 				description: 'The edited message.',
@@ -54,6 +55,7 @@ messages.delete(
 	'/:messageId',
 	describeRoute({
 		description: 'Deletes the specified sent message.',
+		tags: ['Messages'],
 		responses: {
 			200: {
 				description: 'The deleted message.',
