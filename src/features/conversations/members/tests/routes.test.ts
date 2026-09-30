@@ -73,7 +73,7 @@ describe('POST /groups/:groupId/members', () => {
 		expect(res.status).toBe(401);
 	});
 
-	it('prevents duplicating members', async () => {
+	it('forbids banned users from joining the group', async () => {
 		// Arrange
 		await banService.create({
 			actorId: admin.id,
@@ -89,7 +89,7 @@ describe('POST /groups/:groupId/members', () => {
 		expect(res.status).toBe(403);
 	});
 
-	it('forbids banned users from joining the group', async () => {
+	it('prevents duplicating members', async () => {
 		// Arrange
 		await app.request(url, { method: 'POST', headers: memberHeaders });
 
