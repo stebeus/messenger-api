@@ -2,12 +2,12 @@ import { upgradeWebSocket } from '@hono/node-server';
 import { type Context, Hono } from 'hono';
 
 import { Query } from '#contracts/dtos.ts';
-import { CreateMessageBodyRequest } from '#features/conversations/messages/contracts/dtos.ts';
-import { messageService } from '#features/conversations/messages/services.ts';
 import { type AuthEnv, requireAuth, validate } from '#middleware/index.ts';
 
 import { ConversationParams } from './contracts/dtos.ts';
 import { conversationEvents } from './events.ts';
+import { CreateMessageBodyRequest } from './messages/contracts/dtos.ts';
+import { messageService } from './messages/services.ts';
 import { conversationService } from './services.ts';
 
 export const conversations = new Hono();
