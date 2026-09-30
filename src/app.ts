@@ -44,6 +44,7 @@ app.get(
 				license: {
 					name: pkg.license,
 					identifier: pkg.license,
+					url: 'https://opensource.org/license/mit',
 				},
 			},
 			servers: [{ url: config.app.url }],
