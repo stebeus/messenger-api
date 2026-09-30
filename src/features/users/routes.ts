@@ -14,6 +14,7 @@ users.get(
 	'/',
 	describeRoute({
 		description: 'Retrieves users matching the specified query.',
+		tags: ['Users'],
 		responses: {
 			200: {
 				description: 'Users matching the specified query.',
@@ -45,6 +46,7 @@ users.get(
 	'/:userId',
 	describeRoute({
 		description: 'Retrieves the specified user.',
+		tags: ['Users'],
 		responses: {
 			200: {
 				description: 'The specified user.',
