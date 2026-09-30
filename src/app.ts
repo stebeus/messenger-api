@@ -5,6 +5,8 @@ import { logger } from 'hono/logger';
 import { openAPIRouteHandler } from 'hono-openapi';
 import { WebSocketServer } from 'ws';
 
+import pkg from '#root/package.json' with { type: 'json' };
+
 import { config } from './config.ts';
 import { auth } from './lib/auth.ts';
 import { routes } from './routes.ts';
@@ -36,8 +38,8 @@ app.get(
 	openAPIRouteHandler(app, {
 		documentation: {
 			info: {
-				title: 'Messenger API',
-				version: '0.1.0',
+				title: pkg.name,
+				version: pkg.version,
 			},
 			servers: [{ url: config.app.url }],
 		},

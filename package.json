@@ -4,6 +4,7 @@
 	"private": true,
 	"type": "module",
 	"imports": {
+		"#root/*": "./*",
 		"#*": "./src/*"
 	},
 	"scripts": {
