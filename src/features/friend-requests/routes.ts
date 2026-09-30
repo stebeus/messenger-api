@@ -20,6 +20,7 @@ friendRequests.get(
 	'/',
 	describeRoute({
 		description: 'Retrieves friend requests matching the specified query.',
+		tags: ['Friend requests'],
 		responses: {
 			200: {
 				description: 'Friend requests matching the specified query.',
@@ -51,6 +52,7 @@ friendRequests.post(
 	'/:recipientId',
 	describeRoute({
 		description: 'Sends a friend request to another user.',
+		tags: ['Friend requests'],
 		responses: {
 			201: {
 				description: 'The sent friend request.',
@@ -94,6 +96,7 @@ friendRequests.delete(
 	'/:userId',
 	describeRoute({
 		description: 'Cancels a sent or received friend request.',
+		tags: ['Friend requests'],
 		responses: {
 			200: {
 				description: 'The cancelled friend request.',
