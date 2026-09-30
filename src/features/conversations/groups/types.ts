@@ -3,20 +3,25 @@ import type { Selection } from '#db/types.ts';
 import type {
 	Member,
 	roles,
-	UpdateMemberBody,
+	UpdateMemberBodyRequest,
 } from '#features/conversations/members/contracts/index.ts';
 import type { UserParams } from '#features/users/contracts/dtos.ts';
-import type { CreateGroupBody, Group, GroupParams, UpdateGroupBody } from './contracts/index.ts';
+import type {
+	CreateGroupBodyRequest,
+	Group,
+	GroupParams,
+	UpdateGroupBodyRequest,
+} from './contracts/index.ts';
 
 export type GroupsSelection = UserParams & QueryArgs;
 
 export type GroupSelection = Selection<Group>;
 
-export type CreateGroupArgs = UserParams & BodyArgs<CreateGroupBody>;
+export type CreateGroupArgs = UserParams & BodyArgs<CreateGroupBodyRequest>;
 
 export type GroupMember = UserParams & GroupParams;
 
-export type UpdateGroupArgs = GroupMember & BodyArgs<UpdateGroupBody>;
+export type UpdateGroupArgs = GroupMember & BodyArgs<UpdateGroupBodyRequest>;
 
 export type Role = Member['role'];
 
@@ -32,4 +37,4 @@ export type MemberManagement = Management & {
 	targetId: Id;
 };
 
-export type RoleManagement = MemberManagement & UpdateMemberBody;
+export type RoleManagement = MemberManagement & UpdateMemberBodyRequest;

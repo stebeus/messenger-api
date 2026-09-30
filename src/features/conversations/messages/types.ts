@@ -5,19 +5,19 @@ import type { Management } from '#features/conversations/groups/types.ts';
 import type { MemberArgs } from '#features/conversations/members/types.ts';
 import type { UserParams } from '#features/users/contracts/dtos.ts';
 import type {
-	CreateMessageBody,
+	CreateMessageBodyRequest,
 	Message,
 	MessageParams,
-	UpdateMessageBody,
+	UpdateMessageBodyRequest,
 } from './contracts/index.ts';
 
-type EditMessageArgs = BodyArgs<UpdateMessageBody>;
+type EditMessageArgs = BodyArgs<UpdateMessageBodyRequest>;
 
 export type MessagesSelection = ConversationParams & QueryArgs;
 
 export type MessageSelection = Selection<Message>;
 
-export type SendMessageArgs = MemberArgs & BodyArgs<CreateMessageBody>;
+export type SendMessageArgs = MemberArgs & BodyArgs<CreateMessageBodyRequest>;
 
 export type ListMessageArgs = MemberArgs & QueryArgs;
 

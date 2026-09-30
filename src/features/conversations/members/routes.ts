@@ -4,7 +4,7 @@ import { GroupMemberParams, GroupParams } from '#features/conversations/groups/c
 import { UserQuery } from '#features/users/contracts/dtos.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
-import { UpdateMemberBody } from './contracts/dtos.ts';
+import { UpdateMemberBodyRequest } from './contracts/dtos.ts';
 import { memberService } from './services.ts';
 
 export const members = new Hono();
@@ -46,7 +46,7 @@ members.delete('/me', validate('param', GroupParams), requireAuth, async (c) => 
 members.patch(
 	'/:memberId',
 	validate('param', GroupMemberParams),
-	validate('json', UpdateMemberBody),
+	validate('json', UpdateMemberBodyRequest),
 	requireAuth,
 	async (c) => {
 		const { user } = c.var.auth;

@@ -2,7 +2,7 @@ import { upgradeWebSocket } from '@hono/node-server';
 import { type Context, Hono } from 'hono';
 
 import { Query } from '#contracts/dtos.ts';
-import { CreateMessageBody } from '#features/conversations/messages/contracts/dtos.ts';
+import { CreateMessageBodyRequest } from '#features/conversations/messages/contracts/dtos.ts';
 import { messageService } from '#features/conversations/messages/services.ts';
 import { type AuthEnv, requireAuth, validate } from '#middleware/index.ts';
 
@@ -76,7 +76,7 @@ conversations.get(
 conversations.post(
 	'/:conversationId/messages',
 	validate('param', ConversationParams),
-	validate('json', CreateMessageBody),
+	validate('json', CreateMessageBodyRequest),
 	requireAuth,
 	async (c) => {
 		const { user } = c.var.auth;

@@ -13,12 +13,12 @@ export const BanQuery = z
 	})
 	.partial();
 
-export const CreateBanBody = NewBan.omit({ userId: true, groupId: true });
+export const CreateBanBodyRequest = NewBan.omit({ userId: true, groupId: true });
 
-export const UpdateBanBody = BanUpdate.omit({ userId: true, groupId: true });
+export const UpdateBanBodyRequest = BanUpdate.omit({ userId: true, groupId: true });
 
 export type BanQuery = z.infer<typeof BanQuery>;
 
-export type CreateBanBody = z.infer<typeof CreateBanBody>;
+export type CreateBanBodyRequest = z.infer<typeof CreateBanBodyRequest>;
 
-export type UpdateBanBody = z.infer<typeof UpdateBanBody>;
+export type UpdateBanBodyRequest = z.infer<typeof UpdateBanBodyRequest>;

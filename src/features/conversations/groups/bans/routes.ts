@@ -4,7 +4,7 @@ import { GroupMemberParams, GroupParams } from '#features/conversations/groups/c
 import { UserQuery } from '#features/users/contracts/dtos.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
-import { CreateBanBody, UpdateBanBody } from './contracts/dtos.ts';
+import { CreateBanBodyRequest, UpdateBanBodyRequest } from './contracts/dtos.ts';
 import { banService } from './services.ts';
 
 export const bans = new Hono();
@@ -28,7 +28,7 @@ bans.get(
 bans.post(
 	'/:memberId',
 	validate('param', GroupMemberParams),
-	validate('json', CreateBanBody),
+	validate('json', CreateBanBodyRequest),
 	requireAuth,
 	async (c) => {
 		const { user } = c.var.auth;
@@ -44,7 +44,7 @@ bans.post(
 bans.patch(
 	'/:memberId',
 	validate('param', GroupMemberParams),
-	validate('json', UpdateBanBody),
+	validate('json', UpdateBanBodyRequest),
 	requireAuth,
 	async (c) => {
 		const { user } = c.var.auth;

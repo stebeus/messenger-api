@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 
 import { requireAuth, validate } from '#middleware/index.ts';
 
-import { MessageParams, UpdateMessageBody } from './contracts/dtos.ts';
+import { MessageParams, UpdateMessageBodyRequest } from './contracts/dtos.ts';
 import { messageService } from './services.ts';
 
 export const messages = new Hono();
@@ -10,7 +10,7 @@ export const messages = new Hono();
 messages.patch(
 	'/:messageId',
 	validate('param', MessageParams),
-	validate('json', UpdateMessageBody),
+	validate('json', UpdateMessageBodyRequest),
 	requireAuth,
 	async (c) => {
 		const { user } = c.var.auth;

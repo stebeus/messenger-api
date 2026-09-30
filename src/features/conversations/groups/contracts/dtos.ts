@@ -14,12 +14,12 @@ export const GroupMemberParams = z.object({ ...GroupParams.shape, ...MemberParam
 
 export const GroupMessageParams = z.object({ ...GroupParams.shape, ...MessageParams.shape });
 
-export const CreateGroupBody = z.object({
+export const CreateGroupBodyRequest = z.object({
 	...NewGroup.omit({ conversationId: true, ownerId: true }).shape,
 	avatar,
 });
 
-export const UpdateGroupBody = z.object({
+export const UpdateGroupBodyRequest = z.object({
 	...GroupUpdate.omit({ conversationId: true }).shape,
 	avatar,
 });
@@ -30,6 +30,6 @@ export type GroupMemberParams = z.infer<typeof GroupMemberParams>;
 
 export type GroupMessageParams = z.infer<typeof GroupMessageParams>;
 
-export type CreateGroupBody = z.input<typeof CreateGroupBody>;
+export type CreateGroupBodyRequest = z.input<typeof CreateGroupBodyRequest>;
 
-export type UpdateGroupBody = z.infer<typeof UpdateGroupBody>;
+export type UpdateGroupBodyRequest = z.infer<typeof UpdateGroupBodyRequest>;
