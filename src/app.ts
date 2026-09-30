@@ -39,7 +39,7 @@ app.get(
 	openAPIRouteHandler(app, {
 		documentation: {
 			info: {
-				title: pkg.name,
+				title: 'Messenger API',
 				version: pkg.version,
 				license: {
 					name: pkg.license,
