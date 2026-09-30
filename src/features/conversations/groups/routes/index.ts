@@ -28,6 +28,7 @@ groups.get(
 	'/',
 	describeRoute({
 		description: 'Retrieves public groups matching the specified query.',
+		tags: ['Groups'],
 		responses: {
 			200: {
 				description: 'Public groups matching the specified query.',
@@ -59,6 +60,7 @@ groups.get(
 	'/me',
 	describeRoute({
 		description: 'Retrieves joined groups matching the specified query.',
+		tags: ['Groups'],
 		responses: {
 			200: {
 				description: 'Joined groups matching the specified query.',
@@ -90,6 +92,7 @@ groups.post(
 	'/',
 	describeRoute({
 		description: 'Creates a group.',
+		tags: ['Groups'],
 		responses: {
 			200: {
 				description: 'The new group.',
@@ -126,6 +129,7 @@ groups.patch(
 	'/:groupId',
 	describeRoute({
 		description: 'Updates an owned group.',
+		tags: ['Groups'],
 		responses: {
 			200: {
 				description: 'The updated group.',
@@ -172,6 +176,7 @@ groups.delete(
 	'/:groupId',
 	describeRoute({
 		description: 'Deletes an owned group.',
+		tags: ['Groups'],
 		responses: {
 			200: {
 				description: 'The deleted group.',
