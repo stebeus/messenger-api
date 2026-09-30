@@ -4,10 +4,9 @@ import { app } from '#app.ts';
 import { resetTestDb } from '#db/helpers.ts';
 import { dmService } from '#features/conversations/dms/services.ts';
 import { groupCommands } from '#features/conversations/groups/commands.ts';
+import { messageService } from '#features/conversations/messages/services.ts';
 import { createAuthenticatedUser } from '#features/users/tests/factories.ts';
 import { requestJson } from '#utils/test.ts';
-
-import { messageService } from './services.ts';
 
 const url = '/api/v1/messages';
 
