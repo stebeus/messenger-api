@@ -47,6 +47,44 @@ app.get(
 				},
 			},
 			servers: [{ url: config.app.url }],
+			tags: [
+				{
+					name: 'Users',
+					description: 'Operations for searching users.',
+				},
+				{
+					name: 'Friend requests',
+					description: 'Operations for managing friend requests.',
+				},
+				{
+					name: 'Friends',
+					description: 'Operations for managing friendships.',
+				},
+				{
+					name: 'Conversations',
+					description: 'Operations for connecting to chat rooms and accessing messages.',
+				},
+				{
+					name: 'DMs',
+					description: 'Operations for searching direct messages (DMs).',
+				},
+				{
+					name: 'Groups',
+					description: 'Operations for managing groups.',
+				},
+				{
+					name: 'Bans',
+					description: 'Operations for managing group bans.',
+				},
+				{
+					name: 'Members',
+					description: 'Operations for managing conversation membership.',
+				},
+				{
+					name: 'Messages',
+					description: 'Operations for editing and deleting sent messages.',
+				},
+			],
 		},
 	}),
 );
