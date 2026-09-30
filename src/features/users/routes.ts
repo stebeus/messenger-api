@@ -47,7 +47,7 @@ users.get(
 		description: 'Retrieves the specified user.',
 		responses: {
 			200: {
-				description: 'Specified user.',
+				description: 'The specified user.',
 				content: { 'application/json': { schema: resolver(GetUserResponse) } },
 			},
 			400: {
