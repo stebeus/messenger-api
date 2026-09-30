@@ -21,6 +21,7 @@ friends.get(
 	'/',
 	describeRoute({
 		description: 'Retrieves friends matching the specified query.',
+		tags: ['Friends'],
 		responses: {
 			200: {
 				description: 'Friends matching the specified query.',
@@ -52,6 +53,7 @@ friends.post(
 	'/:requesterId',
 	describeRoute({
 		description: 'Accepts a friend request.',
+		tags: ['Friends'],
 		responses: {
 			201: {
 				description: 'The new friendship.',
@@ -87,6 +89,7 @@ friends.delete(
 	'/:friendId',
 	describeRoute({
 		description: 'Unfriends a user.',
+		tags: ['Friends'],
 		responses: {
 			200: {
 				description: 'The unfriended user.',
