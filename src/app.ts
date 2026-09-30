@@ -73,10 +73,6 @@ app.get(
 					description: 'Operations for managing groups.',
 				},
 				{
-					name: 'Bans',
-					description: 'Operations for managing group bans.',
-				},
-				{
 					name: 'Members',
 					description: 'Operations for managing conversation membership.',
 				},
@@ -87,6 +83,10 @@ app.get(
 				{
 					name: 'Group messages',
 					description: 'Operations for editing and deleting sent group messages.',
+				},
+				{
+					name: 'Bans',
+					description: 'Operations for managing group bans.',
 				},
 			],
 		},
