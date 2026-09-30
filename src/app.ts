@@ -93,7 +93,7 @@ app.get(
 	}),
 );
 
-app.get('/scalar', Scalar({ url: '/api/openapi.json', theme: 'alternate' }));
+app.get('/scalar', Scalar({ url: '/api/openapi.json' }));
 
 app.route('/v1', routes);
 
