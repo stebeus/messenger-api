@@ -58,7 +58,7 @@ friends.post(
 				content: { 'application/json': { schema: resolver(Friendship) } },
 			},
 			400: {
-				description: 'Invalid parameters.',
+				description: 'Invalid ID parameter.',
 				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
 			},
 			401: {
@@ -93,7 +93,7 @@ friends.delete(
 				content: { 'application/json': { schema: resolver(FriendRequest) } },
 			},
 			400: {
-				description: 'Invalid parameters.',
+				description: 'Invalid ID parameter.',
 				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
 			},
 			401: {
