@@ -44,6 +44,11 @@ describe('GET /dms', () => {
 });
 
 describe('GET /dms/:dmId', () => {
+	it('rejects invalid parameters', async () => {
+		const res = await app.request(`${url}/john_doe`);
+		expect(res.status).toBe(400);
+	});
+
 	it('rejects unauthenticated users', async () => {
 		const res = await app.request(`${url}/1`);
 		expect(res.status).toBe(401);
