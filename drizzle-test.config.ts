@@ -1,12 +1,4 @@
-import { defineConfig } from 'drizzle-kit';
-
+import { configureDrizzle } from './drizzle.config.ts';
 import { config } from './src/config.ts';
 
-// https://orm.drizzle.team/docs/drizzle-config-file
-export default defineConfig({
-	dialect: 'postgresql',
-	schema: 'src/db/schemas/index.ts',
-	dbCredentials: {
-		url: config.db.testUrl,
-	},
-});
+export default configureDrizzle(config.db.testUrl);
