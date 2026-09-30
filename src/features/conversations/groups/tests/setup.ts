@@ -1,10 +1,10 @@
-import { resetTestDb } from '#db/helpers.ts';
+import { resetDb } from '#db/helpers.ts';
 import { groupCommands } from '#features/conversations/groups/commands.ts';
 import { memberService } from '#features/conversations/members/services.ts';
 import { createAuthenticatedUser } from '#features/users/tests/factories.ts';
 
 export const setUpGroup = async () => {
-	await resetTestDb();
+	await resetDb();
 
 	const ownerAuth = await createAuthenticatedUser();
 	const adminAuth = await createAuthenticatedUser();

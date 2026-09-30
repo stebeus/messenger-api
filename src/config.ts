@@ -17,10 +17,9 @@ const supabaseHostnameRegex = /^[a-z0-9]{20}\.supabase\.co\/?$/;
 const Env = z
 	.object({
 		CLIENT_URL: z.url().normalize().default('*'),
-		PORT: z.coerce.number().int().positive().default(3000),
-
 		DATABASE_URL: z.url().regex(dbUrlRegex),
-		DATABASE_TEST_URL: z.url().regex(dbUrlRegex),
+		NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+		PORT: z.coerce.number().int().positive().default(3000),
 
 		AUTH_SECRET: z.string(),
 		AUTH_URL: z.httpUrl().normalize().optional(),
@@ -33,16 +32,16 @@ const Env = z
 const { success, error, data } = Env.safeParse(env);
 if (!success) throw new Error(z.prettifyError(error));
 
+const dbUrl = new URL(data.DATABASE_URL);
+if (data.NODE_ENV === 'test') dbUrl.pathname += '_test';
+
 export const config = {
 	clientUrl: data.CLIENT_URL,
+	dbUrl: dbUrl.toString(),
 	port: data.PORT,
 	auth: {
 		secret: data.AUTH_SECRET,
 		url: data.AUTH_URL ?? `http://localhost:${data.PORT}`,
-	},
-	db: {
-		url: data.DATABASE_URL,
-		testUrl: data.DATABASE_TEST_URL,
 	},
 	storage: {
 		secret: data.STORAGE_SECRET,

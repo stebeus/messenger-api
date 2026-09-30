@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { app } from '#app.ts';
-import { resetTestDb } from '#db/helpers.ts';
+import { resetDb } from '#db/helpers.ts';
 import { banService } from '#features/conversations/groups/bans/services.ts';
 import { groupCommands } from '#features/conversations/groups/commands.ts';
 import { memberService } from '#features/conversations/members/services.ts';
@@ -19,7 +19,7 @@ import {
 
 let wss: WebSocketServer;
 
-beforeEach(async () => await resetTestDb());
+beforeEach(async () => await resetDb());
 
 beforeAll(() => (wss = serveWebSocket()));
 afterAll(() => wss.server.close());

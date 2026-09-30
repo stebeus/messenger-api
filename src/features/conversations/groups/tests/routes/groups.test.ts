@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { app } from '#app.ts';
-import { resetTestDb } from '#db/helpers.ts';
+import { resetDb } from '#db/helpers.ts';
 import { groupCommands } from '#features/conversations/groups/commands.ts';
 import { groupQueries } from '#features/conversations/groups/queries.ts';
 import { memberService } from '#features/conversations/members/services.ts';
@@ -12,7 +12,7 @@ import { requestMultipartForm } from '#utils/test.ts';
 
 const url = '/api/v1/groups';
 
-beforeEach(async () => await resetTestDb());
+beforeEach(async () => await resetDb());
 
 describe('GET /groups', () => {
 	describe('Given invalid query parameters', () => {

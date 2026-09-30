@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { app } from '#app.ts';
-import { resetTestDb } from '#db/helpers.ts';
+import { resetDb } from '#db/helpers.ts';
 import { createAuthenticatedUser } from '#features/users/tests/factories.ts';
 
 import { dmService } from './services.ts';
 
 const url = '/api/v1/dms';
 
-beforeEach(async () => await resetTestDb());
+beforeEach(async () => await resetDb());
 
 describe('GET /dms', () => {
 	describe('Given invalid query parameters', () => {

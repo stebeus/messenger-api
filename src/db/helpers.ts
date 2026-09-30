@@ -2,7 +2,7 @@ import type { Id } from '#contracts/entity.ts';
 
 import { reset } from 'drizzle-seed';
 
-import { testDb } from './client.ts';
+import { db } from './client.ts';
 import * as schema from './schemas/index.ts';
 
 export const contains = (query?: string) =>
@@ -19,4 +19,4 @@ export const parseId = (id: Id) => {
 	return parsedId;
 };
 
-export const resetTestDb = async () => await reset(testDb, schema);
+export const resetDb = async () => await reset(db, schema);

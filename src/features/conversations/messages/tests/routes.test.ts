@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { app } from '#app.ts';
-import { resetTestDb } from '#db/helpers.ts';
+import { resetDb } from '#db/helpers.ts';
 import { dmService } from '#features/conversations/dms/services.ts';
 import { groupCommands } from '#features/conversations/groups/commands.ts';
 import { messageService } from '#features/conversations/messages/services.ts';
@@ -10,7 +10,7 @@ import { requestJson } from '#utils/test.ts';
 
 const url = '/api/v1/messages';
 
-beforeEach(async () => await resetTestDb());
+beforeEach(async () => await resetDb());
 
 describe('PATCH /messages/:messageId', () => {
 	describe('Given invalid inputs', () => {

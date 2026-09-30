@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { app } from '#app.ts';
-import { resetTestDb } from '#db/helpers.ts';
+import { resetDb } from '#db/helpers.ts';
 import { dmRepository, dmService } from '#features/conversations/dms/index.ts';
 import { friendRequestRepository, friendRequestService } from '#features/friend-requests/index.ts';
 import { friendshipService } from '#features/friendships/services.ts';
@@ -9,7 +9,7 @@ import { createAuthenticatedUser } from '#features/users/tests/factories.ts';
 
 const url = '/api/v1/friends';
 
-beforeEach(async () => await resetTestDb());
+beforeEach(async () => await resetDb());
 
 describe('GET /friends', () => {
 	describe('Given invalid query parameters', () => {
