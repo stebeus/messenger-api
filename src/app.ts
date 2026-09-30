@@ -84,6 +84,10 @@ app.get(
 					name: 'Messages',
 					description: 'Operations for editing and deleting sent messages.',
 				},
+				{
+					name: 'Group messages',
+					description: 'Operations for editing and deleting sent group messages.',
+				},
 			],
 		},
 	}),
