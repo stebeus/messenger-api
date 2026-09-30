@@ -22,15 +22,15 @@ const { type } = Conversation.shape;
 const { visibility } = Group.shape;
 const { role } = Member.shape;
 
-export const messagingSchema = snakeCase.schema('messaging');
+export const conversationSchema = snakeCase.schema('conversation');
 
-export const conversations = messagingSchema.table('conversations', (t) => ({
+export const conversations = conversationSchema.table('conversations', (t) => ({
 	id,
 	type: t.text({ enum: conversationTypes }).default(type.def.defaultValue).notNull(),
 	createdAt,
 }));
 
-export const groups = messagingSchema.table('groups', (t) => ({
+export const groups = conversationSchema.table('groups', (t) => ({
 	...timestamps,
 	conversationId: reference(() => conversations.id, { onDelete: 'cascade' }).notNull(),
 	ownerId: reference(() => users.id, { onDelete: 'cascade' }).notNull(),
@@ -40,7 +40,7 @@ export const groups = messagingSchema.table('groups', (t) => ({
 	visibility: t.text({ enum: visibilities }).default(visibility.def.defaultValue).notNull(),
 }));
 
-export const bans = messagingSchema.table(
+export const bans = conversationSchema.table(
 	'bans',
 	(t) => ({
 		...timestamps,
@@ -52,7 +52,7 @@ export const bans = messagingSchema.table(
 	(t) => [unique().on(t.userId, t.groupId)],
 );
 
-export const members = messagingSchema.table(
+export const members = conversationSchema.table(
 	'members',
 	(t) => ({
 		...timestamps,
@@ -63,7 +63,7 @@ export const members = messagingSchema.table(
 	(t) => [unique().on(t.userId, t.conversationId)],
 );
 
-export const messages = messagingSchema.table('messages', (t) => ({
+export const messages = conversationSchema.table('messages', (t) => ({
 	...base,
 	senderId: reference(() => users.id, { onDelete: 'cascade' }).notNull(),
 	conversationId: reference(() => conversations.id, { onDelete: 'cascade' }).notNull(),
