@@ -26,7 +26,7 @@ bans.get(
 				content: { 'application/json': { schema: resolver(ListBansResponse) } },
 			},
 			400: {
-				description: 'Invalid query parameters.',
+				description: 'Invalid group ID or query parameters.',
 				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
 			},
 			401: {
@@ -63,7 +63,7 @@ bans.post(
 				content: { 'application/json': { schema: resolver(Ban) } },
 			},
 			400: {
-				description: 'Invalid member ID parameter or body.',
+				description: 'Invalid ID parameters or body.',
 				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
 			},
 			401: {
@@ -108,7 +108,7 @@ bans.patch(
 				content: { 'application/json': { schema: resolver(Ban) } },
 			},
 			400: {
-				description: 'Invalid member ID parameter or body.',
+				description: 'Invalid ID parameters or body.',
 				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
 			},
 			401: {
@@ -149,7 +149,7 @@ bans.delete(
 				content: { 'application/json': { schema: resolver(Ban) } },
 			},
 			400: {
-				description: 'Invalid member ID parameter.',
+				description: 'Invalid ID parameters.',
 				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
 			},
 			401: {
