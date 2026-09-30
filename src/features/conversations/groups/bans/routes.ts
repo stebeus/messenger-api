@@ -1,16 +1,44 @@
 import { Hono } from 'hono';
+import { describeRoute, resolver } from 'hono-openapi';
 
+import { BadRequestErrorResponse, HttpErrorResponse } from '#contracts/dtos.ts';
 import { GroupMemberParams, GroupParams } from '#features/conversations/groups/contracts/dtos.ts';
 import { UserQuery } from '#features/users/contracts/dtos.ts';
 import { requireAuth, validate } from '#middleware/index.ts';
 
-import { CreateBanBodyRequest, UpdateBanBodyRequest } from './contracts/dtos.ts';
+import {
+	Ban,
+	CreateBanBodyRequest,
+	ListBansResponse,
+	UpdateBanBodyRequest,
+} from './contracts/index.ts';
 import { banService } from './services.ts';
 
 export const bans = new Hono();
 
 bans.get(
 	'/',
+	describeRoute({
+		description: 'Retrieves bans matching the specified query.',
+		responses: {
+			200: {
+				description: 'Bans matching the specified query.',
+				content: { 'application/json': { schema: resolver(ListBansResponse) } },
+			},
+			400: {
+				description: 'Invalid query parameters.',
+				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+			},
+			401: {
+				description: 'Authentication is required.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			403: {
+				description: 'You do not have permission to view bans.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+		},
+	}),
 	validate('param', GroupParams),
 	validate('query', UserQuery),
 	requireAuth,
@@ -27,6 +55,35 @@ bans.get(
 
 bans.post(
 	'/:memberId',
+	describeRoute({
+		description: 'Bans the specified group member.',
+		responses: {
+			201: {
+				description: 'The banned user.',
+				content: { 'application/json': { schema: resolver(Ban) } },
+			},
+			400: {
+				description: 'Invalid member ID parameter or body.',
+				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+			},
+			401: {
+				description: 'Authentication is required.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			409: {
+				description: 'User is already banned.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			404: {
+				description: 'Ban not found',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			403: {
+				description: 'You do not have permission to ban this member.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+		},
+	}),
 	validate('param', GroupMemberParams),
 	validate('json', CreateBanBodyRequest),
 	requireAuth,
@@ -43,6 +100,31 @@ bans.post(
 
 bans.patch(
 	'/:memberId',
+	describeRoute({
+		description: 'Updates the specified ban.',
+		responses: {
+			201: {
+				description: 'The updated ban.',
+				content: { 'application/json': { schema: resolver(Ban) } },
+			},
+			400: {
+				description: 'Invalid member ID parameter or body.',
+				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+			},
+			401: {
+				description: 'Authentication is required.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			404: {
+				description: 'Ban not found',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			403: {
+				description: 'You do not have permission to update this ban.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+		},
+	}),
 	validate('param', GroupMemberParams),
 	validate('json', UpdateBanBodyRequest),
 	requireAuth,
@@ -57,11 +139,41 @@ bans.patch(
 	},
 );
 
-bans.delete('/:memberId', validate('param', GroupMemberParams), requireAuth, async (c) => {
-	const { user } = c.var.auth;
-	const { groupId, memberId } = c.req.valid('param');
+bans.delete(
+	'/:memberId',
+	describeRoute({
+		description: 'Unbans the specified user.',
+		responses: {
+			201: {
+				description: 'The unbanned user.',
+				content: { 'application/json': { schema: resolver(Ban) } },
+			},
+			400: {
+				description: 'Invalid member ID parameter.',
+				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+			},
+			401: {
+				description: 'Authentication is required.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			404: {
+				description: 'Ban not found',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+			403: {
+				description: 'You do not have permission to unban this user.',
+				content: { 'application/json': { schema: resolver(HttpErrorResponse) } },
+			},
+		},
+	}),
+	validate('param', GroupMemberParams),
+	requireAuth,
+	async (c) => {
+		const { user } = c.var.auth;
+		const { groupId, memberId } = c.req.valid('param');
 
-	const data = await banService.destroy({ actorId: user.id, targetId: memberId, groupId });
+		const data = await banService.destroy({ actorId: user.id, targetId: memberId, groupId });
 
-	return c.json({ data });
-});
+		return c.json({ data });
+	},
+);
