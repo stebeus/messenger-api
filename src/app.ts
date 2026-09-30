@@ -40,6 +40,10 @@ app.get(
 			info: {
 				title: pkg.name,
 				version: pkg.version,
+				license: {
+					name: pkg.license,
+					identifier: pkg.license,
+				},
 			},
 			servers: [{ url: config.app.url }],
 		},
