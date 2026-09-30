@@ -16,6 +16,7 @@ dms.get(
 	describeRoute({
 		description:
 			'Retrieves DMs involving users matching the specified username or display name, with optional sorting.',
+		tags: ['Direct messages'],
 		responses: {
 			200: {
 				description: 'DMs matching the specified query.',
@@ -47,6 +48,7 @@ dms.get(
 	'/:dmId',
 	describeRoute({
 		description: 'Retrieves the specified DM',
+		tags: ['Direct messages'],
 		responses: {
 			200: {
 				description: 'The specified DM.',
