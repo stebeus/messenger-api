@@ -81,7 +81,25 @@ friendRequests.post(
 			},
 			409: {
 				description: 'A friend request already exists or the users are already friends.',
-				content: { 'application/json': { schema: resolver(FriendRequestConflictErrorResponse) } },
+				content: {
+					'application/json': {
+						schema: resolver(FriendRequestConflictErrorResponse),
+						examples: {
+							'Existing friend request': {
+								value: {
+									status: 409,
+									message: 'Friend request already exists',
+								},
+							},
+							'Existing friendship': {
+								value: {
+									status: 409,
+									message: 'Friendship already exists',
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	}),
