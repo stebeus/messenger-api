@@ -63,7 +63,8 @@ app.get(
 				},
 				{
 					name: 'Conversations',
-					description: 'Operations for connecting to chat rooms and accessing messages.',
+					description:
+						'Operations for connecting to chat rooms and accessing messages.',
 				},
 				{
 					name: 'Direct messages',
@@ -113,7 +114,7 @@ app.get(
 	}),
 );
 
-app.get('/scalar', Scalar({ url: '/api/openapi.json' }));
+app.get('/docs', Scalar({ url: '/api/openapi.json' }));
 
 app.route('/v1', routes);
 
