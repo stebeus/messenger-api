@@ -34,20 +34,27 @@ groups.route('/:groupId/messages', messages);
 groups.get(
 	'/',
 	describeRoute({
-		description: 'Retrieves public groups matching the specified query.',
+		description:
+			'Retrieves public groups matching the specified query, where the current user did not join yet or get banned.',
 		tags: ['Groups'],
 		responses: {
 			200: {
 				description: 'Public groups matching the specified query.',
-				content: { 'application/json': { schema: resolver(ListGroupsResponse) } },
+				content: {
+					'application/json': { schema: resolver(ListGroupsResponse) },
+				},
 			},
 			400: {
 				description: 'Invalid query parameters.',
-				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(BadRequestErrorResponse) },
+				},
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(UnauthorizedErrorResponse) },
+				},
 			},
 		},
 	}),
@@ -71,15 +78,21 @@ groups.get(
 		responses: {
 			200: {
 				description: 'Joined groups matching the specified query.',
-				content: { 'application/json': { schema: resolver(ListJoinedGroupsResponse) } },
+				content: {
+					'application/json': { schema: resolver(ListJoinedGroupsResponse) },
+				},
 			},
 			400: {
 				description: 'Invalid query parameters.',
-				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(BadRequestErrorResponse) },
+				},
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(UnauthorizedErrorResponse) },
+				},
 			},
 		},
 	}),
@@ -89,7 +102,10 @@ groups.get(
 		const { user } = c.var.auth;
 		const query = c.req.valid('query');
 
-		const data = await groupQueries.findByMembership({ userId: user.id, query });
+		const data = await groupQueries.findByMembership({
+			userId: user.id,
+			query,
+		});
 
 		return c.json({ data });
 	},
@@ -107,15 +123,23 @@ groups.post(
 			},
 			413: {
 				description: 'Avatar file size must not exceed 512 KB.',
-				content: { 'application/json': { schema: resolver(AvatarIsTooLargeErrorResponse) } },
+				content: {
+					'application/json': {
+						schema: resolver(AvatarIsTooLargeErrorResponse),
+					},
+				},
 			},
 			400: {
 				description: 'Invalid body.',
-				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(BadRequestErrorResponse) },
+				},
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(UnauthorizedErrorResponse) },
+				},
 			},
 		},
 	}),
@@ -144,23 +168,35 @@ groups.patch(
 			},
 			413: {
 				description: 'Avatar file size must not exceed 512 KB.',
-				content: { 'application/json': { schema: resolver(AvatarIsTooLargeErrorResponse) } },
+				content: {
+					'application/json': {
+						schema: resolver(AvatarIsTooLargeErrorResponse),
+					},
+				},
 			},
 			400: {
 				description: 'Invalid ID parameter or body.',
-				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(BadRequestErrorResponse) },
+				},
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(UnauthorizedErrorResponse) },
+				},
 			},
 			404: {
 				description: 'Group not found.',
-				content: { 'application/json': { schema: resolver(GroupNotFoundErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(GroupNotFoundErrorResponse) },
+				},
 			},
 			403: {
 				description: 'Group ownership is required.',
-				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(ForbiddenErrorResponse) },
+				},
 			},
 		},
 	}),
@@ -191,19 +227,27 @@ groups.delete(
 			},
 			400: {
 				description: 'Invalid ID parameter.',
-				content: { 'application/json': { schema: resolver(BadRequestErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(BadRequestErrorResponse) },
+				},
 			},
 			401: {
 				description: 'Authentication is required.',
-				content: { 'application/json': { schema: resolver(UnauthorizedErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(UnauthorizedErrorResponse) },
+				},
 			},
 			404: {
 				description: 'Group not found.',
-				content: { 'application/json': { schema: resolver(GroupNotFoundErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(GroupNotFoundErrorResponse) },
+				},
 			},
 			403: {
 				description: 'Group ownership is required.',
-				content: { 'application/json': { schema: resolver(ForbiddenErrorResponse) } },
+				content: {
+					'application/json': { schema: resolver(ForbiddenErrorResponse) },
+				},
 			},
 		},
 	}),
