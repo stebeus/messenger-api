@@ -1,7 +1,4 @@
-import { fileURLToPath } from 'node:url';
-
 import { serve } from '@hono/node-server';
-import { serveStatic } from '@hono/node-server/serve-static';
 import { Scalar } from '@scalar/hono-api-reference';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
@@ -32,14 +29,6 @@ app.use(
 		origin: config.app.clientUrl,
 		allowMethods: ['GET', 'POST', 'PATCH', 'DELETE'],
 		credentials: true,
-	}),
-);
-
-app.use(
-	'*',
-	serveStatic({
-		root: fileURLToPath(new URL('../public', import.meta.url)),
-		rewriteRequestPath: (path) => path.replace(/^\/api/, ''),
 	}),
 );
 
@@ -130,14 +119,7 @@ app.get(
 	}),
 );
 
-app.get(
-	'/docs',
-	Scalar({
-		pageTitle: 'Messenger REST API Reference',
-		favicon: '/api/favicon.svg',
-		url: '/api/openapi.json',
-	}),
-);
+app.get('/docs', Scalar({ pageTitle: 'Messenger REST API Reference', url: '/api/openapi.json' }));
 
 app.route('/v1', routes);
 
