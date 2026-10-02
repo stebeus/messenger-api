@@ -39,7 +39,7 @@ app.get(
 	openAPIRouteHandler(app, {
 		documentation: {
 			info: {
-				title: 'Messenger API',
+				title: 'Messenger REST API',
 				description:
 					'This reference covers the endpoints, authentication requirements, request and response schemas, and errors of the REST API.',
 				version: pkg.version,
