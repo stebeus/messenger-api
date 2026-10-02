@@ -20,6 +20,12 @@ jobs:
         node-version:
           - 26
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+      STORAGE_SECRET: ${{ secrets.STORAGE_SECRET }}
+      STORAGE_URL: ${{ secrets.STORAGE_URL }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -38,5 +44,3 @@ jobs:
 
       - name: Migrate database
         run: pnpm db:migrate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
