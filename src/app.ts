@@ -47,6 +47,10 @@ app.get(
 					url: 'https://opensource.org/license/mit',
 				},
 			},
+			externalDocs: {
+				description: 'README',
+				url: 'https://github.com/stebeus/messenger-api/blob/main/README.md',
+			},
 			servers: [{ url: config.app.url }],
 			tags: [
 				{
@@ -63,8 +67,7 @@ app.get(
 				},
 				{
 					name: 'Conversations',
-					description:
-						'Operations for connecting to chat rooms and accessing messages.',
+					description: 'Operations for connecting to chat rooms and accessing messages.',
 				},
 				{
 					name: 'Direct messages',
