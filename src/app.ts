@@ -119,7 +119,7 @@ app.get(
 	}),
 );
 
-app.get('/docs', Scalar({ url: '/api/openapi.json' }));
+app.get('/docs', Scalar({ pageTitle: 'Messenger REST API Reference', url: '/api/openapi.json' }));
 
 app.route('/v1', routes);
 
