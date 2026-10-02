@@ -11,6 +11,7 @@ services:
       - postgres_data:/var/lib/postgresql
 
   web:
+    image: stebeus/messenger-api:1.0.0
     build: .
 
     depends_on:
