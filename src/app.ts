@@ -40,6 +40,8 @@ app.get(
 		documentation: {
 			info: {
 				title: 'Messenger API',
+				description:
+					'This reference covers the endpoints, authentication requirements, request and response schemas, and errors of the REST API.',
 				version: pkg.version,
 				license: {
 					name: pkg.license,
