@@ -48,7 +48,7 @@ Validation schemas and their derived types form contracts for the application re
 
 Alongside contracts, modules are organized by feature to separate them from infrastructure, such as third-party libraries. Each feature uses repositories for database operations, services for application logic, and routes for handling HTTP and WebSocket requests.
 
-Only groups lack services. They instead retrieve data with queries and mutates the database with commands, because group authorization spans multiple features.
+Only groups lack services. They instead retrieve data with queries and modify the database with commands, because group authorization spans multiple features.
 
 ## License
 
