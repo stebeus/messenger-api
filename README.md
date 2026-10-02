@@ -40,7 +40,7 @@ These events use the `resource.operation` format and are grouped by resource:
 
 ## REST operations
 
-They handle all API actions and can emit corresponding events to the connected chat rooms. Their [OpenAPI reference]() shows how they validate, authenticate, and handle requests.
+They handle all API actions and can emit corresponding events to the connected chat rooms. Their [OpenAPI reference](https://registry.scalar.com/@proton-wmyu1/apis/messenger-rest-api@latest#description/introduction) shows how they validate, authenticate, and handle requests.
 
 ## Design decisions
 
