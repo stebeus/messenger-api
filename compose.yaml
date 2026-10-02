@@ -20,7 +20,7 @@ services:
       - .env
 
     ports:
-      - '${PORT}:${PORT}'
+      - 8080:${PORT-3000}
 
     restart: unless-stopped
 
