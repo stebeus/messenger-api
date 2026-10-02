@@ -52,7 +52,7 @@ app.get(
 			info: {
 				title: 'Messenger REST API',
 				description:
-					'This reference covers the endpoints, authentication requirements, request and response schemas, and errors of the REST API.',
+					'This reference documents endpoints, authentication requirements, request and response schemas, and errors of the REST API.',
 				version: pkg.version,
 				license: {
 					name: pkg.license,
