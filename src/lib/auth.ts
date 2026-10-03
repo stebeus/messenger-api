@@ -1,5 +1,5 @@
 import { drizzleAdapter } from '@better-auth/drizzle-adapter/relations-v2';
-import { betterAuth } from 'better-auth/minimal';
+import { type BetterAuthOptions, betterAuth } from 'better-auth/minimal';
 import { testUtils, username } from 'better-auth/plugins';
 
 import { config } from '#config.ts';
@@ -56,7 +56,7 @@ const authConfig = {
 			image: 'avatar',
 		},
 	},
-} as const;
+} as const satisfies BetterAuthOptions;
 
 const usernameConfig = username({
 	maxUsernameLength: userConstants.username.maxLength,
