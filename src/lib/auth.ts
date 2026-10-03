@@ -41,6 +41,10 @@ const authConfig = {
 			usernameValidator: (username) => userConstants.username.regex.test(username),
 		}),
 	],
+	trustedOrigins: [
+		config.app.url,
+		'https://registry.scalar.com/@stebeus/apis/messenger-rest-api-reference',
+	],
 	user: {
 		additionalFields: {
 			bio: {
