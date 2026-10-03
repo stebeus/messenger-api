@@ -6,6 +6,16 @@ Users begin by signing up, so that they can find and befriend other users or dis
 
 Some of these operations coordinate multiple parts of the application. For example, banning a member removes their membership and messages while creating a ban to prevent them from rejoining the group. These are operated by REST endpoints, whose data gets emitted in events for the WebSocket chat rooms.
 
+
+## Usage
+
+Sign up through the [OpenAPI reference](https://registry.scalar.com/@stebeus/apis/messenger-rest-api-reference) and use the REST endpoints. Then, in the terminal, connect to a WebSocket chat room with your session cookie:
+
+```sh
+npx wscat -c 'wss://messenger-api-laxw.onrender.com/api/v1/conversations/<DM_OR_GROUP_ID>/ws' \
+  -H 'Cookie: __Secure-better-auth.session_token=<YOUR_SESSION_COOKIE>'
+```
+
 ## Features
 
 - **Authentication**: Register, sign in, and manage your account.
