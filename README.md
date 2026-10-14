@@ -52,7 +52,7 @@ These events use the `resource.operation` format and are grouped by resource:
 
 They handle all API actions and can emit corresponding events to the connected chat rooms. Their [OpenAPI reference](https://registry.scalar.com/@stebeus/apis/messenger-rest-api-reference) shows how they validate, authenticate, and handle requests.
 
-## Design decisions
+## Architecture
 
 Validation schemas and their derived types form contracts for the application resources, as they're clear, maintainable, and reusable.
 
