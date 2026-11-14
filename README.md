@@ -15,6 +15,28 @@ npx wscat -c 'wss://messenger-api-laxw.onrender.com/api/v1/conversations/<DM_OR_
   -H 'Cookie: __Secure-better-auth.session_token=<YOUR_SESSION_COOKIE>'
 ```
 
+## Local development
+
+1. Install the project dependencies:
+
+   ```sh
+   pnpm install
+   ```
+
+2. Create two PostgreSQL databases for development and tests. The latter's name must match the former one, while suffixing it with `_test`. For example, use `messenger_api_test` for `messenger_api`.
+
+3. Migrate the database:
+
+   ```sh
+   pnpm db:migrate
+   ```
+
+4. Start the server with Docker Compose:
+
+   ```sh
+   docker compose up
+   ```
+
 ## Features
 
 - **Authentication**: Register, sign in, and manage your account.
