@@ -25,13 +25,15 @@ npx wscat -c 'wss://messenger-api-laxw.onrender.com/api/v1/conversations/<DM_OR_
 
 2. Create two PostgreSQL databases for development and tests. The latter's name must match the former one, while suffixing it with `_test`. For example, use `messenger_api_test` for `messenger_api`.
 
-3. Migrate the database:
+3. Create the `.env` file from `env.example`, then fill in its required variables. Set `DATABASE_URL` to your development database, generate `AUTH_SECRET` with `openssl rand -base64 32`, and use your Supabase secret and project URL for `STORAGE_SECRET` and `STORAGE_URL`.
+
+4. Migrate the database:
 
    ```sh
    pnpm db:migrate
    ```
 
-4. Start the server with Docker Compose:
+5. Start the server with Docker Compose:
 
    ```sh
    docker compose up
