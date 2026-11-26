@@ -30,7 +30,11 @@ npx wscat -c 'wss://messenger-api-laxw.onrender.com/api/v1/conversations/<DM_OR_
 4. Migrate the database:
 
    ```sh
+   # Development
    pnpm db:migrate
+
+   # Tests
+   DATABASE_URL='postgres://<USER>:<PASSWORD>@<HOST>:<PORT>/<DATABASE>_test' pnpm db:migrate
    ```
 
 5. Start the server with Docker Compose:
